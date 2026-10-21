@@ -47,11 +47,71 @@
     .markdown-body a:hover { color: #7dd3fc; }
     .markdown-body code { background: #1e293b; color: #fb7185; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.85em; font-family: monospace; }
   </style>
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased">
 
+  <!-- GOOGLE / GMAIL AUTHENTICATION GATE (LOCK SCREEN) -->
+  <div id="auth-gate-modal" class="fixed inset-0 z-[9999] bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-8 shadow-2xl shadow-sky-500/10 text-center relative overflow-hidden">
+      <!-- Glow ambient -->
+      <div class="absolute -top-24 -left-24 w-48 h-48 bg-sky-500/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white text-2xl mx-auto shadow-xl shadow-sky-500/25 mb-4">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+
+      <h2 class="text-2xl font-extrabold text-white tracking-tight">MARKETING OS</h2>
+      <p class="text-xs text-sky-400 font-semibold uppercase tracking-wider mt-1 mb-4">Hệ Thống Tự Động Hóa Tình Báo & Tăng Trưởng</p>
+
+      <div class="bg-slate-800/70 border border-slate-700/60 rounded-2xl p-4 text-xs text-slate-300 mb-6 leading-relaxed text-left flex items-start gap-3">
+        <i class="fa-solid fa-lock text-emerald-400 text-sm mt-0.5 shrink-0"></i>
+        <div>
+          <span class="font-bold text-white">Yêu cầu đăng nhập tài khoản Gmail:</span>
+          <p class="text-slate-400 mt-1">Để bảo vệ dữ liệu chiến lược, tình báo đối thủ và đồng bộ tự động 24/7, bạn cần xác thực bằng tài khoản Google (Gmail) để vào hệ thống.</p>
+        </div>
+      </div>
+
+      <!-- Google Sign-In One-Click Button -->
+      <button onclick="loginWithGooglePrompt()" class="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-100 text-slate-800 font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-white/5 transition mb-3.5 active:scale-95">
+        <svg class="w-5 h-5" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span>Đăng nhập nhanh với Google</span>
+      </button>
+
+      <div class="flex items-center gap-3 my-3">
+        <div class="h-px bg-slate-800 flex-1"></div>
+        <span class="text-[11px] text-slate-500 uppercase font-semibold">Hoặc nhập địa chỉ Gmail</span>
+        <div class="h-px bg-slate-800 flex-1"></div>
+      </div>
+
+      <!-- Direct Gmail Input -->
+      <div class="space-y-3">
+        <div class="relative">
+          <i class="fa-solid fa-envelope absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
+          <input id="auth-email-input" type="email" placeholder="Nhập địa chỉ Gmail (ví dụ: lindseyvu98@gmail.com)" class="w-full bg-slate-800 border border-slate-700 rounded-xl pl-9 pr-3.5 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+        </div>
+        <button onclick="loginWithDirectEmail()" id="btn-login-submit" class="w-full bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-xl text-xs shadow-lg shadow-sky-500/20 transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          <span>Xác Thực Gmail & Truy Cập</span>
+        </button>
+      </div>
+
+      <p class="text-[11px] text-slate-500 mt-5 flex items-center justify-center gap-1.5">
+        <i class="fa-solid fa-shield text-emerald-400 text-[10px]"></i>
+        <span>Xác thực an toàn & đồng bộ thời gian thực</span>
+      </p>
+    </div>
+  </div>
+
   <!-- TOP NAVIGATION -->
-  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 px-6 py-3.5 flex justify-between items-center">
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 px-6 py-3 flex justify-between items-center">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20">
         <i class="fa-solid fa-rocket text-lg"></i>
@@ -60,21 +120,33 @@
         <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-sky-400 to-indigo-300 bg-clip-text text-transparent">MARKETING OS</h1>
         <p class="text-xs text-slate-400 flex items-center gap-1.5">
           <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          Đang phục vụ: <span id="nav-brand-name" class="font-semibold text-slate-200">Đang tải...</span>
+          Đang phục vụ: <span id="nav-brand-name" class="font-semibold text-slate-200">Chưa thiết lập</span>
         </p>
       </div>
     </div>
     
     <div class="flex items-center gap-3">
+      <!-- Gmail User Profile Badge -->
+      <div id="user-header-profile" class="flex items-center gap-2 bg-slate-800/90 border border-slate-700 px-2.5 py-1.5 rounded-xl shadow-inner">
+        <img id="user-avatar-img" src="https://ui-avatars.com/api/?name=User&background=0ea5e9&color=fff" class="w-6 h-6 rounded-full border border-sky-400 object-cover">
+        <div class="text-left hidden md:block">
+          <span id="user-display-email" class="text-xs text-slate-200 font-medium block max-w-[150px] truncate">user@gmail.com</span>
+        </div>
+        <button onclick="handleLogout()" class="text-slate-400 hover:text-rose-400 text-xs ml-1 transition" title="Đăng xuất tài khoản Gmail">
+          <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
+      </div>
+
       <div class="hidden sm:flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold text-emerald-400">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-        <span>AUTO-PILOT 24/7 ACTIVE</span>
+        <span>AUTO-PILOT 24/7</span>
       </div>
-      <button onclick="runAutoPilotNow()" id="btn-header-autopilot" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold text-xs px-3.5 py-2 rounded-lg shadow-lg shadow-orange-500/25 flex items-center gap-2 transition">
-        <i class="fa-solid fa-bolt"></i>
-        <span class="hidden sm:inline">Chạy Lại Toàn Trình (1-Click)</span>
-        <span class="sm:hidden">Auto-Pilot</span>
+
+      <button onclick="confirmResetDatabase()" class="bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/60 text-rose-300 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition" title="Xóa dữ liệu cũ, đưa hệ thống về trạng thái mới tinh">
+        <i class="fa-solid fa-rotate-left"></i>
+        <span class="hidden lg:inline">Làm Mới Hệ Thống</span>
       </button>
+
       <button onclick="switchTab('tab-profile')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
         <i class="fa-solid fa-sliders"></i>
         <span class="hidden md:inline">Cấu Hình</span>
@@ -254,10 +326,14 @@
               <input type="text" id="inp-voice" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Ví dụ: Trẻ trung, Gần gũi, Hài hước hoặc Chuyên gia, Uy tín...">
             </div>
 
-            <div class="pt-2">
+            <div class="pt-2 flex flex-wrap items-center gap-3">
               <button onclick="saveProfile()" class="w-full sm:w-auto bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-semibold text-sm px-6 py-2.5 rounded-xl shadow-lg shadow-sky-500/25 transition flex items-center justify-center gap-2">
                 <i class="fa-solid fa-floppy-disk"></i>
                 <span>Lưu Hồ Sơ & Áp Dụng Toàn Hệ Thống</span>
+              </button>
+              <button type="button" onclick="confirmResetDatabase()" class="w-full sm:w-auto bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/60 text-rose-300 font-medium text-xs px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-2" title="Xóa bỏ toàn bộ dữ liệu triển khai cũ để nhập doanh nghiệp mới">
+                <i class="fa-solid fa-trash-can"></i>
+                <span>Xóa Dữ Liệu Cũ (Khởi Tạo Trắng)</span>
               </button>
             </div>
           </div>
@@ -322,45 +398,65 @@
           </button>
         </div>
 
-        <!-- Interactive Market Criteria Filter -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-              <i class="fa-solid fa-map-location-dot text-indigo-400"></i>
-              Khu vực địa lý trọng tâm
-            </label>
-            <select id="sel-market-region" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-              <option value="Toàn quốc">Toàn quốc (63 tỉnh thành)</option>
-              <option value="Miền Bắc (Hà Nội, Hải Phòng, Bắc Ninh...)">Miền Bắc (Hà Nội, Hải Phòng, Bắc Ninh...)</option>
-              <option value="Miền Nam & Miền Tây (TP.HCM, Bình Dương, Đồng Nai, Cần Thơ...)">Miền Nam & Miền Tây (TP.HCM, Bình Dương...)</option>
-              <option value="Miền Trung & Tây Nguyên (Đà Nẵng, Quảng Nam, Nghệ An, Đắk Lắk...)">Miền Trung & Tây Nguyên (Đà Nẵng...)</option>
-              <option value="Xuất khẩu (Lào, Campuchia, Đông Nam Á)">Xuất khẩu (Lào, Campuchia, Đông Nam Á)</option>
-            </select>
+        <!-- Interactive Market Criteria Filter (Tỉnh Thành / Quốc Gia / Khu Vực) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <i class="fa-solid fa-layer-group text-indigo-400"></i>
+                Phạm vi thị trường khảo sát
+              </label>
+              <select id="sel-market-scope-type" onchange="handleMarketScopeChange()" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <option value="province">🏙️ Tỉnh / Thành phố cụ thể</option>
+                <option value="region">🗺️ Khu vực / Vùng miền</option>
+                <option value="country">🌍 Quốc gia cụ thể</option>
+                <option value="custom">✍️ Tùy chỉnh địa bàn khác</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <i class="fa-solid fa-map-location-dot text-sky-400"></i>
+                Chọn địa bàn trọng tâm
+              </label>
+              <select id="sel-market-location-select" onchange="syncLocationInput()" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <!-- Javascript will populate dynamically -->
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <i class="fa-solid fa-tags text-emerald-400"></i>
+                Phân khúc giá khảo sát
+              </label>
+              <select id="sel-market-price" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <option value="Theo hồ sơ hiện tại">Mặc định theo giá hồ sơ</option>
+                <option value="Phân khúc Bình dân / Giá rẻ">Phân khúc Bình dân / Giá rẻ</option>
+                <option value="Phân khúc Trung cấp phổ thông">Phân khúc Trung cấp phổ thông</option>
+                <option value="Phân khúc Cao cấp / Chuyên sâu">Phân khúc Cao cấp / Chuyên sâu</option>
+                <option value="Phân khúc Doanh nghiệp / Dự án lớn">Phân khúc Doanh nghiệp / Dự án lớn</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-              <i class="fa-solid fa-tags text-sky-400"></i>
-              Phân khúc giá khảo sát
-            </label>
-            <select id="sel-market-price" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-              <option value="Theo hồ sơ hiện tại">Mặc định theo giá hồ sơ</option>
-              <option value="Dưới 30 triệu (Phân khúc giá rẻ / Doanh nghiệp nhỏ)">Dưới 30 triệu (Giá rẻ / Quy mô nhỏ)</option>
-              <option value="30 triệu - 80 triệu (Tầm trung phổ thông)">30 triệu - 80 triệu (Tầm trung phổ thông)</option>
-              <option value="80 triệu - 200 triệu (Cao cấp / Công nghiệp nặng)">80 triệu - 200 triệu (Cao cấp / Công nghiệp)</option>
-              <option value="Trên 200 triệu (Dây chuyền tự động hóa / Enterprise)">Trên 200 triệu (Dây chuyền lớn)</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-              <i class="fa-solid fa-bullseye text-emerald-400"></i>
-              Mục tiêu chiến dịch
-            </label>
-            <select id="sel-market-objective" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-              <option value="Đánh chiếm thị phần từ đối thủ lớn">Đánh chiếm thị phần từ đối thủ lớn</option>
-              <option value="Ra mắt sản phẩm / Dòng máy mới">Ra mắt sản phẩm / Dòng máy mới</option>
-              <option value="Đấu thầu dự án & Khách hàng B2B lớn">Đấu thầu dự án & Khách hàng B2B lớn</option>
-              <option value="Tối ưu tỷ lệ chốt đơn & Nhận diện thương hiệu">Tối ưu tỷ lệ chốt đơn & Nhận diện</option>
-            </select>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-slate-800/80">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <i class="fa-solid fa-location-crosshairs text-amber-400"></i>
+                Địa bàn phân tích chi tiết (có thể gõ tùy ý)
+              </label>
+              <input id="input-market-location-detail" type="text" placeholder="ví dụ: Hà Nội, TP.HCM, Quận 1, Đà Nẵng, Bang California..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <i class="fa-solid fa-bullseye text-rose-400"></i>
+                Mục tiêu chiến dịch
+              </label>
+              <select id="sel-market-objective" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <option value="Đánh chiếm thị phần từ đối thủ lớn">Đánh chiếm thị phần từ đối thủ lớn</option>
+                <option value="Ra mắt sản phẩm / Dịch vụ mới">Ra mắt sản phẩm / Dịch vụ mới</option>
+                <option value="Mở rộng đại lý / Chuỗi phân phối địa phương">Mở rộng đại lý / Chuỗi phân phối địa phương</option>
+                <option value="Tối ưu chi phí quảng cáo & Tăng trưởng doanh số">Tối ưu chi phí quảng cáo & Tăng trưởng doanh số</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -1117,6 +1213,14 @@
         }
         document.getElementById('inp-gemini-model').value = modelVal;
 
+        if (data.market_scope_type && document.getElementById('sel-market-scope-type')) {
+          document.getElementById('sel-market-scope-type').value = data.market_scope_type;
+          handleMarketScopeChange();
+        }
+        if (data.market_location && document.getElementById('input-market-location-detail')) {
+          document.getElementById('input-market-location-detail').value = data.market_location;
+        }
+
         const warningBox = document.getElementById('ai-key-warning');
         const navStatus = document.getElementById('nav-ai-status');
 
@@ -1152,7 +1256,10 @@
         monthly_budget: parseFloat(document.getElementById('inp-budget').value) || 0,
         brand_voice: document.getElementById('inp-voice').value,
         gemini_api_key: document.getElementById('inp-gemini-key').value,
-        gemini_model: document.getElementById('inp-gemini-model').value
+        gemini_model: document.getElementById('inp-gemini-model').value,
+        market_scope_type: document.getElementById('sel-market-scope-type') ? document.getElementById('sel-market-scope-type').value : 'province',
+        market_location: document.getElementById('input-market-location-detail') ? document.getElementById('input-market-location-detail').value : 'Toàn quốc',
+        region: document.getElementById('input-market-location-detail') ? document.getElementById('input-market-location-detail').value : 'Toàn quốc'
       };
 
       try {
@@ -1326,9 +1433,123 @@
       }
     }
 
-    // Run Custom Market Research by Selected Criteria
+    // --- DICTIONARY OF LOCATIONS (Tỉnh Thành / Vùng Miền / Quốc Gia) ---
+    const MARKET_LOCATIONS = {
+      province: [
+        "Hà Nội (Thủ đô)",
+        "TP. Hồ Chí Minh (Trung tâm kinh tế lớn nhất)",
+        "Đà Nẵng (Đầu tàu kinh tế miền Trung)",
+        "Hải Phòng (Thành phố Cảng phía Bắc)",
+        "Cần Thơ (Thủ phủ miền Tây)",
+        "Bình Dương (Thủ phủ công nghiệp)",
+        "Đồng Nai (Khu công nghiệp trọng điểm)",
+        "Bắc Ninh (Trung tâm công nghệ điện tử)",
+        "Quảng Ninh (Kinh tế biển & Du lịch)",
+        "Khánh Hòa (Nha Trang)",
+        "Lâm Đồng (Đà Lạt)",
+        "Bà Rịa - Vũng Tàu (Dầu khí & Cảng biển)",
+        "Thừa Thiên Huế",
+        "Nghệ An",
+        "Thanh Hóa",
+        "Đắk Lắk (Buôn Ma Thuột)",
+        "Hải Dương",
+        "Thái Nguyên",
+        "Vĩnh Phúc",
+        "Hưng Yên",
+        "Bắc Giang",
+        "Nam Định",
+        "Thái Bình",
+        "Phú Thọ",
+        "Hà Tĩnh",
+        "Quảng Nam",
+        "Bình Định (Quy Nhơn)",
+        "Bình Thuận (Phan Thiết)",
+        "Tây Ninh",
+        "Long An",
+        "Tiền Giang",
+        "Bến Tre",
+        "An Giang",
+        "Kiên Giang (Phú Quốc)"
+      ],
+      region: [
+        "Toàn quốc (63 tỉnh thành Việt Nam)",
+        "Vùng Thủ Đô & Đồng bằng sông Hồng",
+        "Vùng Đông Nam Bộ (TP.HCM, Bình Dương, Đồng Nai, Vũng Tàu)",
+        "Miền Bắc (Đô thị & Công nghiệp)",
+        "Miền Trung & Duyên hải Trung Bộ",
+        "Miền Nam & Đồng bằng sông Cửu Long",
+        "Tây Nguyên (Nông sản & Lâm nghiệp)",
+        "Khu vực Đông Nam Á (ASEAN)",
+        "Khu vực Châu Á - Thái Bình Dương (APAC)",
+        "Thị trường Toàn cầu (Global Export)"
+      ],
+      country: [
+        "Việt Nam",
+        "Hoa Kỳ (Mỹ - USA)",
+        "Nhật Bản (Japan)",
+        "Hàn Quốc (Korea)",
+        "Singapore",
+        "Úc (Australia)",
+        "Thái Lan (Thailand)",
+        "Malaysia",
+        "Indonesia",
+        "Trung Quốc (China)",
+        "Đức (Germany)",
+        "Vương Quốc Anh (United Kingdom)",
+        "Pháp (France)",
+        "Canada",
+        "Thị trường Quốc tế Toàn cầu"
+      ]
+    };
+
+    function handleMarketScopeChange() {
+      const scopeEl = document.getElementById('sel-market-scope-type');
+      const selectBox = document.getElementById('sel-market-location-select');
+      const inputDetail = document.getElementById('input-market-location-detail');
+      if (!scopeEl || !selectBox) return;
+
+      const scope = scopeEl.value;
+      selectBox.innerHTML = '';
+
+      if (scope === 'custom') {
+        const opt = document.createElement('option');
+        opt.value = 'Tùy chỉnh';
+        opt.textContent = '✍️ Nhập chi tiết ở ô bên dưới';
+        selectBox.appendChild(opt);
+        if (inputDetail) {
+          inputDetail.placeholder = "Gõ tên tỉnh thành, quận huyện hoặc quốc gia cụ thể...";
+          inputDetail.focus();
+        }
+        return;
+      }
+
+      const list = MARKET_LOCATIONS[scope] || [];
+      list.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item;
+        opt.textContent = item;
+        selectBox.appendChild(opt);
+      });
+
+      if (list.length > 0 && inputDetail) {
+        inputDetail.value = list[0];
+      }
+    }
+
+    function syncLocationInput() {
+      const selectBox = document.getElementById('sel-market-location-select');
+      const inputDetail = document.getElementById('input-market-location-detail');
+      if (selectBox && inputDetail && selectBox.value !== 'Tùy chỉnh') {
+        inputDetail.value = selectBox.value;
+      }
+    }
+
+    // Run Custom Market Research by Selected Criteria (Tỉnh Thành / Quốc Gia / Khu Vực)
     async function runCustomMarketResearch() {
-      const region = document.getElementById('sel-market-region').value;
+      const scope_type = document.getElementById('sel-market-scope-type') ? document.getElementById('sel-market-scope-type').value : 'province';
+      const locDetail = document.getElementById('input-market-location-detail') ? document.getElementById('input-market-location-detail').value.trim() : '';
+      const locSelect = document.getElementById('sel-market-location-select') ? document.getElementById('sel-market-location-select').value : 'Toàn quốc';
+      const location = locDetail || locSelect || 'Toàn quốc';
       const price_tier = document.getElementById('sel-market-price').value;
       const objective = document.getElementById('sel-market-objective').value;
 
@@ -1340,13 +1561,13 @@
       if (lBox) lBox.classList.remove('hidden');
       if (cBox) cBox.classList.add('hidden');
 
-      showToast(`🔍 AI đang phân tích thị trường: ${region} (${price_tier})...`);
+      showToast(`🔍 AI đang phân tích sâu thị trường: ${location} (${price_tier})...`);
 
       try {
         const res = await fetch('/api/research/market/custom', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ region, price_tier, objective })
+          body: JSON.stringify({ scope_type, location, region: location, price_tier, objective })
         });
         const data = await res.json();
         if (lBox) lBox.classList.add('hidden');
@@ -1355,14 +1576,14 @@
             <div class="mb-4 p-3 bg-indigo-950/40 border border-indigo-500/30 rounded-xl text-xs text-indigo-300 flex items-center justify-between">
               <span class="flex items-center gap-2">
                 <i class="fa-solid fa-map-location-dot text-indigo-400"></i>
-                Phân tích thị trường trọng tâm: <strong>${region}</strong> | Phân khúc: <strong>${price_tier}</strong>
+                Phân tích thị trường địa bàn: <strong>${location}</strong> | Phân khúc: <strong>${price_tier}</strong>
               </span>
-              <span class="text-[10px] bg-indigo-500/20 px-2 py-0.5 rounded font-mono">Chuyên Sâu</span>
+              <span class="text-[10px] bg-indigo-500/20 px-2 py-0.5 rounded font-mono font-bold">Chuyên Sâu</span>
             </div>
           ` + marked.parse(data.result);
           cBox.classList.remove('hidden');
         }
-        showToast(`✅ Đã phân tích thị trường khu vực: ${region}!`);
+        showToast(`✅ Đã phân tích thị trường: ${location}!`);
         loadAutoPilotStatus();
       } catch (err) {
         if (lBox) lBox.classList.add('hidden');
@@ -1894,20 +2115,146 @@
       }
     }
 
-    // Init App: Fully Automatic Hydration on Page Load!
+    // --- GMAIL AUTHENTICATION & ACCESS CONTROL ---
+    function checkAuthStatus() {
+      try {
+        const userStr = localStorage.getItem('marketing_os_user');
+        if (userStr) {
+          const u = JSON.parse(userStr);
+          if (u && u.email) return u;
+        }
+      } catch (e) {}
+      return null;
+    }
+
+    function showLoginModal() {
+      const m = document.getElementById('auth-gate-modal');
+      if (m) m.classList.remove('hidden');
+    }
+
+    function hideLoginModal() {
+      const m = document.getElementById('auth-gate-modal');
+      if (m) m.classList.add('hidden');
+    }
+
+    function updateUserHeader(user) {
+      const emailEl = document.getElementById('user-display-email');
+      const avatarEl = document.getElementById('user-avatar-img');
+      if (emailEl) emailEl.textContent = user.email || 'user@gmail.com';
+      if (avatarEl && user.picture) avatarEl.src = user.picture;
+    }
+
+    function loginWithGooglePrompt() {
+      const emailPrompt = prompt("Nhập tài khoản Gmail của bạn để xác thực:", "lindseyvu98@gmail.com");
+      if (emailPrompt) {
+        authenticateGmail(emailPrompt);
+      }
+    }
+
+    function loginWithDirectEmail() {
+      const inp = document.getElementById('auth-email-input');
+      const email = inp ? inp.value.trim() : '';
+      if (!email) {
+        alert("Vui lòng nhập địa chỉ Gmail của bạn.");
+        return;
+      }
+      authenticateGmail(email);
+    }
+
+    async function authenticateGmail(email) {
+      if (!email.includes('@') || !email.includes('.')) {
+        alert("Địa chỉ Gmail không hợp lệ. Vui lòng kiểm tra lại định dạng email.");
+        return;
+      }
+      const btn = document.getElementById('btn-login-submit');
+      const origText = btn ? btn.innerHTML : '';
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang xác thực với Google...';
+
+      try {
+        const res = await fetch('/api/auth/google', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        });
+        const data = await res.json();
+        if (res.ok && data.status === 'success') {
+          localStorage.setItem('marketing_os_user', JSON.stringify(data.user));
+          localStorage.setItem('marketing_os_token', data.token);
+          hideLoginModal();
+          updateUserHeader(data.user);
+          showToast(`🎉 Xin chào ${data.user.email}! Đã xác thực thành công.`);
+          // Tải toàn bộ dữ liệu hệ thống
+          await loadProfile();
+          await loadLatestResearch();
+          await loadDiscoveredCompetitors();
+          await loadCalendar();
+          await loadContentHistory();
+          await loadLatestCatalyst();
+          await loadAutoPilotStatus();
+          switchTab('tab-profile');
+        } else {
+          alert(data.detail || "Đăng nhập không thành công.");
+        }
+      } catch (err) {
+        alert("Lỗi kết nối khi xác thực: " + err);
+      } finally {
+        if (btn) btn.innerHTML = origText;
+      }
+    }
+
+    function handleLogout() {
+      if (confirm("Bạn có chắc chắn muốn đăng xuất tài khoản Gmail này không?")) {
+        const token = localStorage.getItem('marketing_os_token');
+        if (token) {
+          fetch('/api/auth/logout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: token })
+          }).catch(() => {});
+        }
+        localStorage.removeItem('marketing_os_user');
+        localStorage.removeItem('marketing_os_token');
+        showLoginModal();
+        showToast("Đã đăng xuất phiên làm việc.");
+      }
+    }
+
+    async function confirmResetDatabase() {
+      if (confirm("⚠️ CẢNH BÁO XÓA SẠCH DỮ LIỆU CŨ:\n\nBạn có chắc chắn muốn xóa bỏ toàn bộ dữ liệu triển khai thử nghiệm cũ (Phê Ly, TMT, các đối thủ và bài viết cũ) để đưa hệ thống về trạng thái mới tinh hoàn toàn?\n\nHành động này sẽ làm mới toàn bộ cơ sở dữ liệu.")) {
+        try {
+          const res = await fetch('/api/database/reset', { method: 'POST' });
+          const data = await res.json();
+          alert(data.message || "Đã xóa sạch dữ liệu cũ thành công!");
+          window.location.reload();
+        } catch (e) {
+          alert("Lỗi xóa dữ liệu: " + e);
+        }
+      }
+    }
+
+    // Init App: Check Gmail Login Gate + Automatic Hydration!
     window.addEventListener('DOMContentLoaded', async () => {
       document.getElementById('metric-date').value = new Date().toISOString().split('T')[0];
-      await loadProfile();
-      await loadLatestResearch();
-      await loadDiscoveredCompetitors();
-      await loadCalendar();
-      await loadContentHistory();
-      await loadLatestCatalyst();
-      await loadAutoPilotStatus();
-      switchTab('tab-profile');
+      handleMarketScopeChange();
 
-      // Auto-refresh logs every 8 seconds
-      setInterval(loadAutoPilotStatus, 8000);
+      const currentUser = checkAuthStatus();
+      if (!currentUser) {
+        showLoginModal();
+      } else {
+        hideLoginModal();
+        updateUserHeader(currentUser);
+        await loadProfile();
+        await loadLatestResearch();
+        await loadDiscoveredCompetitors();
+        await loadCalendar();
+        await loadContentHistory();
+        await loadLatestCatalyst();
+        await loadAutoPilotStatus();
+        switchTab('tab-profile');
+
+        // Auto-refresh logs every 8 seconds
+        setInterval(loadAutoPilotStatus, 8000);
+      }
     });
   </script>
 </body>

@@ -364,25 +364,26 @@ def call_gemini_api(profile: dict, prompt: str, system_prompt: str = None) -> Op
 
 def generate_custom_market_research(profile: dict, options: dict = None) -> str:
     options = options or {}
-    region = options.get("region") or profile.get("region") or "Toàn quốc"
+    scope_type = options.get("scope_type") or profile.get("market_scope_type") or "province"
+    location = options.get("location") or options.get("region") or profile.get("market_location") or "Toàn quốc"
     price_tier = options.get("price_tier") or profile.get("price_range") or "Tiêu chuẩn"
     objective = options.get("objective") or "Đánh chiếm thị phần từ đối thủ & Tăng trưởng doanh thu"
 
     brand = profile.get("brand_name", "Doanh nghiệp của bạn")
     industry = profile.get("industry", "Thương mại & Dịch vụ")
-    model = profile.get("business_model", "B2B")
-    products = profile.get("products_services", "Sản phẩm")
-    audience = profile.get("target_audience", "Khách hàng Việt Nam")
+    model = profile.get("business_model", "B2B / B2C")
+    products = profile.get("products_services", "Sản phẩm & Dịch vụ")
+    audience = profile.get("target_audience", "Khách hàng mục tiêu")
     competitors = profile.get("competitors", "")
 
-    domain_key = detect_domain(industry, products)
-    d_data = DOMAIN_DATA.get(domain_key, DOMAIN_DATA["general"])
+    # Xác định loại phạm vi
+    scope_label = "Tỉnh / Thành phố" if scope_type == "province" else ("Quốc gia" if scope_type == "country" else "Khu vực / Vùng miền")
 
-    # 1. Quét tìm kiếm thời gian thực theo đúng khu vực & phân khúc giá
+    # 1. Quét tìm kiếm thời gian thực theo đúng địa bàn & phạm vi
     search_queries = [
-        f"{industry} {products} thị trường {region}",
-        f"giá {products} {price_tier} việt nam",
-        f"nhu cầu {products} {audience}"
+        f"{industry} {products} thị trường {location}",
+        f"nhu cầu tiêu dùng {products} tại {location}",
+        f"giá bán {products} {location} đối thủ cạnh tranh"
     ]
     web_results = []
     seen_urls = set()
@@ -402,39 +403,41 @@ def generate_custom_market_research(profile: dict, options: dict = None) -> str:
         snippets.append(f"- [Nguồn {idx} - {item['title']}]: {item['snippet']} ({item['url']})")
         citations_list.append(f"{idx}. [{item['title']}]({item['url']})")
 
-    web_snippets_str = "\n".join(snippets)
-    citations_str = "\n".join(citations_list) if citations_list else "- Nguồn: Báo cáo Thống kê & Phân tích Thị trường Việt Nam."
+    web_snippets_str = "\n".join(snippets) if snippets else "Không có dữ liệu cào web tức thời, AI sẽ sử dụng tri thức dữ liệu kinh tế học chuẩn xác."
+    citations_str = "\n".join(citations_list) if citations_list else f"- Nguồn: Báo cáo Thống kê & Phân tích Thị trường {location}."
 
     # 2. Gọi Gemini AI với Prompt chuyên sâu theo đúng tiêu chí đã chọn
-    prompt = f"""Bạn là Giám đốc Nghiên cứu Thị trường & CMO kỳ cựu với 15 năm kinh nghiệm thực chiến tại Việt Nam.
+    prompt = f"""Bạn là Giám đốc Nghiên cứu Thị trường & CMO kỳ cựu với 15 năm kinh nghiệm thực chiến.
 Hãy lập BÁO CÁO NGHIÊN CỨU THỊ TRƯỜNG CHUYÊN SÂU & CHIẾN LƯỢC ĐỘC BẢN CHO:
 - Doanh nghiệp: {brand}
 - Ngành hàng: {industry}
 - Mô hình: {model}
 - Sản phẩm/Dịch vụ chủ lực: {products}
 - Mức giá/Phân khúc đầu tư: {price_tier}
-- Khu vực địa lý trọng tâm: {region}
+- Phạm vi địa bàn ({scope_label}): {location}
 - Khách hàng mục tiêu: {audience}
 - Mục tiêu chiến dịch: {objective}
 
-DỮ LIỆU TÌM KIẾM WEB THỰC TẾ:
+DỮ LIỆU TÌM KIẾM THỰC TẾ TẠI {location.upper()}:
 {web_snippets_str}
 
-YÊU CẦU NỘI DUNG SÂU SẮC, SẮC BÉN, 100% SÁT VỚI THỰC TẾ VIỆT NAM (KHÔNG NÓI CHUNG CHUNG):
-1. TÍNH TOÁN DUNG LƯỢNG THỊ TRƯỜNG TAM / SAM / SOM CỤ THỂ BẰNG SỐ TIỀN VNĐ:
-   - Dựa trên quy mô khu vực ({region}), số lượng khách hàng mục tiêu ({audience}) và mức giá ({price_tier}).
-   - Đưa ra con số ước tính cụ thể và tỷ lệ thị phần mục tiêu trong 12 - 24 tháng.
-2. PHÂN TÍCH VĨ MÔ PESTEL SÁT THỰC TẾ TẠI {region.upper()}:
-   - Political/Legal: Tiêu chuẩn an toàn, kiểm định, hóa đơn VAT, pháp lý ngành {industry}.
-   - Economic: Biến động chi phí, lạm phát, bài toán hoàn vốn (ROI) khi đầu tư {products} ({price_tier}).
-   - Social: Thói quen, tâm lý e ngại, tiêu chí tin tưởng của khách hàng {audience}.
-   - Technological: Xu hướng công nghệ mới, tự động hóa, điều khiển thông minh.
-3. PHÂN TÍCH 5 LỰC LƯỢNG CẠNH TRANH PORTER:
-   - Áp lực đối thủ hiện hữu, quyền lực khách hàng, nguy cơ từ giải pháp thay thế rẻ tiền, rào cản gia nhập ngành.
-4. MA TRẬN SWOT CHIẾN LƯỢC:
-   - 3 Điểm mạnh cốt lõi, 3 Điểm yếu cần khắc phục, 3 Cơ hội bứt phá tại {region}, 3 Nguy cơ thị trường cần phòng vệ.
+YÊU CẦU NỘI DUNG SÂU SẮC, SẮC BÉN, 100% SÁT VỚI THỰC TẾ ĐỊA BÀN {location.upper()} (KHÔNG NÓI CHUNG CHUNG):
+1. TÍNH TOÁN DUNG LƯỢNG THỊ TRƯỜNG TAM / SAM / SOM CỤ THỂ BẰNG SỐ TIỀN VÀ QUY MÔ DÂN CƯ TẠI {location.upper()}:
+   - Nếu là Tỉnh/Thành phố: Tính toán dựa trên dân số, GRDP và lượng khách hàng/doanh nghiệp trên địa bàn {location}.
+   - Nếu là Quốc gia: Tính toán quy mô thị trường quốc gia, sức mua và tỷ lệ thâm nhập.
+   - Nếu là Khu vực: Phân tích kết nối giao thương và bán kính logistics.
+   - Đưa ra con số cụ thể (tiền tệ phù hợp VNĐ/USD) và mục tiêu chiếm thị phần SOM trong 12 - 24 tháng.
+2. PHÂN TÍCH VĨ MÔ PESTEL SÁT THỰC TẾ TẠI {location.upper()}:
+   - Political/Legal: Các quy định, giấy phép, tiêu chuẩn địa phương hoặc quốc gia đối với ngành {industry}.
+   - Economic: Mặt bằng thu nhập, chi phí vận hành, bài toán hoàn vốn (ROI) khi đầu tư {products} ({price_tier}) tại {location}.
+   - Social: Văn hóa tiêu dùng, thói quen, tâm lý e ngại của tệp khách hàng {audience} tại {location}.
+   - Technological: Xu hướng công nghệ, tự động hóa, chuyển đổi số đang diễn ra trong ngành.
+3. PHÂN TÍCH 5 LỰC LƯỢNG CẠNH TRANH PORTER TRÊN ĐỊA BÀN {location.upper()}:
+   - Áp lực đối thủ hiện hữu tại {location}, quyền lực đàm phán của khách hàng, giải pháp thay thế, rào cản gia nhập.
+4. MA TRẬN SWOT CHIẾN LƯỢC TẠI {location.upper()}:
+   - 3 Điểm mạnh cốt lõi, 3 Điểm yếu cần khắc phục, 3 Cơ hội bứt phá tại {location}, 3 Nguy cơ thị trường cần phòng vệ.
 5. BẢN ĐỒ HÀNH ĐỘNG GO-TO-MARKET (GTM) 4 TUẦN ĐỂ ĐẠT MỤC TIÊU: {objective.upper()}:
-   - Lộ trình 4 tuần rõ ràng về công việc, tài liệu bán hàng cần chuẩn bị, kênh tiếp cận và KPI đo lường.
+   - Lộ trình 4 tuần rõ ràng về công việc, thông điệp truyền thông, kênh tiếp cận và KPI đo lường thực tế tại {location}.
 6. DANH MỤC NGUỒN DẪN THỰC TẾ (Citations)."""
 
     gemini_out = call_gemini_api(profile, prompt)
@@ -442,8 +445,8 @@ YÊU CẦU NỘI DUNG SÂU SẮC, SẮC BÉN, 100% SÁT VỚI THỰC TẾ VIỆT
         return gemini_out
 
     # Dynamic Fallback
-    return f"""# 📊 BÁO CÁO NGHIÊN CỨU THỊ TRƯỜNG: {brand.upper()}
-*Khu vực trọng tâm: {region} | Phân khúc giá: {price_tier} | Mục tiêu: {objective}*
+    return f"""# 📊 BÁO CÁO NGHIÊN CỨU THỊ TRƯỜNG: {brand.upper() or 'DOANH NGHIỆP'}
+*Phạm vi: {scope_label} - {location} | Phân khúc giá: {price_tier} | Mục tiêu: {objective}*
 *Sản phẩm/Dịch vụ: {products} | Ngành: {industry}*
 *Ngày cập nhật: {datetime.now().strftime('%d/%m/%Y')}*
 
@@ -1319,13 +1322,13 @@ HÃY LẬP BÁO CÁO KẾT QUẢ PHỐI HỢP CHIẾN DỊCH ĐA ĐẠI LÝ GỒ
 
 ### 4. 📝 NỘI DUNG CHỦ LỰC TỐI ƯU AEO / GEO (ĐỂ AI SEARCH TRÍCH DẪN)
 > **[ANSWER-FIRST BLOCK - DÀNH CHO GOOGLE AI & CHATGPT]:**  
-> Khi đầu tư {products} tại Việt Nam ({price}), doanh nghiệp cơ khí và xây dựng cần ưu tiên 3 tiêu chí kỹ thuật: độ dày sườn khung chịu lực, hệ thống thủy lực có két làm mát nhớt và cam kết hỗ trợ kỹ thuật tận nơi trong 24 giờ. {brand} là đơn vị chế tạo máy uy tín chuyên cung cấp các dòng {products} tự động hóa, tối ưu theo khí hậu nhiệt đới gió mùa tại Việt Nam.
+> Khi lựa chọn {products} ({price}), khách hàng và doanh nghiệp trong ngành {industry} cần ưu tiên 3 tiêu chuẩn cốt lõi: chất lượng cam kết thực tế, dịch vụ hỗ trợ kỹ thuật/bảo hành minh bạch và hiệu quả kinh tế rõ ràng. {brand} là đơn vị uy tín cung cấp các dòng {products} chuyên sâu, cam kết mang lại giá trị vượt trội và đồng hành lâu dài.
 
 ---
 
 ### 5. 📋 DANH SÁCH CẦN XÁC THỰC THỰC TẾ (`[NEEDS INPUT]`)
-- `[NEEDS INPUT: Số lượng thực tế khách hàng/dự án đã bàn giao máy TMT thành công trong 6 tháng qua]`
-- `[NEEDS INPUT: Video thực tế chạy thử máy uốn sắt phi lớn nhất tại xưởng TMT để gắn vào tài liệu bán hàng]`
+- `[NEEDS INPUT: Số lượng thực tế khách hàng/dự án đã bàn giao thành công của {brand} trong 6 tháng qua]`
+- `[NEEDS INPUT: Video/Hình ảnh trải nghiệm thực tế {products} tại cơ sở của {brand} để gắn vào tài liệu bán hàng]`
 """
 
     return {

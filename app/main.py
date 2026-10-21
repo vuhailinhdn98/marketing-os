@@ -24,7 +24,9 @@ from app.database import (
     log_automation, get_automation_logs,
     save_calendar_items, get_calendar_items,
     save_discovered_competitors, get_discovered_competitors,
-    save_content_package
+    save_content_package,
+    create_or_update_user, create_session, verify_session, delete_session,
+    reset_database_clean
 )
 from app.ai_engine import (
     generate_market_research, generate_custom_market_research,
@@ -46,6 +48,15 @@ STATIC_DIR.mkdir(parents=True, exist_ok=True)
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 # Pydantic models
+class GoogleAuthRequest(BaseModel):
+    email: str
+    name: Optional[str] = ""
+    picture: Optional[str] = ""
+    credential: Optional[str] = ""
+
+class LogoutRequest(BaseModel):
+    token: str
+
 class ProfileUpdate(BaseModel):
     brand_name: str
     industry: str
@@ -58,11 +69,15 @@ class ProfileUpdate(BaseModel):
     monthly_budget: Optional[float] = 0.0
     brand_voice: Optional[str] = ""
     gemini_api_key: Optional[str] = ""
-    gemini_model: Optional[str] = "gemini-3.5-flash"
+    gemini_model: Optional[str] = "gemini-2.5-flash"
     region: Optional[str] = "Toàn quốc"
+    market_scope_type: Optional[str] = "province"
+    market_location: Optional[str] = "Toàn quốc"
     content_direction: Optional[str] = "educational"
 
 class CustomMarketRequest(BaseModel):
+    scope_type: Optional[str] = "province"
+    location: Optional[str] = "Toàn quốc"
     region: Optional[str] = "Toàn quốc"
     price_tier: Optional[str] = ""
     objective: Optional[str] = "Đánh chiếm thị phần từ đối thủ & Tăng trưởng doanh thu"
@@ -202,6 +217,49 @@ def serve_index():
             return f.read()
     return "<h1>Marketing Automation OS is running. Please load static/index.html</h1>"
 
+# --- API: Google / Gmail Authentication ---
+@app.post("/api/auth/google")
+def api_auth_google(req: GoogleAuthRequest):
+    email = req.email.strip().lower()
+    if "@" not in email or "." not in email:
+        raise HTTPException(status_code=400, detail="Vui lòng nhập địa chỉ Gmail hoặc Google Workspace hợp lệ.")
+    
+    name = req.name.strip() if req.name else email.split("@")[0]
+    picture = req.picture.strip() if req.picture else f"https://ui-avatars.com/api/?name={name}&background=0ea5e9&color=fff&bold=true"
+    
+    user = create_or_update_user(email, name, picture)
+    token = create_session(email)
+    log_automation("AUTH_LOGIN", "Đăng nhập Gmail", "SUCCESS", f"Người dùng {email} đã đăng nhập thành công")
+    return {
+        "status": "success",
+        "token": token,
+        "user": user,
+        "message": f"Đăng nhập thành công với tài khoản Gmail: {email}"
+    }
+
+@app.get("/api/auth/me")
+def api_auth_me(token: Optional[str] = None, request: Request = None):
+    auth_header = request.headers.get("Authorization") if request else None
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.split(" ")[1]
+    
+    user = verify_session(token) if token else None
+    if user:
+        return {"status": "authenticated", "user": user}
+    return {"status": "unauthenticated"}
+
+@app.post("/api/auth/logout")
+def api_auth_logout(req: LogoutRequest):
+    delete_session(req.token)
+    return {"status": "success", "message": "Đã đăng xuất phiên làm việc"}
+
+# --- API: Reset To Clean Database (Xóa sạch toàn bộ dữ liệu mẫu / thử nghiệm) ---
+@app.post("/api/database/reset")
+def api_database_reset():
+    res = reset_database_clean()
+    log_automation("SYS_RESET", "Khởi tạo hệ thống mới", "SUCCESS", "Đã xóa sạch dữ liệu cũ và đưa cơ sở dữ liệu về trạng thái sạch ban đầu")
+    return res
+
 # --- API: Business Profile ---
 @app.get("/api/profile")
 def api_get_profile():
@@ -264,15 +322,20 @@ def api_run_market_research():
 @app.post("/api/research/market/custom")
 def api_run_custom_market_research(req: CustomMarketRequest):
     profile = get_profile()
+    location = req.location or req.region or "Toàn quốc"
+    scope_type = req.scope_type or "province"
     options = {
-        "region": req.region,
+        "scope_type": scope_type,
+        "location": location,
+        "region": location,
         "price_tier": req.price_tier,
         "objective": req.objective
     }
     result_md = generate_custom_market_research(profile, options)
-    save_research_record("market_research", f"Nghiên cứu thị trường ({req.region}): {profile.get('brand_name')}", result_md)
-    log_automation("A01_MARKET", "Nghiên cứu thị trường tùy biến", "SUCCESS", f"Đã phân tích thị trường khu vực {req.region} ({len(result_md)} ký tự)")
-    return {"status": "success", "result": result_md}
+    brand_display = profile.get('brand_name') or 'Doanh nghiệp'
+    save_research_record("market_research", f"Nghiên cứu thị trường ({location}): {brand_display}", result_md)
+    log_automation("A01_MARKET", f"Nghiên cứu thị trường: {location}", "SUCCESS", f"Đã phân tích chuyên sâu địa bàn {location} ({len(result_md)} ký tự)")
+    return {"status": "success", "result": result_md, "location": location, "scope_type": scope_type}
 
 # --- API: Competitor Auto-Discovery & Strategic Battlecards ---
 @app.post("/api/competitors/discover")

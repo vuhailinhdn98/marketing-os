@@ -2,14 +2,17 @@
 """
 Database layer for Marketing Automation App
 SQLite database: marketing_os_app.db
-- Business Profile
+- Business Profile (Clean State, Dynamic Geographic Market)
+- Users & Sessions (Gmail Authentication)
 - Research Records (Market, Competitors, Personas)
 - Content Items
 - Calendar Schedules
 - Automation Logs (Real-time Auto-Pilot Feed)
+- Discovered Competitors
 """
 import sqlite3
 import json
+import uuid
 from datetime import datetime
 from pathlib import Path
 
@@ -26,27 +29,51 @@ def init_app_db():
     conn = get_connection()
     cur = conn.cursor()
     
-    # 1. Bảng lưu trữ hồ sơ doanh nghiệp
+    # 1. Bảng người dùng đăng nhập Gmail
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS app_users (
+        email TEXT PRIMARY KEY,
+        name TEXT,
+        picture TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_login TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
+    # 2. Bảng phiên đăng nhập (Sessions)
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS app_sessions (
+        token TEXT PRIMARY KEY,
+        email TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
+    # 3. Bảng lưu trữ hồ sơ doanh nghiệp (Mặc định sạch)
     cur.execute("""
     CREATE TABLE IF NOT EXISTS business_profile (
         id INTEGER PRIMARY KEY CHECK (id = 1),
-        brand_name TEXT NOT NULL,
-        industry TEXT NOT NULL,
-        business_model TEXT NOT NULL,
-        products_services TEXT NOT NULL,
-        price_range TEXT,
-        target_audience TEXT NOT NULL,
-        competitors TEXT,
-        channels TEXT,
+        brand_name TEXT NOT NULL DEFAULT '',
+        industry TEXT NOT NULL DEFAULT '',
+        business_model TEXT NOT NULL DEFAULT 'B2C / B2B',
+        products_services TEXT NOT NULL DEFAULT '',
+        price_range TEXT DEFAULT '',
+        target_audience TEXT NOT NULL DEFAULT '',
+        competitors TEXT DEFAULT '',
+        channels TEXT DEFAULT 'Facebook, TikTok, Google, YouTube, Website',
         monthly_budget REAL DEFAULT 0,
-        brand_voice TEXT,
-        gemini_api_key TEXT,
-        gemini_model TEXT DEFAULT 'gemini-1.5-flash',
+        brand_voice TEXT DEFAULT 'Chuyên nghiệp, Uy tín',
+        gemini_api_key TEXT DEFAULT '',
+        gemini_model TEXT DEFAULT 'gemini-2.5-flash',
+        region TEXT DEFAULT 'Toàn quốc',
+        market_scope_type TEXT DEFAULT 'province',
+        market_location TEXT DEFAULT 'Toàn quốc',
+        content_direction TEXT DEFAULT 'educational',
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """)
 
-    # 2. Bảng lưu trữ kết quả nghiên cứu thị trường & chiến lược
+    # 4. Bảng lưu trữ kết quả nghiên cứu thị trường & chiến lược
     cur.execute("""
     CREATE TABLE IF NOT EXISTS research_records (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,24 +85,26 @@ def init_app_db():
     );
     """)
 
-    # 3. Bảng lưu trữ nội dung đã tạo (Content Studio & Calendar)
+    # 5. Bảng lưu trữ nội dung đã tạo (Content Studio & Calendar)
     cur.execute("""
     CREATE TABLE IF NOT EXISTS content_items (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        channel TEXT NOT NULL, -- 'tiktok', 'facebook', 'seo_blog', 'email', 'ads'
+        channel TEXT NOT NULL,
         topic TEXT NOT NULL,
         pillar TEXT,
         funnel_stage TEXT,
         hook TEXT,
         body TEXT NOT NULL,
         cta TEXT,
-        status TEXT DEFAULT 'draft', -- 'draft', 'approved', 'scheduled', 'published'
+        video_script TEXT,
+        image_prompt TEXT,
+        status TEXT DEFAULT 'draft',
         publish_date TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """)
 
-    # 4. Bảng ghi nhận chỉ số & đơn hàng thực tế
+    # 6. Bảng ghi nhận chỉ số & đơn hàng thực tế
     cur.execute("""
     CREATE TABLE IF NOT EXISTS performance_metrics (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -91,7 +120,7 @@ def init_app_db():
     );
     """)
 
-    # 5. Bảng lưu trữ Lịch biên tập 30 Ngày (Calendar Schedules)
+    # 7. Bảng lưu trữ Lịch biên tập 30 Ngày (Calendar Schedules)
     cur.execute("""
     CREATE TABLE IF NOT EXISTS calendar_schedules (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -106,19 +135,19 @@ def init_app_db():
     );
     """)
 
-    # 6. Bảng lưu trữ Nhật ký Vận Hành Tự Động (Auto-Pilot Execution Logs)
+    # 8. Bảng lưu trữ Nhật ký Vận Hành Tự Động (Auto-Pilot Execution Logs)
     cur.execute("""
     CREATE TABLE IF NOT EXISTS automation_logs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         task_code TEXT NOT NULL,
         task_name TEXT NOT NULL,
-        status TEXT NOT NULL, -- 'SUCCESS', 'RUNNING', 'FAILED'
+        status TEXT NOT NULL,
         details TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """)
 
-    # 7. Bảng lưu trữ Đối thủ cạnh tranh được AI rà quét (Discovered Competitors)
+    # 9. Bảng lưu trữ Đối thủ cạnh tranh được AI rà quét (Discovered Competitors)
     cur.execute("""
     CREATE TABLE IF NOT EXISTS discovered_competitors (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -133,50 +162,134 @@ def init_app_db():
     );
     """)
 
-    # Tự động nâng cấp cột mới nếu DB đã tồn tại
-    try:
-        cur.execute("ALTER TABLE business_profile ADD COLUMN region TEXT DEFAULT 'Toàn quốc'")
-    except Exception:
-        pass
-    try:
-        cur.execute("ALTER TABLE business_profile ADD COLUMN content_direction TEXT DEFAULT 'educational'")
-    except Exception:
-        pass
-    try:
-        cur.execute("ALTER TABLE content_items ADD COLUMN video_script TEXT")
-    except Exception:
-        pass
-    try:
-        cur.execute("ALTER TABLE content_items ADD COLUMN image_prompt TEXT")
-    except Exception:
-        pass
+    # Nâng cấp các cột nếu DB đã tồn tại
+    cols = [
+        ("business_profile", "market_scope_type", "TEXT DEFAULT 'province'"),
+        ("business_profile", "market_location", "TEXT DEFAULT 'Toàn quốc'"),
+        ("business_profile", "region", "TEXT DEFAULT 'Toàn quốc'"),
+        ("business_profile", "content_direction", "TEXT DEFAULT 'educational'"),
+        ("content_items", "video_script", "TEXT"),
+        ("content_items", "image_prompt", "TEXT"),
+    ]
+    for table, col, def_val in cols:
+        try:
+            cur.execute(f"ALTER TABLE {table} ADD COLUMN {col} {def_val}")
+        except Exception:
+            pass
 
-    # Insert default initial profile if empty
+    # Đảm bảo Profile ID = 1 luôn tồn tại sạch sẽ
     cur.execute("SELECT COUNT(*) FROM business_profile WHERE id = 1")
     if cur.fetchone()[0] == 0:
         cur.execute("""
         INSERT INTO business_profile (
             id, brand_name, industry, business_model, products_services, price_range,
-            target_audience, competitors, channels, monthly_budget, brand_voice, gemini_model
+            target_audience, competitors, channels, monthly_budget, brand_voice, gemini_model,
+            market_scope_type, market_location, content_direction
         ) VALUES (
-            1,
-            'CÔNG TY CỔ PHẦN CHẾ TẠO MÁY TMT',
-            'SẢN XUẤT MÁY MÓC',
-            'B2B / Nhà thầu',
-            'MÁY UỐN THÉP XÂY DỰNG',
-            '100TR',
-            'NGƯỜI LÀM TRONG NGÀNH XÂY DỰNG, NHÀ THẦU, ĐỘI CAI THẦU',
-            'https://cokhitudongchiho.com/ , http://www.maybedaihoangminh.com/ , https://mayxaydungtudong.com/ , https://maybedaiphuclong.com/',
-            'Facebook, YOUTUBE, WEBSITE',
-            40000000,
-            'Thực chiến, Cơ khí, Uy tín',
-            'gemini-2.0-flash'
+            1, '', '', 'B2C / B2B', '', '',
+            '', '',
+            'Facebook, TikTok, Google, YouTube, Website', 0,
+            'Chuyên nghiệp, Uy tín', 'gemini-2.5-flash',
+            'province', 'Toàn quốc', 'educational'
         );
         """)
 
     conn.commit()
     conn.close()
 
+# --- Auth Management ---
+def create_or_update_user(email: str, name: str = "", picture: str = "") -> dict:
+    init_app_db()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+    INSERT INTO app_users (email, name, picture, last_login)
+    VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+    ON CONFLICT(email) DO UPDATE SET
+        name = excluded.name,
+        picture = excluded.picture,
+        last_login = CURRENT_TIMESTAMP
+    """, (email, name or email.split("@")[0], picture))
+    conn.commit()
+    
+    cur.execute("SELECT * FROM app_users WHERE email = ?", (email,))
+    user = dict(cur.fetchone())
+    conn.close()
+    return user
+
+def create_session(email: str) -> str:
+    init_app_db()
+    conn = get_connection()
+    cur = conn.cursor()
+    token = str(uuid.uuid4())
+    cur.execute("INSERT INTO app_sessions (token, email) VALUES (?, ?)", (token, email))
+    conn.commit()
+    conn.close()
+    return token
+
+def verify_session(token: str) -> dict:
+    if not token:
+        return None
+    init_app_db()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+    SELECT u.email, u.name, u.picture
+    FROM app_sessions s
+    JOIN app_users u ON s.email = u.email
+    WHERE s.token = ?
+    """, (token,))
+    row = cur.fetchone()
+    conn.close()
+    if row:
+        return dict(row)
+    return None
+
+def delete_session(token: str):
+    init_app_db()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM app_sessions WHERE token = ?", (token,))
+    conn.commit()
+    conn.close()
+
+# --- Reset Database Clean Slate ---
+def reset_database_clean():
+    """Xóa sạch toàn bộ dữ liệu triển khai cũ (Phê Ly, TMT...) và đưa DB về trạng thái tinh khôi"""
+    init_app_db()
+    conn = get_connection()
+    cur = conn.cursor()
+    
+    cur.execute("DELETE FROM research_records")
+    cur.execute("DELETE FROM content_items")
+    cur.execute("DELETE FROM calendar_schedules")
+    cur.execute("DELETE FROM automation_logs")
+    cur.execute("DELETE FROM discovered_competitors")
+    cur.execute("DELETE FROM performance_metrics")
+    
+    cur.execute("""
+    UPDATE business_profile SET
+        brand_name = '',
+        industry = '',
+        business_model = 'B2C / B2B',
+        products_services = '',
+        price_range = '',
+        target_audience = '',
+        competitors = '',
+        channels = 'Facebook, TikTok, Google, YouTube, Website',
+        monthly_budget = 0,
+        brand_voice = 'Chuyên nghiệp, Uy tín',
+        market_scope_type = 'province',
+        market_location = 'Toàn quốc',
+        content_direction = 'educational',
+        updated_at = CURRENT_TIMESTAMP
+    WHERE id = 1
+    """)
+    conn.commit()
+    conn.close()
+    return {"status": "success", "message": "Đã xóa sạch dữ liệu cũ và đưa hệ thống về trạng thái mới tinh hoàn toàn!"}
+
+# --- Profile Management ---
 def get_profile():
     init_app_db()
     conn = get_connection()
@@ -206,6 +319,10 @@ def update_profile(data: dict):
         brand_voice = ?,
         gemini_api_key = ?,
         gemini_model = ?,
+        market_scope_type = ?,
+        market_location = ?,
+        region = ?,
+        content_direction = ?,
         updated_at = CURRENT_TIMESTAMP
     WHERE id = 1
     """, (
@@ -220,7 +337,11 @@ def update_profile(data: dict):
         float(data.get("monthly_budget", 0) or 0),
         data.get("brand_voice", ""),
         data.get("gemini_api_key", ""),
-        data.get("gemini_model", "gemini-1.5-flash")
+        data.get("gemini_model", "gemini-2.5-flash"),
+        data.get("market_scope_type", "province"),
+        data.get("market_location", data.get("region", "Toàn quốc")),
+        data.get("market_location", data.get("region", "Toàn quốc")),
+        data.get("content_direction", "educational")
     ))
     conn.commit()
     conn.close()
@@ -354,4 +475,5 @@ def save_content_package(channel: str, topic: str, body: str, cta: str, video_sc
 
 if __name__ == "__main__":
     init_app_db()
-    print("Database initialized successfully.")
+    reset_database_clean()
+    print("Database reset to clean state.")

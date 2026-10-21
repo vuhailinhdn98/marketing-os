@@ -1,0 +1,20 @@
+{
+  "table_name": "leads",
+  "description": "Dữ liệu cơ hội khách hàng tiềm năng từ CRM",
+  "required_columns": [
+    "date",
+    "lead_id",
+    "source",
+    "campaign",
+    "stage",
+    "value"
+  ],
+  "types": {
+    "date": "DATE",
+    "lead_id": "TEXT",
+    "source": "TEXT",
+    "campaign": "TEXT",
+    "stage": "TEXT",
+    "value": "REAL"
+  }
+}

@@ -1,0 +1,6 @@
+task_id,title,assignee,due_date,priority,status,notes
+TSK-001,Kiem tra pacing ngan sach quang cao tuan 43,Performance Specialist,2026-10-23,High,In_Progress,Kiem tra chi phi Meta Ads truoc dot sale 11.11
+TSK-002,Xuat ban bai viet SEO ve hoa don dien tu may tinh tien,SEO Specialist,2026-10-24,High,Ready_For_Review,Noi dung da viet xong can duyet checklist E-E-A-T
+TSK-003,Duyet khao sat khach hang quy 4 gui qua Google Forms,Customer Insights Lead,2026-10-25,Medium,In_Progress,18 cau hoi danh gia do hai long NPS
+TSK-004,Gui email newsletter tuan 43 chu de quan tri kho cuoi nam,CRM Specialist,2026-10-26,Medium,Planned,3 phuong an subject line A/B
+TSK-005,Lien he 2 bao chi Cafebiz va BrandsVietnam gui thong cao bao chi,PR Specialist,2026-10-27,Low,Planned,Thong cao ra mat module AI CRM

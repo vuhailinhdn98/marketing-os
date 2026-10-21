@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketing OS - Bảng Điều Khiển Doanh Nghiệp</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #38bdf8;
+      --success: #4ade80;
+      --warning: #facc15;
+      --danger: #f87171;
+      --accent: #818cf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background: var(--bg); color: var(--text); padding: 24px; min-height: 100vh; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+    .header h1 { font-size: 24px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+    .header .meta { font-size: 13px; color: var(--text-muted); }
+    
+    /* Tabs */
+    .tabs { display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+    .tab-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.2s; white-space: nowrap; }
+    .tab-btn:hover { background: rgba(56, 189, 248, 0.1); color: var(--primary); }
+    .tab-btn.active { background: var(--primary); color: #0f172a; border-color: var(--primary); }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* KPI Grid */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+    .kpi-title { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .kpi-val { font-size: 24px; font-weight: 700; color: #fff; }
+    .kpi-sub { font-size: 12px; color: var(--success); margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+    
+    /* Tables */
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 24px; overflow-x: auto; }
+    .card-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--primary); display: flex; justify-content: space-between; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th { background: #0f172a; padding: 12px; color: var(--text-muted); border-bottom: 1px solid var(--border); font-weight: 600; }
+    td { padding: 12px; border-bottom: 1px solid var(--border); }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    /* Badges */
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
+    .badge-success { background: rgba(74, 222, 128, 0.15); color: var(--success); }
+    .badge-primary { background: rgba(56, 189, 248, 0.15); color: var(--primary); }
+    .badge-warning { background: rgba(250, 204, 21, 0.15); color: var(--warning); }
+    .badge-danger { background: rgba(248, 113, 113, 0.15); color: var(--danger); }
+
+    /* Simple SVG Chart */
+    .chart-box { width: 100%; height: 200px; display: flex; align-items: flex-end; gap: 8px; padding-top: 20px; }
+    .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end; }
+    .bar { width: 100%; background: var(--primary); border-radius: 4px 4px 0 0; transition: height 0.3s; min-height: 4px; }
+    .bar-spend { width: 100%; background: var(--danger); border-radius: 4px 4px 0 0; margin-top: 2px; }
+    .bar-label { font-size: 10px; color: var(--text-muted); margin-top: 6px; white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <h1>🚀 MARKETING OS DASHBOARD</h1>
+      <div class="meta">Hệ Điều Hành Doanh Nghiệp | Cập nhật tự động: 2026-10-21 | Local Uptime: 100%</div>
+    </div>
+    <div style="text-align: right;">
+      <span class="badge badge-success">● HỆ THỐNG HOẠT ĐỘNG BÌNH THƯỜNG</span>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="openTab('overview')">📊 Tổng quan</button>
+    <button class="tab-btn" onclick="openTab('channels')">📢 Kênh tiếp thị</button>
+    <button class="tab-btn" onclick="openTab('campaigns')">🎯 Chiến dịch</button>
+    <button class="tab-btn" onclick="openTab('content')">✍️ Nội dung & Lịch</button>
+    <button class="tab-btn" onclick="openTab('seo')">🔍 SEO & Từ khóa</button>
+    <button class="tab-btn" onclick="openTab('social')">💬 Mạng xã hội</button>
+    <button class="tab-btn" onclick="openTab('budget')">💰 Ngân sách & Pacing</button>
+    <button class="tab-btn" onclick="openTab('tasks')">📋 Nhiệm vụ & Duyệt</button>
+    <button class="tab-btn" onclick="openTab('research')">🔎 Nghiên cứu & VoC</button>
+    <button class="tab-btn" onclick="openTab('alerts')">⚠️ Cảnh báo bất thường</button>
+  </div>
+
+  <!-- TAB 1: TỔNG QUAN -->
+  <div id="overview" class="tab-content active">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">Doanh thu bán hàng (30d)</div>
+        <div class="kpi-val">1,628,848,000 đ</div>
+        <div class="kpi-sub">↑ 104% Mục tiêu tháng</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Tổng chi Marketing (30d)</div>
+        <div class="kpi-val">229,817,069 đ</div>
+        <div class="kpi-sub" style="color: var(--primary);">Pacing chi tiêu chuẩn</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Tỷ lệ MER toàn diện</div>
+        <div class="kpi-val">7.09x</div>
+        <div class="kpi-sub">Ngưỡng chuẩn > 7.0x</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">ROAS Quảng cáo</div>
+        <div class="kpi-val">29.05x</div>
+        <div class="kpi-sub">Doanh thu ads: 3,557,273,000 đ</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Khách hàng mới</div>
+        <div class="kpi-val">156 Khách</div>
+        <div class="kpi-sub">CAC: 1,473,186 đ (Trần < 2.5tr)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">Tổng Lead MQL</div>
+        <div class="kpi-val">399 Leads</div>
+        <div class="kpi-sub">CPL: 575,983 đ | Chốt: 33</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span>📈 Doanh thu (Xanh dương) vs Chi tiêu quảng cáo (Đỏ) 14 ngày qua</span>
+        <span style="font-size: 12px; color: var(--text-muted);">Biểu đồ Offline</span>
+      </div>
+      <div class="chart-box">
+
+        <div class="bar-col" title="2026-10-07: Doanh thu 71,252,000đ - Chi 2,655,415đ">
+          <div class="bar" style="height: 61.2%;"></div>
+          <div class="bar-spend" style="height: 2.3%;"></div>
+          <div class="bar-label">10-07</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-08: Doanh thu 26,000,000đ - Chi 3,877,510đ">
+          <div class="bar" style="height: 22.3%;"></div>
+          <div class="bar-spend" style="height: 3.3%;"></div>
+          <div class="bar-label">10-08</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-09: Doanh thu 13,938,000đ - Chi 3,819,213đ">
+          <div class="bar" style="height: 12.0%;"></div>
+          <div class="bar-spend" style="height: 3.3%;"></div>
+          <div class="bar-label">10-09</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-10: Doanh thu 44,600,000đ - Chi 4,603,576đ">
+          <div class="bar" style="height: 38.3%;"></div>
+          <div class="bar-spend" style="height: 4.0%;"></div>
+          <div class="bar-label">10-10</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-11: Doanh thu 25,200,000đ - Chi 4,506,548đ">
+          <div class="bar" style="height: 21.6%;"></div>
+          <div class="bar-spend" style="height: 3.9%;"></div>
+          <div class="bar-label">10-11</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-12: Doanh thu 40,238,000đ - Chi 3,587,991đ">
+          <div class="bar" style="height: 34.6%;"></div>
+          <div class="bar-spend" style="height: 3.1%;"></div>
+          <div class="bar-label">10-12</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-13: Doanh thu 116,440,000đ - Chi 4,693,543đ">
+          <div class="bar" style="height: 100.0%;"></div>
+          <div class="bar-spend" style="height: 4.0%;"></div>
+          <div class="bar-label">10-13</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-14: Doanh thu 73,514,000đ - Chi 4,582,291đ">
+          <div class="bar" style="height: 63.1%;"></div>
+          <div class="bar-spend" style="height: 3.9%;"></div>
+          <div class="bar-label">10-14</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-15: Doanh thu 27,876,000đ - Chi 4,019,274đ">
+          <div class="bar" style="height: 23.9%;"></div>
+          <div class="bar-spend" style="height: 3.5%;"></div>
+          <div class="bar-label">10-15</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-16: Doanh thu 49,600,000đ - Chi 3,147,128đ">
+          <div class="bar" style="height: 42.6%;"></div>
+          <div class="bar-spend" style="height: 2.7%;"></div>
+          <div class="bar-label">10-16</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-17: Doanh thu 36,376,000đ - Chi 4,074,941đ">
+          <div class="bar" style="height: 31.2%;"></div>
+          <div class="bar-spend" style="height: 3.5%;"></div>
+          <div class="bar-label">10-17</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-18: Doanh thu 30,150,000đ - Chi 4,384,576đ">
+          <div class="bar" style="height: 25.9%;"></div>
+          <div class="bar-spend" style="height: 3.8%;"></div>
+          <div class="bar-label">10-18</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-19: Doanh thu 66,390,000đ - Chi 3,481,154đ">
+          <div class="bar" style="height: 57.0%;"></div>
+          <div class="bar-spend" style="height: 3.0%;"></div>
+          <div class="bar-label">10-19</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-20: Doanh thu 75,814,000đ - Chi 3,934,979đ">
+          <div class="bar" style="height: 65.1%;"></div>
+          <div class="bar-spend" style="height: 3.4%;"></div>
+          <div class="bar-label">10-20</div>
+        </div>
+        
+        <div class="bar-col" title="2026-10-21: Doanh thu 41,040,000đ - Chi 4,359,428đ">
+          <div class="bar" style="height: 35.2%;"></div>
+          <div class="bar-spend" style="height: 3.7%;"></div>
+          <div class="bar-label">10-21</div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: KÊNH TIẾP THỊ -->
+  <div id="channels" class="tab-content">
+    <div class="card">
+      <div class="card-title">Hiệu Quả Kênh Quảng Cáo (Paid Channels) 30 Ngày Qua</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Kênh / Nền tảng</th>
+            <th>Ngân sách chi</th>
+            <th>Doanh thu quy đổi</th>
+            <th>ROAS</th>
+            <th>Lượt chuyển đổi</th>
+            <th>CPA</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td><strong>Google Search</strong></td>
+            <td>42,542,017 đ</td>
+            <td>1,090,956,000 đ</td>
+            <td><strong>25.64x</strong></td>
+            <td>709</td>
+            <td>60,003 đ</td>
+            <td><span class="badge badge-success">Hiệu quả cao</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>Meta Ads</strong></td>
+            <td>37,388,327 đ</td>
+            <td>1,412,340,000 đ</td>
+            <td><strong>37.77x</strong></td>
+            <td>706</td>
+            <td>52,958 đ</td>
+            <td><span class="badge badge-success">Hiệu quả cao</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>TikTok Ads</strong></td>
+            <td>42,507,458 đ</td>
+            <td>1,053,977,000 đ</td>
+            <td><strong>24.80x</strong></td>
+            <td>771</td>
+            <td>55,133 đ</td>
+            <td><span class="badge badge-success">Hiệu quả cao</span></td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 3: CHIẾN DỊCH -->
+  <div id="campaigns" class="tab-content">
+    <div class="card">
+      <div class="card-title">Danh Mục Chiến Dịch (Campaign Registry)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Mã</th>
+            <th>Tên chiến dịch</th>
+            <th>Thời gian</th>
+            <th>Ngân sách</th>
+            <th>Target Leads</th>
+            <th>Target Doanh thu</th>
+            <th>Phụ trách</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td>CMP-2026-Q4-01</td>
+            <td><strong>Novapos_Omni_Launch</strong></td>
+            <td>2026-10-01 - 2026-11-15</td>
+            <td>180,000,000 đ</td>
+            <td>1200</td>
+            <td>4,200,000,000 đ</td>
+            <td>Nguyen Van Growth</td>
+            <td><span class="badge badge-success">Active</span></td>
+          </tr>
+        
+          <tr>
+            <td>CMP-2026-Q4-02</td>
+            <td><strong>Retail_Tet_2026</strong></td>
+            <td>2026-11-01 - 2026-12-31</td>
+            <td>250,000,000 đ</td>
+            <td>1800</td>
+            <td>6,500,000,000 đ</td>
+            <td>Tran Thi Campaign</td>
+            <td><span class="badge badge-warning">Planned</span></td>
+          </tr>
+        
+          <tr>
+            <td>CMP-2026-Q4-03</td>
+            <td><strong>Hardware_Promo</strong></td>
+            <td>2026-10-15 - 2026-11-30</td>
+            <td>90,000,000 đ</td>
+            <td>650</td>
+            <td>2,100,000,000 đ</td>
+            <td>Le Van Sales</td>
+            <td><span class="badge badge-success">Active</span></td>
+          </tr>
+        
+          <tr>
+            <td>CMP-2026-Q4-04</td>
+            <td><strong>AlwaysOn_Branding</strong></td>
+            <td>2026-10-01 - 2026-12-31</td>
+            <td>120,000,000 đ</td>
+            <td>800</td>
+            <td>2,800,000,000 đ</td>
+            <td>Pham Thi Brand</td>
+            <td><span class="badge badge-success">Active</span></td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 4: NỘI DUNG -->
+  <div id="content" class="tab-content">
+    <div class="card">
+      <div class="card-title">Lịch Xuất Bản Nội Dung Đa Kênh (Content Calendar)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Ngày & Giờ</th>
+            <th>Kênh</th>
+            <th>Định dạng</th>
+            <th>Pillar</th>
+            <th>Chủ đề bài viết</th>
+            <th>Người làm</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td>2026-10-22 08:30</td>
+            <td><span class="badge badge-primary">TikTok</span></td>
+            <td>Video 9:16</td>
+            <td>Help</td>
+            <td><strong>3 Lỗi lệch tồn kho khiến chủ shop TikTok Shop bị phạt</strong></td>
+            <td>Content Team</td>
+            <td><span class="badge badge-success">approved</span></td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-22 11:30</td>
+            <td><span class="badge badge-primary">Facebook</span></td>
+            <td>Carousel</td>
+            <td>Hub</td>
+            <td><strong>Bác chủ tạp hóa 50 tuổi quản lý 3000 món hàng thế nào?</strong></td>
+            <td>Content Team</td>
+            <td><span class="badge badge-success">approved</span></td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-23 09:00</td>
+            <td><span class="badge badge-primary">LinkedIn</span></td>
+            <td>Article</td>
+            <td>Hero</td>
+            <td><strong>Tự động hóa chuỗi F&B bằng AI định lượng nguyên vật liệu</strong></td>
+            <td>CMO</td>
+            <td><span class="badge badge-success">approved</span></td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-23 15:00</td>
+            <td><span class="badge badge-primary">Website Blog</span></td>
+            <td>Blog SEO</td>
+            <td>Help</td>
+            <td><strong>Hướng dẫn đối soát doanh thu đa sàn Shopee và TikTok Shop</strong></td>
+            <td>SEO Team</td>
+            <td><span class="badge badge-success">published</span></td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-24 19:00</td>
+            <td><span class="badge badge-primary">Zalo OA</span></td>
+            <td>Broadcast</td>
+            <td>Action</td>
+            <td><strong>Thông báo hạn chót kết nối máy tính tiền xuất hóa đơn thuế</strong></td>
+            <td>CRM Team</td>
+            <td><span class="badge badge-success">approved</span></td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-25 10:00</td>
+            <td><span class="badge badge-primary">Facebook</span></td>
+            <td>Video Demo</td>
+            <td>Hero</td>
+            <td><strong>Demo tính năng in 500 đơn hàng loạt chỉ trong 2 phút</strong></td>
+            <td>Content Team</td>
+            <td><span class="badge badge-warning">planned</span></td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-26 14:00</td>
+            <td><span class="badge badge-primary">Email</span></td>
+            <td>Newsletter</td>
+            <td>Help</td>
+            <td><strong>Bản tin Quản Trị Tuần: 5 Xu hướng tiêu dùng mùa lễ hội 2026</strong></td>
+            <td>CRM Team</td>
+            <td><span class="badge badge-warning">planned</span></td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-27 08:30</td>
+            <td><span class="badge badge-primary">TikTok</span></td>
+            <td>Video 9:16</td>
+            <td>Hub</td>
+            <td><strong>Tâm sự chủ shop livestream từ 20h đến 2h sáng</strong></td>
+            <td>Content Team</td>
+            <td><span class="badge badge-warning">planned</span></td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-28 11:30</td>
+            <td><span class="badge badge-primary">Facebook</span></td>
+            <td>Image Single</td>
+            <td>Help</td>
+            <td><strong>4 Quy tắc phân quyền nhân viên thu ngân để không bị thất thoát tiền</strong></td>
+            <td>Content Team</td>
+            <td><span class="badge badge-warning">planned</span></td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-29 09:00</td>
+            <td><span class="badge badge-primary">Website Blog</span></td>
+            <td>Blog SEO</td>
+            <td>Help</td>
+            <td><strong>Top 5 máy in hóa đơn nhiệt tốt nhất cho cửa hàng tạp hóa</strong></td>
+            <td>SEO Team</td>
+            <td><span class="badge badge-warning">planned</span></td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-30 19:00</td>
+            <td><span class="badge badge-primary">TikTok</span></td>
+            <td>Video 9:16</td>
+            <td>Hero</td>
+            <td><strong>So sánh tốc độ đồng bộ đơn của NovaPOS với thao tác tay</strong></td>
+            <td>Content Team</td>
+            <td><span class="badge badge-warning">planned</span></td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-31 10:00</td>
+            <td><span class="badge badge-primary">Facebook</span></td>
+            <td>Minigame</td>
+            <td>Action</td>
+            <td><strong>Minigame: Dự đoán doanh số 11.11 - Rinh trọn máy POS cảm ứng</strong></td>
+            <td>Content Team</td>
+            <td><span class="badge badge-warning">planned</span></td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 5: SEO -->
+  <div id="seo" class="tab-content">
+    <div class="card">
+      <div class="card-title">Bản Đồ Từ Khóa & Vị Trí Xếp Hạng (Keyword Map)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Từ khóa mục tiêu</th>
+            <th>Search Intent</th>
+            <th>Topic Cluster</th>
+            <th>Volume</th>
+            <th>URL Đích</th>
+            <th>Độ ưu tiên</th>
+            <th>Thứ hạng</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td><strong>phan mem quan ly ban hang</strong></td>
+            <td>Commercial</td>
+            <td>Core Product</td>
+            <td>18500</td>
+            <td><code>/phan-mem-pos</code></td>
+            <td><span class="badge badge-danger">P1</span></td>
+            <td><span class="badge badge-success">Ranking Top 3</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>phan mem quan ly kho</strong></td>
+            <td>Informational</td>
+            <td>Inventory</td>
+            <td>12200</td>
+            <td><code>/blog/quan-ly-ton-kho</code></td>
+            <td><span class="badge badge-danger">P1</span></td>
+            <td><span class="badge badge-success">Ranking Top 4</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>may in hoa don pos</strong></td>
+            <td>Transactional</td>
+            <td>Hardware</td>
+            <td>8400</td>
+            <td><code>/thiet-bi/may-in-bill</code></td>
+            <td><span class="badge badge-danger">P1</span></td>
+            <td><span class="badge badge-success">Ranking Top 2</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>phan mem ban hang shopee</strong></td>
+            <td>Commercial</td>
+            <td>Omnichannel</td>
+            <td>6500</td>
+            <td><code>/tinh-nang/dong-bo-san</code></td>
+            <td><span class="badge badge-danger">P1</span></td>
+            <td><span class="badge badge-success">Ranking Top 4</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>dong bo don hang tiktok shop</strong></td>
+            <td>Commercial</td>
+            <td>Omnichannel</td>
+            <td>4800</td>
+            <td><code>/tinh-nang/tiktok-shop</code></td>
+            <td><span class="badge badge-danger">P1</span></td>
+            <td><span class="badge badge-success">Ranking Top 3</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>may tinh tien cam ung</strong></td>
+            <td>Transactional</td>
+            <td>Hardware</td>
+            <td>5200</td>
+            <td><code>/thiet-bi/may-pos-cam-ung</code></td>
+            <td><span class="badge badge-danger">P2</span></td>
+            <td><span class="badge badge-success">Ranking Top 5</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>cach quan ly chuoi cua hang</strong></td>
+            <td>Informational</td>
+            <td>Management</td>
+            <td>3100</td>
+            <td><code>/blog/quan-ly-chuoi-ban-le</code></td>
+            <td><span class="badge badge-danger">P2</span></td>
+            <td><span class="badge badge-success">Ranking Top 7</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>hoa don dien tu tu may tinh tien</strong></td>
+            <td>Commercial</td>
+            <td>Compliance</td>
+            <td>7800</td>
+            <td><code>/blog/hoa-don-dien-tu-may-tinh-tien</code></td>
+            <td><span class="badge badge-danger">P1</span></td>
+            <td><span class="badge badge-success">Content Planned</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>kinh nghiem mo tap hoa nho</strong></td>
+            <td>Informational</td>
+            <td>Startup</td>
+            <td>9200</td>
+            <td><code>/blog/kinh-nghiem-mo-tap-hoa</code></td>
+            <td><span class="badge badge-danger">P2</span></td>
+            <td><span class="badge badge-success">Content Brief Ready</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>quan ly khach hang than thiet</strong></td>
+            <td>Informational</td>
+            <td>Loyalty</td>
+            <td>2400</td>
+            <td><code>/blog/quan-ly-loyalty-cskh</code></td>
+            <td><span class="badge badge-danger">P3</span></td>
+            <td><span class="badge badge-success">Content Brief Ready</span></td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 6: SOCIAL -->
+  <div id="social" class="tab-content">
+    <div class="card">
+      <div class="card-title">Hiệu Suất Mạng Xã Hội 30 Ngày Qua</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Nền tảng</th>
+            <th>Lượt tiếp cận (Reach)</th>
+            <th>Lượt tương tác</th>
+            <th>Tỷ lệ tương tác</th>
+            <th>Quy mô Follower</th>
+            <th>Đánh giá</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td><strong>Facebook</strong></td>
+            <td>253,733</td>
+            <td>18,543</td>
+            <td><strong>7.31%</strong></td>
+            <td>68,440</td>
+            <td><span class="badge badge-success">Tăng trưởng tốt</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>LinkedIn</strong></td>
+            <td>230,840</td>
+            <td>16,779</td>
+            <td><strong>7.27%</strong></td>
+            <td>68,256</td>
+            <td><span class="badge badge-success">Tăng trưởng tốt</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>TikTok</strong></td>
+            <td>211,407</td>
+            <td>15,852</td>
+            <td><strong>7.50%</strong></td>
+            <td>68,096</td>
+            <td><span class="badge badge-success">Tăng trưởng tốt</span></td>
+          </tr>
+        
+          <tr>
+            <td><strong>YouTube</strong></td>
+            <td>205,846</td>
+            <td>17,117</td>
+            <td><strong>8.32%</strong></td>
+            <td>68,432</td>
+            <td><span class="badge badge-success">Tăng trưởng tốt</span></td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 7: NGÂN SÁCH -->
+  <div id="budget" class="tab-content">
+    <div class="card">
+      <div class="card-title">Kế Hoạch & Thực Chi Ngân Sách Marketing (Budget Plan)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Tháng</th>
+            <th>Hạng mục / Kênh</th>
+            <th>Ngân sách kế hoạch</th>
+            <th>Thực chi tích lũy</th>
+            <th>Chênh lệch</th>
+            <th>Ghi chú</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td>2026-10</td>
+            <td><strong>Paid Meta Ads</strong></td>
+            <td>110,000,000 đ</td>
+            <td>108,500,000 đ</td>
+            <td>-1,500,000 đ</td>
+            <td>Chay sat ngan sach pacing tot</td>
+          </tr>
+        
+          <tr>
+            <td>2026-10</td>
+            <td><strong>Paid Google Ads</strong></td>
+            <td>92,500,000 đ</td>
+            <td>91,200,000 đ</td>
+            <td>-1,300,000 đ</td>
+            <td>Hieu qua Inbound cao duy tri deu</td>
+          </tr>
+        
+          <tr>
+            <td>2026-10</td>
+            <td><strong>Paid TikTok Ads</strong></td>
+            <td>45,000,000 đ</td>
+            <td>44,800,000 đ</td>
+            <td>-200,000 đ</td>
+            <td>Video review viral tiep tuc duy tri</td>
+          </tr>
+        
+          <tr>
+            <td>2026-10</td>
+            <td><strong>Content Production</strong></td>
+            <td>67,500,000 đ</td>
+            <td>65,000,000 đ</td>
+            <td>-2,500,000 đ</td>
+            <td>Hoan tat 12 video va 16 bai blog</td>
+          </tr>
+        
+          <tr>
+            <td>2026-10</td>
+            <td><strong>PR & Event</strong></td>
+            <td>54,000,000 đ</td>
+            <td>52,000,000 đ</td>
+            <td>-2,000,000 đ</td>
+            <td>Len 3 bai bao VnExpress va Cafebiz</td>
+          </tr>
+        
+          <tr>
+            <td>2026-10</td>
+            <td><strong>KOL & Influencer</strong></td>
+            <td>45,000,000 đ</td>
+            <td>45,000,000 đ</td>
+            <td>0 đ</td>
+            <td>Hop tac 3 KOL nganh ban le</td>
+          </tr>
+        
+          <tr>
+            <td>2026-10</td>
+            <td><strong>Tools & Tech</strong></td>
+            <td>36,000,000 đ</td>
+            <td>35,500,000 đ</td>
+            <td>-500,000 đ</td>
+            <td>Chi phi SMS ZNS va server</td>
+          </tr>
+        
+          <tr>
+            <td>2026-11</td>
+            <td><strong>Paid Meta Ads</strong></td>
+            <td>135,000,000 đ</td>
+            <td>0 đ</td>
+            <td>0 đ</td>
+            <td>Tang 25tr don mua sale 11.11 va Black Friday</td>
+          </tr>
+        
+          <tr>
+            <td>2026-11</td>
+            <td><strong>Paid Google Ads</strong></td>
+            <td>105,000,000 đ</td>
+            <td>0 đ</td>
+            <td>0 đ</td>
+            <td>Tang ngan sach don tu khoa cao diem</td>
+          </tr>
+        
+          <tr>
+            <td>2026-11</td>
+            <td><strong>Paid TikTok Ads</strong></td>
+            <td>55,000,000 đ</td>
+            <td>0 đ</td>
+            <td>0 đ</td>
+            <td>Day manh video giai phap ban hang Tet</td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 8: TASKS -->
+  <div id="tasks" class="tab-content">
+    <div class="card">
+      <div class="card-title">Bảng Công Việc Cần Xử Lý (Tasks Board)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Mã Task</th>
+            <th>Nhiệm vụ</th>
+            <th>Người phụ trách</th>
+            <th>Hạn chót</th>
+            <th>Độ ưu tiên</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td>TSK-001</td>
+            <td><strong>Kiem tra pacing ngan sach quang cao tuan 43</strong></td>
+            <td>Performance Specialist</td>
+            <td>2026-10-23</td>
+            <td><span class="badge badge-danger">High</span></td>
+            <td><span class="badge badge-primary">In_Progress</span></td>
+          </tr>
+        
+          <tr>
+            <td>TSK-002</td>
+            <td><strong>Xuat ban bai viet SEO ve hoa don dien tu may tinh tien</strong></td>
+            <td>SEO Specialist</td>
+            <td>2026-10-24</td>
+            <td><span class="badge badge-danger">High</span></td>
+            <td><span class="badge badge-primary">Ready_For_Review</span></td>
+          </tr>
+        
+          <tr>
+            <td>TSK-003</td>
+            <td><strong>Duyet khao sat khach hang quy 4 gui qua Google Forms</strong></td>
+            <td>Customer Insights Lead</td>
+            <td>2026-10-25</td>
+            <td><span class="badge badge-warning">Medium</span></td>
+            <td><span class="badge badge-primary">In_Progress</span></td>
+          </tr>
+        
+          <tr>
+            <td>TSK-004</td>
+            <td><strong>Gui email newsletter tuan 43 chu de quan tri kho cuoi nam</strong></td>
+            <td>CRM Specialist</td>
+            <td>2026-10-26</td>
+            <td><span class="badge badge-warning">Medium</span></td>
+            <td><span class="badge badge-primary">Planned</span></td>
+          </tr>
+        
+          <tr>
+            <td>TSK-005</td>
+            <td><strong>Lien he 2 bao chi Cafebiz va BrandsVietnam gui thong cao bao chi</strong></td>
+            <td>PR Specialist</td>
+            <td>2026-10-27</td>
+            <td><span class="badge badge-warning">Low</span></td>
+            <td><span class="badge badge-primary">Planned</span></td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="card">
+      <div class="card-title">Hàng Đợi Phê Duyệt Nội Dung & Quảng Cáo (Approvals Queue)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Mã Duyệt</th>
+            <th>Loại tài liệu</th>
+            <th>Đường dẫn file</th>
+            <th>Người gửi</th>
+            <th>Người duyệt</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td>APP-001</td>
+            <td>Content Draft</td>
+            <td><code>04_content/drafts/2026-10-22_tiktok_lech-ton-kho.md</code></td>
+            <td>Content Creator</td>
+            <td>Brand Manager</td>
+            <td><span class="badge badge-success">Approved</span></td>
+          </tr>
+        
+          <tr>
+            <td>APP-002</td>
+            <td>Content Draft</td>
+            <td><code>04_content/drafts/2026-10-23_facebook_quan-ly-3000-mon.md</code></td>
+            <td>Content Creator</td>
+            <td>Brand Manager</td>
+            <td><span class="badge badge-warning">Pending</span></td>
+          </tr>
+        
+          <tr>
+            <td>APP-003</td>
+            <td>Ad Copy</td>
+            <td><code>07_ads/ad_copies/facebook_ad_copies.md</code></td>
+            <td>Copywriter</td>
+            <td>Performance Lead</td>
+            <td><span class="badge badge-success">Approved</span></td>
+          </tr>
+        
+          <tr>
+            <td>APP-004</td>
+            <td>PR Release</td>
+            <td><code>09_pr_events/press_releases/2026-10_thong-cao-bao-chi.md</code></td>
+            <td>PR Lead</td>
+            <td>CMO</td>
+            <td><span class="badge badge-success">Approved</span></td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 9: NGHIÊN CỨU & VOC -->
+  <div id="research" class="tab-content">
+    <div class="card">
+      <div class="card-title">Tình Báo Đối Thủ Cạnh Tranh (Competitor Matrix)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Đối thủ</th>
+            <th>Website</th>
+            <th>Sản phẩm chính</th>
+            <th>Khoảng giá</th>
+            <th>Điểm mạnh</th>
+            <th>Điểm yếu</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td><strong>KiotViet</strong></td>
+            <td><a href="https://kiotviet.vn" target="_blank" style="color: var(--primary);">kiotviet.vn</a></td>
+            <td>Phần mềm quản lý bán hàng POS</td>
+            <td>180,000 - 350,000 đ</td>
+            <td>Độ phủ thương hiệu lớn nhất VN; sale offline tại mọi tỉnh thành</td>
+            <td>Giao diện cũ; ít tính năng marketing automation; CSKH phản hồi chậm</td>
+          </tr>
+        
+          <tr>
+            <td><strong>Sapo</strong></td>
+            <td><a href="https://sapo.vn" target="_blank" style="color: var(--primary);">sapo.vn</a></td>
+            <td>Hệ sinh thái Omnichannel (Sapo POS + Web)</td>
+            <td>229,000 - 599,000 đ</td>
+            <td>Tích hợp sàn TMĐT và thiết kế web rất tốt</td>
+            <td>Khó thiết lập với người lớn tuổi; chi phí phát sinh nhiều</td>
+          </tr>
+        
+          <tr>
+            <td><strong>Haravan</strong></td>
+            <td><a href="https://haravan.com" target="_blank" style="color: var(--primary);">haravan.com</a></td>
+            <td>Nền tảng thương mại đa kênh & Harasocial</td>
+            <td>500,000 - 3,000,000 đ</td>
+            <td>Quản trị chat đa kênh và kết nối sàn mạnh mẽ</td>
+            <td>Giá cao; tập trung phân khúc trên; bỏ ngỏ tiểu thương nhỏ</td>
+          </tr>
+        
+          <tr>
+            <td><strong>Pos365</strong></td>
+            <td><a href="https://pos365.vn" target="_blank" style="color: var(--primary);">pos365.vn</a></td>
+            <td>Phần mềm tính tiền POS</td>
+            <td>99,000 - 199,000 đ</td>
+            <td>Giá thành rẻ nhất; có gói vĩnh viễn</td>
+            <td>Ít tính năng nâng cao; không có AI phân tích dữ liệu</td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tiếng Nói Khách Hàng (Voice of Customer Log)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Ngày</th>
+            <th>Nguồn phản hồi</th>
+            <th>Ý kiến trích xuất</th>
+            <th>Cảm xúc</th>
+            <th>Chủ đề</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td>2026-10-12</td>
+            <td>Google Maps Review - Chi nhánh Cầu Giấy</td>
+            <td><em>"Phần mềm chạy rất mượt máy in bill nhạy nhân viên hỗ trợ cài đặt tận nơi nhiệt tình"</em></td>
+            <td><span class="badge badge-success">positive</span></td>
+            <td>Cskh & Thiết bị</td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-14</td>
+            <td>Group Hội Chủ Quán Cafe & Trà Sữa Hà Nội</td>
+            <td><em>"Mình đang dùng app cũ hay bị treo lúc đông khách quá chuyển sang NovaPOS thấy mượt hơn hẳn"</em></td>
+            <td><span class="badge badge-success">positive</span></td>
+            <td>Độ ổn định</td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-16</td>
+            <td>Bình luận Fanpage NovaTech</td>
+            <td><em>"Có tính năng tự trừ tồn kho khi bán hàng trên TikTok Shop không ad?"</em></td>
+            <td><span class="badge badge-warning">neutral</span></td>
+            <td>Tính năng</td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-18</td>
+            <td>Zalo CSKH Khách hàng</td>
+            <td><em>"Cuối tuần đối soát tiền hơi lâu mong công ty có thêm video hướng dẫn chi tiết cách xem báo cáo thuế"</em></td>
+            <td><span class="badge badge-warning">neutral</span></td>
+            <td>Hướng dẫn sử dụng</td>
+          </tr>
+        
+          <tr>
+            <td>2026-10-19</td>
+            <td>Group Cộng Đồng Kinh Doanh Shopee</td>
+            <td><em>"Gặp lỗi lệch tồn kho với Shopee lúc 23h may được đội trực hotline hỗ trợ sửa trong 10 phút"</em></td>
+            <td><span class="badge badge-success">positive</span></td>
+            <td>Hỗ trợ khẩn cấp</td>
+          </tr>
+        
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 10: CẢNH BÁO -->
+  <div id="alerts" class="tab-content">
+    <div class="card">
+      <div class="card-title">Trung Tâm Cảnh Báo Sức Khỏe Tiếp Thị</div>
+      <div style="padding: 16px; background: rgba(74, 222, 128, 0.1); border: 1px solid var(--success); border-radius: 8px; margin-bottom: 16px;">
+        <strong style="color: var(--success);">✅ Không có cảnh báo nguy cấp (Zero Critical Errors)</strong>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Toàn bộ hệ thống cơ sở dữ liệu SQLite, tiến độ nạp file CSV, và các kênh quảng cáo đang vận hành trong ngưỡng an toàn.</p>
+      </div>
+      <div style="padding: 16px; background: rgba(250, 204, 21, 0.1); border: 1px solid var(--warning); border-radius: 8px;">
+        <strong style="color: var(--warning);">⚠️ Nhắc nhở vận hành tuần này:</strong>
+        <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Thời gian chuẩn bị chiến dịch Bán Lẻ Đón Tết còn 10 ngày. Đảm bảo kế hoạch ngân sách và các mẫu video TikTok đã được phê duyệt trong bảng Approvals.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+  </script>
+</body>
+</html>

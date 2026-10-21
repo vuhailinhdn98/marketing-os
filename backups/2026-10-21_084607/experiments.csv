@@ -1,0 +1,5 @@
+experiment_id,name,channel,hypothesis,variable_tested,status,winner,lift_pct
+EXP-2026-01,Test Hook Video Tikok Nỗi Đau vs Tính Năng,TikTok Ads,Video mở đầu bằng số liệu thất thoát tiền sẽ tăng 30% CTR so với video demo máy,Hook 3s đầu tiên,Completed,Variant A (Nỗi đau),34.5%
+EXP-2026-02,Test Tiêu Đề Email Nurture Cá Nhân Hóa,Email CRM,Subject chứa tên shop của khách sẽ tăng tỷ lệ mở thêm 25%,Subject Line,Completed,Variant B (Personalized),28.2%
+EXP-2026-03,Test Ưu Đãi Landing Page Tặng Máy In vs Giảm 30%,Meta Ads,Ưu đãi tặng máy in vật lý kích thích chốt đơn hơn giảm giá trừ tiền,Incentive Offer,Running,Pending,N/A
+EXP-2026-04,Test Nút Kêu Gọi CTA 'Dùng Thử 0đ' vs 'Đăng Ký Tư Vấn',Google Ads,Nút 'Dùng thử 0đ' giảm rào cản tâm lý giúp tăng CVR lên 20%,Button Copy,Running,Pending,N/A

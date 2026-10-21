@@ -1,0 +1,24 @@
+{
+  "table_name": "web",
+  "description": "Dữ liệu lưu lượng truy cập web từ Google Analytics (GA4)",
+  "required_columns": [
+    "date",
+    "source",
+    "medium",
+    "sessions",
+    "users",
+    "new_users",
+    "conversions",
+    "revenue"
+  ],
+  "types": {
+    "date": "DATE",
+    "source": "TEXT",
+    "medium": "TEXT",
+    "sessions": "INTEGER",
+    "users": "INTEGER",
+    "new_users": "INTEGER",
+    "conversions": "INTEGER",
+    "revenue": "REAL"
+  }
+}

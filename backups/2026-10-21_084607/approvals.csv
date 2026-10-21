@@ -1,0 +1,5 @@
+approval_id,item_type,item_path,submitted_by,submitted_date,status,reviewer,review_notes
+APP-001,Content Draft,04_content/drafts/2026-10-22_tiktok_lech-ton-kho.md,Content Creator,2026-10-21,Approved,Brand Manager,Noi dung hook rat tot dat 9.5 diem
+APP-002,Content Draft,04_content/drafts/2026-10-23_facebook_quan-ly-3000-mon.md,Content Creator,2026-10-21,Pending,Brand Manager,Dang kiem tra tinh phap ly ve cam ket doanh so
+APP-003,Ad Copy,07_ads/ad_copies/facebook_ad_copies.md,Copywriter,2026-10-20,Approved,Performance Lead,San sang de set camp tren Meta
+APP-004,PR Release,09_pr_events/press_releases/2026-10_thong-cao-bao-chi.md,PR Lead,2026-10-19,Approved,CMO,Chuan bi gui cho cac toa soan bao chi

@@ -1,0 +1,5 @@
+campaign_id,name,start_date,end_date,budget,target_leads,target_revenue,lead_owner,status
+CMP-2026-Q4-01,Novapos_Omni_Launch,2026-10-01,2026-11-15,180000000,1200,4200000000,Nguyen Van Growth,Active
+CMP-2026-Q4-02,Retail_Tet_2026,2026-11-01,2026-12-31,250000000,1800,6500000000,Tran Thi Campaign,Planned
+CMP-2026-Q4-03,Hardware_Promo,2026-10-15,2026-11-30,90000000,650,2100000000,Le Van Sales,Active
+CMP-2026-Q4-04,AlwaysOn_Branding,2026-10-01,2026-12-31,120000000,800,2800000000,Pham Thi Brand,Active

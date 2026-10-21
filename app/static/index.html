@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marketing OS - Hệ Thống Tự Động Hóa Marketing Toàn Diện</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Marked for Markdown Rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .markdown-body h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.75rem; color: #38bdf8; }
+    .markdown-body h2 { font-size: 1.25rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; color: #e2e8f0; border-bottom: 1px solid #334155; padding-bottom: 0.4rem; }
+    .markdown-body h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1rem; margin-bottom: 0.35rem; color: #cbd5e1; }
+    .markdown-body p { margin-bottom: 0.75rem; line-height: 1.6; }
+    .markdown-body ul, .markdown-body ol { margin-left: 1.25rem; margin-bottom: 0.75rem; }
+    .markdown-body li { margin-bottom: 0.35rem; }
+    .markdown-body blockquote { border-left: 4px solid #38bdf8; padding: 0.75rem 1rem; background: rgba(30, 41, 59, 0.5); border-radius: 0 0.5rem 0.5rem 0; color: #cbd5e1; margin-bottom: 1rem; }
+    .markdown-body strong { color: #f8fafc; font-weight: 600; }
+    .markdown-body table { width: 100%; border-collapse: collapse; margin-top: 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; overflow-x: auto; display: block; }
+    .markdown-body th { background-color: #1e293b; color: #38bdf8; font-weight: 600; text-align: left; padding: 0.75rem; border: 1px solid #334155; }
+    .markdown-body td { padding: 0.75rem; border: 1px solid #334155; color: #cbd5e1; }
+    .markdown-body tr:nth-child(even) { background-color: rgba(30, 41, 59, 0.4); }
+    .markdown-body a { color: #38bdf8; text-decoration: underline; }
+    .markdown-body a:hover { color: #7dd3fc; }
+    .markdown-body code { background: #1e293b; color: #fb7185; padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.85em; font-family: monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- TOP NAVIGATION -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 px-6 py-3.5 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20">
+        <i class="fa-solid fa-rocket text-lg"></i>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-sky-400 to-indigo-300 bg-clip-text text-transparent">MARKETING OS</h1>
+        <p class="text-xs text-slate-400 flex items-center gap-1.5">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Đang phục vụ: <span id="nav-brand-name" class="font-semibold text-slate-200">Đang tải...</span>
+        </p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <div class="hidden sm:flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold text-emerald-400">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>AUTO-PILOT 24/7 ACTIVE</span>
+      </div>
+      <button onclick="runAutoPilotNow()" id="btn-header-autopilot" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold text-xs px-3.5 py-2 rounded-lg shadow-lg shadow-orange-500/25 flex items-center gap-2 transition">
+        <i class="fa-solid fa-bolt"></i>
+        <span class="hidden sm:inline">Chạy Lại Toàn Trình (1-Click)</span>
+        <span class="sm:hidden">Auto-Pilot</span>
+      </button>
+      <button onclick="switchTab('tab-profile')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-sliders"></i>
+        <span class="hidden md:inline">Cấu Hình</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- AUTO-PILOT BANNER -->
+  <div class="bg-slate-900 border-b border-slate-800 px-6 py-2 flex flex-wrap justify-between items-center text-xs text-slate-400 gap-2">
+    <div class="flex items-center gap-2">
+      <i class="fa-solid fa-robot text-sky-400"></i>
+      <span class="text-slate-300 font-medium">Trạng thái tự động hóa:</span>
+      <span class="text-emerald-400 font-semibold flex items-center gap-1">
+        <i class="fa-solid fa-circle-check"></i> Đã tự động phân tích thị trường, đối thủ, 30 ngày nội dung
+      </span>
+    </div>
+    <div class="flex items-center gap-3 text-[11px]">
+      <span id="banner-stats" class="text-slate-400">Đang đồng bộ cơ sở dữ liệu...</span>
+      <button onclick="switchTab('tab-automations')" class="text-sky-400 hover:underline flex items-center gap-1">
+        <span>Xem Nhật Ký Live</span>
+        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN WRAPPER -->
+  <div class="flex flex-1 overflow-hidden">
+    <!-- SIDEBAR -->
+    <aside class="w-64 border-r border-slate-800 bg-slate-900/50 p-4 space-y-1 overflow-y-auto hidden md:block">
+      <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-2">Khởi tạo & Cấu hình</div>
+      <button onclick="switchTab('tab-profile')" id="btn-tab-profile" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-building text-sky-400 w-5"></i>
+        <span>Hồ sơ Doanh nghiệp</span>
+      </button>
+
+      <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-2 pt-4">Trí tuệ Nhân tạo AI</div>
+      <button onclick="switchTab('tab-research')" id="btn-tab-research" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-magnifying-glass-chart text-indigo-400 w-5"></i>
+        <span>Nghiên cứu Thị trường</span>
+      </button>
+      <button onclick="switchTab('tab-competitors')" id="btn-tab-competitors" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-crosshairs text-rose-400 w-5"></i>
+        <span>Tình báo Đối thủ</span>
+      </button>
+      <button onclick="switchTab('tab-personas')" id="btn-tab-personas" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-users text-amber-400 w-5"></i>
+        <span>Chân dung Khách hàng</span>
+      </button>
+
+      <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-2 pt-4">Sản xuất & Chiến dịch</div>
+      <button onclick="switchTab('tab-content')" id="btn-tab-content" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-pen-nib text-teal-400 w-5"></i>
+        <span>Xưởng Tạo Nội dung</span>
+      </button>
+      <button onclick="switchTab('tab-calendar')" id="btn-tab-calendar" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-calendar-days text-purple-400 w-5"></i>
+        <span>Lịch Nội dung 30 Ngày</span>
+      </button>
+      <button onclick="switchTab('tab-catalyst')" id="btn-tab-catalyst" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-network-wired text-cyan-400 w-5"></i>
+        <span>Đại Lý CATALYST (Loops)</span>
+      </button>
+
+      <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-2 pt-4">Vận hành & Đo lường</div>
+      <button onclick="switchTab('tab-analytics')" id="btn-tab-analytics" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-chart-line text-emerald-400 w-5"></i>
+        <span>Báo cáo & Dashboard</span>
+      </button>
+      <button onclick="switchTab('tab-automations')" id="btn-tab-automations" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-clock-rotate-left text-blue-400 w-5"></i>
+        <span>Lịch Chạy Tự Động</span>
+      </button>
+    </aside>
+
+    <!-- CONTENT AREA -->
+    <main class="flex-1 overflow-y-auto p-6 lg:p-8 space-y-6">
+
+      <!-- TAB 1: BUSINESS PROFILE -->
+      <section id="tab-profile" class="tab-pane hidden space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+            <i class="fa-solid fa-building text-sky-400"></i>
+            Hồ sơ Doanh nghiệp & Kết nối AI Studio
+          </h2>
+          <p class="text-sm text-slate-400 mt-1">
+            Nhập thông tin doanh nghiệp của bạn tại đây. Toàn bộ các module nghiên cứu, chân dung khách hàng, bài viết và lịch trình sẽ tự động tạo dựa trên thông tin này!
+          </p>
+        </div>
+
+        <!-- AI Key Warning Banner -->
+        <div id="ai-key-warning" class="bg-amber-950/40 border border-amber-500/30 rounded-2xl p-4 text-xs text-amber-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 text-base">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+              <span class="font-bold text-white text-sm">Chưa kết nối Google AI Studio (Gemini API):</span>
+              <p class="text-slate-300 mt-0.5">Hiện tại hệ thống đang chạy kịch bản dự phòng tĩnh. Để AI tự động đọc website đối thủ và suy luận thực tế (Real-time AI Inference), bạn chỉ cần dán Gemini API Key miễn phí vào ô bên dưới!</p>
+            </div>
+          </div>
+          <a href="https://aistudio.google.com/app/apikey" target="_blank" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl flex items-center gap-2 shrink-0 shadow-lg shadow-amber-500/20 transition">
+            <span>Lấy Key Miễn Phí Tại Đây</span>
+            <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Main Form -->
+          <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5">
+            <h3 class="text-base font-semibold text-sky-400 border-b border-slate-800 pb-3">Thông Tin Kinh Doanh</h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Tên Doanh nghiệp / Thương hiệu *</label>
+                <input type="text" id="inp-brand-name" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Ví dụ: Mỹ phẩm Mộc An, Thời trang X...">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Ngành hàng / Lĩnh vực *</label>
+                <input type="text" id="inp-industry" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Ví dụ: Bán lẻ thời trang, Mỹ phẩm thiên nhiên, F&B...">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Mô hình kinh doanh *</label>
+                <select id="inp-business-model" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                  <option value="B2C / Bán lẻ">B2C (Bán lẻ người tiêu dùng)</option>
+                  <option value="D2C (Trực tiếp từ nhà máy)">D2C (Bán trực tiếp tới khách hàng qua mạng)</option>
+                  <option value="B2B (Bán cho doanh nghiệp)">B2B (Khách hàng doanh nghiệp)</option>
+                  <option value="F&B / Nhà hàng Cafe">F&B / Ăn uống dịch vụ</option>
+                  <option value="Dịch vụ / Đào tạo">Dịch vụ / Giáo dục đào tạo</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Khoảng giá sản phẩm / dịch vụ</label>
+                <input type="text" id="inp-price-range" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Ví dụ: 150.000đ - 1.500.000đ">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Sản phẩm / Dịch vụ chủ lực *</label>
+              <textarea id="inp-products" rows="2" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Mô tả các sản phẩm bán chạy nhất, tính năng nổi bật..."></textarea>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Khách hàng mục tiêu (Độ tuổi, khu vực, hành vi) *</label>
+              <textarea id="inp-audience" rows="2" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Ví dụ: Nữ 22-35 tuổi tại các thành phố lớn, thích làm đẹp, hay mua hàng trên TikTok và Shopee..."></textarea>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="block text-xs font-semibold text-slate-300">
+                  Đối thủ cạnh tranh
+                  <span class="text-xs text-sky-400 font-normal ml-1">(Chưa rõ đối thủ? AI sẽ tự động rà quét trên thị trường)</span>
+                </label>
+                <button type="button" onclick="autoDiscoverCompetitorsUI()" id="btn-discover-comp" class="text-xs bg-indigo-600/80 hover:bg-indigo-600 text-sky-200 px-3 py-1 rounded-lg border border-indigo-500/40 transition flex items-center gap-1.5 font-medium shadow-sm">
+                  <i class="fa-solid fa-radar text-amber-300"></i>
+                  <span>AI Tự Rà Quét Đối Thủ</span>
+                </button>
+              </div>
+              <input type="text" id="inp-competitors" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Để trống nếu chưa rõ — AI sẽ tự động tìm kiếm đối thủ thực tế trên thị trường...">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kênh tiếp thị đang dùng</label>
+                <input type="text" id="inp-channels" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Facebook, TikTok Shop, Shopee, Cửa hàng...">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Ngân sách Marketing / Tháng (VNĐ)</label>
+                <input type="number" id="inp-budget" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Ví dụ: 30000000">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Giọng điệu thương hiệu (Tone of Voice)</label>
+              <input type="text" id="inp-voice" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Ví dụ: Trẻ trung, Gần gũi, Hài hước hoặc Chuyên gia, Uy tín...">
+            </div>
+
+            <div class="pt-2">
+              <button onclick="saveProfile()" class="w-full sm:w-auto bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-semibold text-sm px-6 py-2.5 rounded-xl shadow-lg shadow-sky-500/25 transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Lưu Hồ Sơ & Áp Dụng Toàn Hệ Thống</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- AI Studio & Quick Guide Column -->
+          <div class="space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+              <h3 class="text-base font-semibold text-indigo-400 border-b border-slate-800 pb-3 flex items-center gap-2">
+                <i class="fa-brands fa-google text-sky-400"></i>
+                Google AI Studio API
+              </h3>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Nhập Gemini API Key từ <a href="https://aistudio.google.com/" target="_blank" class="text-sky-400 underline font-semibold">Google AI Studio</a> để sử dụng các mô hình AI mới nhất của Google trực tiếp trong hệ thống.
+              </p>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Gemini API Key</label>
+                <input type="password" id="inp-gemini-key" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500 font-mono" placeholder="AIzaSy...">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Mô hình AI ưu tiên</label>
+                <select id="inp-gemini-model" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                  <option value="gemini-3.5-flash">Gemini 3.5 Flash (Khuyên dùng - Nhanh, chuẩn xác)</option>
+                  <option value="gemini-3.6-flash">Gemini 3.6 Flash (Phân tích chuyên sâu)</option>
+                  <option value="gemini-flash-latest">Gemini Flash Latest</option>
+                </select>
+              </div>
+              <div class="p-3 bg-slate-800/60 rounded-lg border border-slate-700/60 text-xs text-slate-400 flex items-start gap-2">
+                <i class="fa-solid fa-circle-info text-sky-400 mt-0.5"></i>
+                <span>Nếu bạn chưa có API Key, hệ thống vẫn hoạt động bình thường với Động cơ Thông minh Nội bộ (Offline Engine)!</span>
+              </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-indigo-950/40 to-slate-900 border border-indigo-900/40 rounded-2xl p-6 space-y-3">
+              <h4 class="text-sm font-bold text-sky-300 flex items-center gap-2">
+                <i class="fa-solid fa-bolt text-amber-400"></i>
+                Quy trình tự động hóa:
+              </h4>
+              <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+                <li><strong>Bước 1:</strong> Điền hồ sơ và bấm Lưu.</li>
+                <li><strong>Bước 2:</strong> Sang tab Nghiên cứu & Đối thủ để AI quét và phân tích.</li>
+                <li><strong>Bước 3:</strong> Vào Xưởng Nội dung để tự động viết bài đa kênh.</li>
+                <li><strong>Bước 4:</strong> Sinh lịch 30 ngày và theo dõi Dashboard!</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: MARKET RESEARCH -->
+      <section id="tab-research" class="tab-pane hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+              <i class="fa-solid fa-magnifying-glass-chart text-indigo-400"></i>
+              Nghiên cứu Thị trường Chuyên sâu
+            </h2>
+            <p class="text-sm text-slate-400 mt-1">Hệ thống AI tự động phân tích thị trường theo các tiêu chí tùy chọn: Khu vực địa lý, Phân khúc giá và Mục tiêu chiến dịch.</p>
+          </div>
+          <button onclick="runCustomMarketResearch()" id="btn-run-research" class="bg-gradient-to-r from-indigo-500 to-sky-500 hover:from-indigo-600 hover:to-sky-600 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-indigo-500/25 transition flex items-center gap-2 shrink-0">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Phân Tích Sâu Theo Tiêu Chí</span>
+          </button>
+        </div>
+
+        <!-- Interactive Market Criteria Filter -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+              <i class="fa-solid fa-map-location-dot text-indigo-400"></i>
+              Khu vực địa lý trọng tâm
+            </label>
+            <select id="sel-market-region" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+              <option value="Toàn quốc">Toàn quốc (63 tỉnh thành)</option>
+              <option value="Miền Bắc (Hà Nội, Hải Phòng, Bắc Ninh...)">Miền Bắc (Hà Nội, Hải Phòng, Bắc Ninh...)</option>
+              <option value="Miền Nam & Miền Tây (TP.HCM, Bình Dương, Đồng Nai, Cần Thơ...)">Miền Nam & Miền Tây (TP.HCM, Bình Dương...)</option>
+              <option value="Miền Trung & Tây Nguyên (Đà Nẵng, Quảng Nam, Nghệ An, Đắk Lắk...)">Miền Trung & Tây Nguyên (Đà Nẵng...)</option>
+              <option value="Xuất khẩu (Lào, Campuchia, Đông Nam Á)">Xuất khẩu (Lào, Campuchia, Đông Nam Á)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+              <i class="fa-solid fa-tags text-sky-400"></i>
+              Phân khúc giá khảo sát
+            </label>
+            <select id="sel-market-price" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+              <option value="Theo hồ sơ hiện tại">Mặc định theo giá hồ sơ</option>
+              <option value="Dưới 30 triệu (Phân khúc giá rẻ / Doanh nghiệp nhỏ)">Dưới 30 triệu (Giá rẻ / Quy mô nhỏ)</option>
+              <option value="30 triệu - 80 triệu (Tầm trung phổ thông)">30 triệu - 80 triệu (Tầm trung phổ thông)</option>
+              <option value="80 triệu - 200 triệu (Cao cấp / Công nghiệp nặng)">80 triệu - 200 triệu (Cao cấp / Công nghiệp)</option>
+              <option value="Trên 200 triệu (Dây chuyền tự động hóa / Enterprise)">Trên 200 triệu (Dây chuyền lớn)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+              <i class="fa-solid fa-bullseye text-emerald-400"></i>
+              Mục tiêu chiến dịch
+            </label>
+            <select id="sel-market-objective" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+              <option value="Đánh chiếm thị phần từ đối thủ lớn">Đánh chiếm thị phần từ đối thủ lớn</option>
+              <option value="Ra mắt sản phẩm / Dòng máy mới">Ra mắt sản phẩm / Dòng máy mới</option>
+              <option value="Đấu thầu dự án & Khách hàng B2B lớn">Đấu thầu dự án & Khách hàng B2B lớn</option>
+              <option value="Tối ưu tỷ lệ chốt đơn & Nhận diện thương hiệu">Tối ưu tỷ lệ chốt đơn & Nhận diện</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="research-result-box" class="bg-slate-900 border border-slate-800 rounded-2xl p-8 min-h-[400px]">
+          <div id="research-placeholder" class="text-center py-16 space-y-4">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 text-2xl">
+              <i class="fa-solid fa-chart-pie"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-200">Chưa có kết quả nghiên cứu</h3>
+            <p class="text-sm text-slate-400 max-w-md mx-auto">
+              Chọn tiêu chí khảo sát ở trên và bấm <strong class="text-sky-400">"Phân Tích Sâu Theo Tiêu Chí"</strong> để hệ thống tự động quét và phân tích thị trường chuẩn xác.
+            </p>
+          </div>
+          <div id="research-loading" class="hidden text-center py-20 space-y-4">
+            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-sky-400"></i>
+            <p class="text-sm text-slate-300 font-medium animate-pulse">Đang quét thị trường theo thời gian thực & tính toán quy mô TAM/SAM/SOM, PESTEL chuyên sâu...</p>
+            <p class="text-xs text-slate-500">Hệ thống đang truy cập dữ liệu ngành và đối chiếu thực tế theo tiêu chí bạn đã chọn</p>
+          </div>
+          <div id="research-content" class="hidden markdown-body text-slate-300 text-sm space-y-4"></div>
+        </div>
+      </section>
+
+      <!-- TAB 3: COMPETITORS -->
+      <section id="tab-competitors" class="tab-pane hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+              <i class="fa-solid fa-crosshairs text-rose-400"></i>
+              Tình báo Đối thủ & Battlecards
+            </h2>
+            <p class="text-sm text-slate-400 mt-1">Hệ thống AI tự động rà quét thị trường theo ngành nghề & sản phẩm để phát hiện đối thủ có thật, sau đó bóc tách điểm yếu và tạo kịch bản phản đòn.</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="autoDiscoverCompetitorsUI()" id="btn-tab-discover-comp" class="bg-indigo-600/80 hover:bg-indigo-600 text-sky-200 border border-indigo-500/40 font-semibold text-sm px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg">
+              <i class="fa-solid fa-radar text-amber-300"></i>
+              <span>AI Tự Rà Quét Đối Thủ</span>
+            </button>
+            <button onclick="runCompetitorAnalysis()" id="btn-run-competitors" class="bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-rose-500/25 transition flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved"></i>
+              <span>Lập Battlecards Đối Đầu</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Discovered Competitors Quick Bar -->
+        <div id="discovered-cards-container" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3"></div>
+
+        <div id="competitor-result-box" class="bg-slate-900 border border-slate-800 rounded-2xl p-8 min-h-[400px]">
+          <div id="competitor-placeholder" class="text-center py-16 space-y-4">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-400 text-2xl">
+              <i class="fa-solid fa-swords"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-200">Chưa có hồ sơ đối thủ</h3>
+            <p class="text-sm text-slate-400 max-w-lg mx-auto">
+              Chủ doanh nghiệp chưa biết đối thủ là ai? Nhấp vào nút <strong class="text-sky-400">"AI Tự Rà Quét Đối Thủ"</strong> ở trên — hệ thống sẽ tự động quét web thời gian thực dựa trên Tên công ty, Sản phẩm và Ngành nghề để tìm ra các đối thủ cạnh tranh có thật tại Việt Nam!
+            </p>
+          </div>
+          <div id="competitor-loading" class="hidden text-center py-20 space-y-4">
+            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-rose-400"></i>
+            <p class="text-sm text-slate-300 font-medium animate-pulse">Đang tự động rà quét thị trường & cào dữ liệu website từng đối thủ thực tế...</p>
+            <p class="text-xs text-slate-500">Đang lập Ma trận năng lực cạnh tranh, phân tích tử huyệt và Kịch bản xử lý từ chối (Objection Handling)</p>
+          </div>
+          <div id="competitor-content" class="hidden markdown-body text-slate-300 text-sm space-y-4"></div>
+        </div>
+      </section>
+
+      <!-- TAB 4: PERSONAS -->
+      <section id="tab-personas" class="tab-pane hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+              <i class="fa-solid fa-users text-amber-400"></i>
+              Chân dung Khách hàng Mục tiêu (Buyer Personas)
+            </h2>
+            <p class="text-sm text-slate-400 mt-1">Thấu hiểu sâu sắc nỗi đau, động lực mua sắm và thông điệp chạm trúng cảm xúc của từng nhóm khách hàng.</p>
+          </div>
+          <button onclick="runPersonas()" id="btn-run-personas" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-amber-500/25 transition flex items-center gap-2">
+            <i class="fa-solid fa-user-gear"></i>
+            <span>Tạo 3 Chân Dung Khách Hàng</span>
+          </button>
+        </div>
+
+        <div id="personas-result-box" class="bg-slate-900 border border-slate-800 rounded-2xl p-8 min-h-[400px]">
+          <div id="personas-placeholder" class="text-center py-16 space-y-4">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-400 text-2xl">
+              <i class="fa-solid fa-id-card-clip"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-200">Chưa có chân dung khách hàng</h3>
+            <p class="text-sm text-slate-400 max-w-md mx-auto">
+              Bấm nút tạo chân dung để AI phân loại các phân khúc khách hàng cốt lõi và kịch bản thuyết phục riêng cho từng người.
+            </p>
+          </div>
+          <div id="personas-loading" class="hidden text-center py-20 space-y-4">
+            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-amber-400"></i>
+            <p class="text-sm text-slate-300 font-medium animate-pulse">AI đang dựng 3 chân dung khách hàng và phân tích tâm lý mua hàng...</p>
+          </div>
+          <div id="personas-content" class="hidden markdown-body text-slate-300 text-sm space-y-4"></div>
+        </div>
+      </section>
+
+      <!-- TAB 5: CONTENT STUDIO -->
+      <section id="tab-content" class="tab-pane hidden space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+            <i class="fa-solid fa-pen-nib text-teal-400"></i>
+            Xưởng Sản xuất Nội dung Đa Kênh Tự Động
+          </h2>
+          <p class="text-sm text-slate-400 mt-1">Tự động sinh kịch bản TikTok 3s hook, bài viết Facebook, chuẩn SEO và email chỉ với 1 cú nhấp chuột.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Generator Controls -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 h-fit">
+            <h3 class="text-sm font-bold text-teal-400 uppercase tracking-wider">Cấu Hình Yêu Cầu</h3>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Chọn Kênh Tiếp Thị</label>
+              <select id="content-channel" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-teal-500">
+                <option value="TikTok">TikTok / Reels (Video ngắn dọc 9:16)</option>
+                <option value="Facebook">Facebook Fanpage (Bài viết & Hình ảnh)</option>
+                <option value="SEO">Website Blog (Chuẩn SEO H2/H3)</option>
+                <option value="Email">Email Nurture / Bản tin Newsletter</option>
+                <option value="Ads">Quảng cáo Meta & Google Ads Copy</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5">Chủ đề bài viết / Video</label>
+              <input type="text" id="content-topic" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-teal-500" placeholder="Ví dụ: 3 sai lầm khiến khách hàng hủy đơn...">
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="block text-xs font-semibold text-slate-300">Hoặc chọn nhanh chủ đề gợi ý:</label>
+              <div class="flex flex-wrap gap-1.5">
+                <button onclick="pickTopic('3 Sai lầm chết người khi chọn giải pháp')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700">3 Sai lầm</button>
+                <button onclick="pickTopic('Bí quyết tiết kiệm 50% chi phí vận hành')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700">Tiết kiệm 50%</button>
+                <button onclick="pickTopic('Câu chuyện thật của khách hàng trước & sau')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700">Case Study</button>
+                <button onclick="pickTopic('Khuyến mại Flash Sale cuối tuần tri ân')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700">Flash Sale</button>
+              </div>
+            </div>
+
+            <button onclick="generateContent()" id="btn-gen-content" class="w-full bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-semibold text-sm py-2.5 rounded-xl shadow-lg shadow-teal-500/25 transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Tạo Nội Dung Bằng AI</span>
+            </button>
+          </div>
+
+          <!-- Output Box -->
+          <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6 min-h-[450px] flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
+                <span id="content-output-badge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">Bản nháp tự động</span>
+                <button onclick="copyContent()" class="text-xs text-sky-400 hover:text-sky-300 font-medium flex items-center gap-1.5">
+                  <i class="fa-solid fa-copy"></i>
+                  <span>Sao chép toàn bộ</span>
+                </button>
+              </div>
+
+              <div id="content-output" class="markdown-body text-slate-300 text-sm">
+                <p class="text-slate-400 italic">Chọn kênh và chủ đề rồi bấm <strong>"Tạo Nội Dung Bằng AI"</strong> để xem kết quả bản thảo hoàn chỉnh tại đây.</p>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-800 flex justify-end gap-3 text-xs">
+              <span class="text-slate-500 self-center">Tự động lưu vào thư viện bài viết</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 6: CALENDAR -->
+      <section id="tab-calendar" class="tab-pane hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+              <i class="fa-solid fa-calendar-days text-purple-400"></i>
+              Lịch Xuất Bản Nội Dung 30 Ngày
+            </h2>
+            <p class="text-sm text-slate-400 mt-1">Kế hoạch đăng bài đa kênh chia đều theo phễu chuyển đổi (TOFU/MOFU/BOFU) và trụ cột nội dung.</p>
+          </div>
+          <button onclick="generateCalendar()" id="btn-gen-calendar" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-purple-500/25 transition flex items-center gap-2">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Tạo Kế Hoạch 30 Ngày Mới</span>
+          </button>
+        </div>
+
+        <!-- Strategic Content Direction Bar -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-3 w-full md:w-auto">
+            <label class="text-xs font-semibold text-slate-300 shrink-0 flex items-center gap-1.5">
+              <i class="fa-solid fa-compass-drafting text-purple-400"></i>
+              Thiên hướng chiến lược 30 ngày:
+            </label>
+            <select id="sel-content-direction" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500 w-full sm:w-auto">
+              <option value="educational">Giáo dục Kỹ thuật & Bền bỉ (Xây dựng uy tín chuyên gia)</option>
+              <option value="aggressive">Bán hàng Thực chiến & Chốt đơn mạnh (Cam kết ROI, Flash Sale)</option>
+              <option value="video_viral">Video Ngắn Triệu View (TikTok/Reels/Shorts, Hook sốc)</option>
+              <option value="brand_b2b">Định vị Thương hiệu Dẫn đầu B2B (Dự án lớn, Hồ sơ năng lực)</option>
+            </select>
+          </div>
+          <button onclick="generateCustomCalendarUI()" id="btn-custom-calendar" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-purple-500/25 transition flex items-center justify-center gap-2 shrink-0">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+            <span>Lập Lại Lịch Theo Thiên Hướng Này</span>
+          </button>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-slate-800/60 text-slate-400 text-xs uppercase font-semibold border-b border-slate-800">
+                <tr>
+                  <th class="py-3 px-4">Ngày</th>
+                  <th class="py-3 px-4">Kênh Đăng</th>
+                  <th class="py-3 px-4">Trụ Cột (Pillar)</th>
+                  <th class="py-3 px-4">Giai Đoạn Phễu</th>
+                  <th class="py-3 px-4">Chủ Đề & Góc Nhìn</th>
+                  <th class="py-3 px-4 text-center">Trọn Gói Chi Tiết</th>
+                </tr>
+              </thead>
+              <tbody id="calendar-table-body" class="divide-y divide-slate-800 text-slate-300 text-xs">
+                <tr>
+                  <td colspan="6" class="py-12 text-center text-slate-500">Đang tải lịch nội dung...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 7: ANALYTICS -->
+      <section id="tab-analytics" class="tab-pane hidden space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+            <i class="fa-solid fa-chart-line text-emerald-400"></i>
+            Báo cáo Hiệu quả & Dashboard
+          </h2>
+          <p class="text-sm text-slate-400 mt-1">Đo lường các chỉ số vàng: MER, ROAS, CAC, LTV và tiến độ doanh thu thực tế.</p>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Doanh Thu Ghi Nhận</span>
+            <div id="stat-revenue" class="text-2xl font-bold text-white mt-1">0 đ</div>
+            <span class="text-[11px] text-emerald-400 flex items-center gap-1 mt-1">
+              <i class="fa-solid fa-arrow-trend-up"></i> Tăng trưởng thực tế
+            </span>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Chi Phí Tiếp Thị</span>
+            <div id="stat-spend" class="text-2xl font-bold text-white mt-1">0 đ</div>
+            <span class="text-[11px] text-sky-400 flex items-center gap-1 mt-1">
+              <i class="fa-solid fa-bullseye"></i> Ngân sách đã chi
+            </span>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Hiệu Quả Tổng (MER)</span>
+            <div id="stat-mer" class="text-2xl font-bold text-emerald-400 mt-1">0.0x</div>
+            <span class="text-[11px] text-slate-400 mt-1">Doanh thu / Chi phí</span>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Chi Phí Thu Nạp (CAC)</span>
+            <div id="stat-cac" class="text-2xl font-bold text-indigo-400 mt-1">0 đ</div>
+            <span class="text-[11px] text-slate-400 mt-1">Chi phí / Khách mới</span>
+          </div>
+        </div>
+
+        <!-- Quick Entry Form -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <h3 class="text-sm font-bold text-slate-200 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-plus-circle text-sky-400"></i>
+            Nhập Nhanh Số Liệu Ngày Hôm Nay
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Ngày (YYYY-MM-DD)</label>
+              <input type="date" id="metric-date" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Tiền Ads Đã Tiêu (VNĐ)</label>
+              <input type="number" id="metric-spend" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white" placeholder="0">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Doanh Số Bán Hàng (VNĐ)</label>
+              <input type="number" id="metric-rev" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white" placeholder="0">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Số Đơn Hàng Mới</label>
+              <input type="number" id="metric-orders" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white" placeholder="0">
+            </div>
+            <div class="flex items-end">
+              <button onclick="recordDailyMetric()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs py-2 rounded-lg transition">
+                Ghi Nhận
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 8: AUTOMATIONS HUB -->
+      <section id="tab-automations" class="tab-pane hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+              <i class="fa-solid fa-robot text-emerald-400"></i>
+              Trung Tâm Vận Hành Tự Động (Auto-Pilot Hub)
+            </h2>
+            <p class="text-sm text-slate-400 mt-1">Hệ thống marketing tự động 24/7 – Tự quét thị trường, soi đối thủ, lập lịch 30 ngày và xuất bản nội dung.</p>
+          </div>
+          <button onclick="runAutoPilotNow()" id="btn-autopilot-tab-run" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-orange-500/25 transition flex items-center gap-2">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Kích Hoạt Chạy Tự Động Toàn Trình</span>
+          </button>
+        </div>
+
+        <!-- Metric Summary Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <span class="text-xs text-slate-400">Trạng Thái Auto-Pilot</span>
+            <div class="text-sm font-bold text-emerald-400 mt-1 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              24/7 ĐANG CHẠY
+            </div>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <span class="text-xs text-slate-400">Lịch Đã Lên Kế Hoạch</span>
+            <div class="text-lg font-bold text-white mt-1" id="stat-calendar-days">30 Ngày</div>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <span class="text-xs text-slate-400">Kho Bài Đã Viết Nháp</span>
+            <div class="text-lg font-bold text-white mt-1" id="stat-content-count">5 Bài</div>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+            <span class="text-xs text-slate-400">Đối Thủ Đang Theo Dõi</span>
+            <div class="text-lg font-bold text-sky-400 mt-1" id="stat-comp-count">4 Website</div>
+          </div>
+        </div>
+
+        <!-- Realtime Auto-Pilot Feed -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+          <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-terminal text-sky-400"></i>
+              <h3 class="text-sm font-bold text-white">Nhật Ký Tác Vụ Tự Động Thời Gian Thực (Auto-Pilot Live Feed)</h3>
+            </div>
+            <span class="text-[11px] text-slate-400 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              Tự động làm mới mỗi 8s
+            </span>
+          </div>
+          <div id="autopilot-log-feed" class="space-y-2 max-h-72 overflow-y-auto font-mono text-xs pr-2">
+            <div class="text-slate-500 py-4 text-center">Đang tải nhật ký tự động...</div>
+          </div>
+        </div>
+
+        <!-- 4 Core Automation Workflows -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-xs font-bold text-sky-400">A01 (07:00 T2-T7)</span>
+                <h4 class="text-sm font-bold text-white mt-0.5">Bản tin thị trường & Soi đối thủ</h4>
+              </div>
+              <span class="text-[11px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-semibold">Tự Động 24/7</span>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">Tự động cào website 4 đối thủ (Chiho, Hoàng Minh, Siêu Việt, Phúc Long) kiểm tra biến động giá và sản phẩm mới.</p>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-xs font-bold text-teal-400">A03 (08:00 T2-T6)</span>
+                <h4 class="text-sm font-bold text-white mt-0.5">Sản xuất nội dung hằng ngày</h4>
+              </div>
+              <span class="text-[11px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-semibold">Tự Động 24/7</span>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">Tự động đọc lịch 30 ngày và soạn thảo hoàn chỉnh kịch bản video TikTok và bài viết Facebook cho 2 ngày tới.</p>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-xs font-bold text-indigo-400">A04 (08:30 T2-T6)</span>
+                <h4 class="text-sm font-bold text-white mt-0.5">Marketing Ops: Điều phối</h4>
+              </div>
+              <span class="text-[11px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-semibold">Tự Động 24/7</span>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">Tự động tổng hợp danh sách công việc quá hạn, bài viết cần duyệt và gửi thông báo standup.</p>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="text-xs font-bold text-rose-400">A06 (09:00 Thứ 2)</span>
+                <h4 class="text-sm font-bold text-white mt-0.5">Báo cáo KPI tuần & Đề xuất ICE</h4>
+              </div>
+              <span class="text-[11px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-semibold">Tự Động 24/7</span>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">Tự động tính toán MER, ROAS, tỷ lệ chuyển đổi và đề xuất 5 hành động ưu tiên bứt phá doanh số.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 9: CATALYST MULTI-AGENT ORCHESTRATOR & LOOPS -->
+      <section id="tab-catalyst" class="tab-pane hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+              <i class="fa-solid fa-network-wired text-cyan-400"></i>
+              Điều Phối Đa Đại Lý CATALYST & Marketing Loops
+            </h2>
+            <p class="text-sm text-slate-400 mt-1">
+              Kiến trúc Multi-Agent phối hợp 5 chuyên gia tiếp thị độc lập (PMM, Competitive Intel, Sales Coach, Content Creator, AEO Optimizer) theo chuẩn SaaS Marketing Agents.
+            </p>
+          </div>
+          <span class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 shrink-0">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+            <span>CATALYST ENGINE READY</span>
+          </span>
+        </div>
+
+        <!-- 4 Strategic Marketing Loops Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <!-- Loop 1 -->
+          <div class="bg-slate-900 border border-slate-800 hover:border-cyan-500/40 rounded-2xl p-5 space-y-3 transition flex flex-col justify-between shadow-md">
+            <div class="space-y-2">
+              <div class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-crosshairs"></i>
+              </div>
+              <span class="text-[10px] font-bold bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded uppercase">Loop 1 (Hằng Tuần)</span>
+              <h3 class="text-sm font-bold text-white">Tình Báo Đối Thủ Tuần</h3>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Rà quét watchlist đối thủ, phân loại mức độ nghiêm trọng (Watch/Notify/Act) và cập nhật Objection Register cho đội ngũ sale.
+              </p>
+            </div>
+            <button onclick="runCatalystLoop('weekly_intel')" class="w-full mt-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-semibold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Kích Hoạt Loop 1</span>
+            </button>
+          </div>
+
+          <!-- Loop 2 -->
+          <div class="bg-slate-900 border border-slate-800 hover:border-teal-500/40 rounded-2xl p-5 space-y-3 transition flex flex-col justify-between shadow-md">
+            <div class="space-y-2">
+              <div class="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-400 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-feather-pointed"></i>
+              </div>
+              <span class="text-[10px] font-bold bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded uppercase">Loop 2 (AEO/GEO)</span>
+              <h3 class="text-sm font-bold text-white">Cỗ Máy Nội Dung AEO</h3>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Sản xuất tài nguyên định dạng Answer-First 50 từ tối ưu để Perplexity, ChatGPT, Gemini trích dẫn + bộ phân phối đa kênh.
+              </p>
+            </div>
+            <button onclick="runCatalystLoop('content_engine')" class="w-full mt-3 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-500 hover:to-emerald-500 text-white font-semibold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Kích Hoạt Loop 2</span>
+            </button>
+          </div>
+
+          <!-- Loop 3 -->
+          <div class="bg-slate-900 border border-slate-800 hover:border-rose-500/40 rounded-2xl p-5 space-y-3 transition flex flex-col justify-between shadow-md">
+            <div class="space-y-2">
+              <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-hand-holding-hand"></i>
+              </div>
+              <span class="text-[10px] font-bold bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded uppercase">Loop 3 (Poaching)</span>
+              <h3 class="text-sm font-bold text-white">Hớt Tay Trên Khách Đối Thủ</h3>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Khai thác tử huyệt máy nóng nhớt & bảo hành chậm của đối thủ, kích hoạt gói ưu đãi chuyển đổi và thu cũ đổi mới.
+              </p>
+            </div>
+            <button onclick="runCatalystLoop('competitor_poaching')" class="w-full mt-3 bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white font-semibold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Kích Hoạt Loop 3</span>
+            </button>
+          </div>
+
+          <!-- Loop 4 -->
+          <div class="bg-slate-900 border border-slate-800 hover:border-purple-500/40 rounded-2xl p-5 space-y-3 transition flex flex-col justify-between shadow-md">
+            <div class="space-y-2">
+              <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-lg">
+                <i class="fa-solid fa-rocket"></i>
+              </div>
+              <span class="text-[10px] font-bold bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded uppercase">Loop 4 (Sprint)</span>
+              <h3 class="text-sm font-bold text-white">Ra Mắt Dòng Máy Mới</h3>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                Chiến dịch Go-To-Market 4 tuần phối hợp trọn vẹn từ định vị, video thử tải thực tế, kịch bản chốt hợp đồng đến đo lường KPI.
+              </p>
+            </div>
+            <button onclick="runCatalystLoop('product_launch')" class="w-full mt-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow">
+              <i class="fa-solid fa-bolt"></i>
+              <span>Kích Hoạt Loop 4</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Custom Campaign Brief Box -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-terminal text-cyan-400"></i>
+            Hoặc giao nhiệm vụ tùy biến cho Đội Ngũ Đại Lý CATALYST
+          </h3>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input type="text" id="catalyst-custom-brief" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500" placeholder="Ví dụ: Chiến dịch chiếm lĩnh thị phần máy bẻ đai tại khu vực Miền Tây trong quý tới...">
+            <button onclick="runCatalystLoop('custom_brief')" id="btn-run-catalyst-custom" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-lg shadow-cyan-500/20 transition flex items-center justify-center gap-2 shrink-0">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Điều Phối Theo Yêu Cầu</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Specialists Status Bar -->
+        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <span class="text-slate-400 font-semibold flex items-center gap-2">
+            <i class="fa-solid fa-users-gear text-cyan-400"></i>
+            5 Đại Lý Chuyên Biệt Sẵn Sàng:
+          </span>
+          <div class="flex flex-wrap gap-2 text-[11px]">
+            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-cyan-300 border border-cyan-500/30 font-medium">🧑‍💼 PMM Lead (Định vị)</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-sky-300 border border-sky-500/30 font-medium">🕵️ Intel Sweeper (Tình báo web)</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-amber-300 border border-amber-500/30 font-medium">🛡️ Sales Coach (Objection)</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-teal-300 border border-teal-500/30 font-medium">✍️ Content Studio (Bài viết/Video)</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-indigo-300 border border-indigo-500/30 font-medium">⚡ AEO/GEO (AI Search Citation)</span>
+          </div>
+        </div>
+
+        <!-- Output Box -->
+        <div id="catalyst-result-box" class="bg-slate-900 border border-slate-800 rounded-2xl p-8 min-h-[400px]">
+          <div id="catalyst-placeholder" class="text-center py-16 space-y-4">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-2xl">
+              <i class="fa-solid fa-network-wired"></i>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-200">Chưa có phiên điều phối chiến dịch</h3>
+            <p class="text-sm text-slate-400 max-w-md mx-auto">
+              Nhấp vào một trong 4 Vòng lặp chiến lược (Loops) ở trên để kích hoạt hệ thống điều phối 5 đại lý phối hợp giải quyết bài toán marketing thực tế.
+            </p>
+          </div>
+          
+          <div id="catalyst-loading" class="hidden text-center py-20 space-y-4">
+            <i class="fa-solid fa-circle-notch fa-spin text-4xl text-cyan-400"></i>
+            <p class="text-sm text-slate-300 font-medium animate-pulse">CATALYST đang phân công nhiệm vụ và điều phối 5 đại lý chuyên trách...</p>
+            <p class="text-xs text-slate-500">Đang quét dữ liệu thị trường thực tế và thiết lập Objection Register + Nội dung AEO</p>
+          </div>
+
+          <div id="catalyst-content" class="hidden space-y-6">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+              <span id="catalyst-loop-badge" class="text-xs font-bold px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">Vòng lặp CATALYST</span>
+              <button onclick="copyCatalystPlan()" class="text-xs text-sky-400 hover:text-sky-300 font-medium flex items-center gap-1.5 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                <i class="fa-solid fa-copy"></i>
+                <span>Sao Chép Toàn Bộ Kế Hoạch</span>
+              </button>
+            </div>
+            
+            <div id="catalyst-markdown-body" class="markdown-body text-slate-300 text-sm leading-relaxed space-y-4"></div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODAL: TRỌN GÓI NỘI DUNG ĐA PHƯƠNG TIỆN (BÀI VIẾT + VIDEO DỌC + PROMPT ẢNH) -->
+  <div id="modal-content-package" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/90">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-teal-500 to-emerald-600 flex items-center justify-center text-white text-base shadow-md shadow-teal-500/20">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span id="pkg-modal-title" class="line-clamp-1">Trọn Gói Nội Dung Đa Phương Tiện AI</span>
+            </h3>
+            <p class="text-xs text-slate-400 flex items-center gap-2 mt-0.5">
+              <span id="pkg-modal-channel" class="bg-teal-500/10 text-teal-400 border border-teal-500/30 px-2 py-0.5 rounded text-[10px] font-semibold">Kênh</span>
+              <span>• Bài viết hoàn chỉnh + Kịch bản Video dọc 9:16 + Prompt Midjourney/Imagen</span>
+            </p>
+          </div>
+        </div>
+        <button onclick="closePackageModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Modal Tabs Bar -->
+      <div class="px-6 pt-3 border-b border-slate-800 bg-slate-950/40 flex gap-2">
+        <button onclick="switchPackageTab('tab-pkg-article')" id="btn-tab-pkg-article" class="pkg-tab-btn px-4 py-2 text-xs font-semibold rounded-t-lg transition border-b-2 border-teal-400 text-teal-300 bg-teal-500/10 flex items-center gap-1.5">
+          <i class="fa-solid fa-newspaper"></i>
+          <span>1. Bài Viết Đầy Đủ</span>
+        </button>
+        <button onclick="switchPackageTab('tab-pkg-video')" id="btn-tab-pkg-video" class="pkg-tab-btn px-4 py-2 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5">
+          <i class="fa-solid fa-video"></i>
+          <span>2. Kịch Bản Video Dọc (9:16)</span>
+        </button>
+        <button onclick="switchPackageTab('tab-pkg-image')" id="btn-tab-pkg-image" class="pkg-tab-btn px-4 py-2 text-xs font-semibold rounded-t-lg transition border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5">
+          <i class="fa-solid fa-image"></i>
+          <span>3. Prompt Ảnh AI (Midjourney/Imagen)</span>
+        </button>
+      </div>
+
+      <!-- Modal Content Body -->
+      <div class="p-6 overflow-y-auto flex-1 min-h-[350px] relative">
+        <!-- Loading State -->
+        <div id="pkg-modal-loading" class="absolute inset-0 bg-slate-900/90 backdrop-blur-sm flex flex-col items-center justify-center gap-3 z-10 hidden">
+          <i class="fa-solid fa-circle-notch fa-spin text-3xl text-teal-400"></i>
+          <p class="text-sm font-semibold text-slate-200 animate-pulse">AI đang viết trọn gói bài viết, phân cảnh video 9:16 và prompt ảnh 8k...</p>
+          <span class="text-xs text-slate-400">Tối ưu theo đúng đặc thù sản phẩm và đối tượng khách hàng</span>
+        </div>
+
+        <!-- Panel 1: Article -->
+        <div id="panel-pkg-article" class="pkg-panel space-y-4">
+          <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+            <span class="text-xs text-slate-400">Nội dung bài viết sẵn sàng xuất bản lên Facebook, Website hoặc Zalo</span>
+            <button onclick="copyPackagePart('article')" class="bg-slate-800 hover:bg-slate-700 text-sky-400 hover:text-sky-300 text-xs px-3 py-1.5 rounded-lg border border-slate-700 font-medium flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-copy"></i>
+              <span>Sao chép bài viết</span>
+            </button>
+          </div>
+          <div id="pkg-article-content" class="markdown-body text-slate-300 text-xs leading-relaxed space-y-3"></div>
+        </div>
+
+        <!-- Panel 2: Video Storyboard -->
+        <div id="panel-pkg-video" class="pkg-panel hidden space-y-4">
+          <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+            <div class="text-xs text-slate-400 flex items-center gap-2">
+              <span class="bg-rose-500/10 text-rose-400 px-2 py-0.5 rounded font-mono text-[10px]">TikTok / Reels 9:16</span>
+              <span>Bảng phân cảnh chi tiết từng giây (0-3s Hook, 4-15s Nỗi đau, 16-30s Giải pháp, 31-45s CTA)</span>
+            </div>
+            <button onclick="copyPackagePart('video')" class="bg-slate-800 hover:bg-slate-700 text-sky-400 hover:text-sky-300 text-xs px-3 py-1.5 rounded-lg border border-slate-700 font-medium flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-copy"></i>
+              <span>Sao chép kịch bản</span>
+            </button>
+          </div>
+          <div id="pkg-video-content" class="markdown-body text-slate-300 text-xs leading-relaxed space-y-3"></div>
+        </div>
+
+        <!-- Panel 3: Image Prompt -->
+        <div id="panel-pkg-image" class="pkg-panel hidden space-y-4">
+          <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+            <div class="text-xs text-slate-400 flex items-center gap-2">
+              <span class="bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded font-mono text-[10px]">Midjourney v6 / Imagen 3</span>
+              <span>Prompt tiếng Anh chuẩn studio cinematic, độ phân giải 8k</span>
+            </div>
+            <button onclick="copyPackagePart('image')" class="bg-slate-800 hover:bg-slate-700 text-sky-400 hover:text-sky-300 text-xs px-3 py-1.5 rounded-lg border border-slate-700 font-medium flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-copy"></i>
+              <span>Sao chép Prompt</span>
+            </button>
+          </div>
+          
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 font-mono text-xs text-emerald-400 leading-relaxed select-all" id="pkg-image-prompt-text"></div>
+          
+          <div class="bg-slate-800/40 border border-slate-800 rounded-xl p-3 text-xs text-slate-400 space-y-1">
+            <p class="font-semibold text-slate-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-lightbulb text-amber-400"></i>
+              Cách sử dụng Prompt:
+            </p>
+            <p>1. Bấm nút <strong>Sao chép Prompt</strong> ở trên.</p>
+            <p>2. Dán vào Discord bot của <strong>Midjourney</strong> (lệnh <code>/imagine prompt: ...</code>), hoặc công cụ <strong>Google Imagen 3 / DALL-E 3</strong>.</p>
+            <p>3. Ảnh xuất ra sẽ có phong cách studio chuyên nghiệp, ánh sáng công nghiệp chân thực và sắc nét.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-6 py-3 border-t border-slate-800 bg-slate-900/90 flex justify-between items-center text-xs">
+        <span class="text-slate-400 flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-check text-emerald-400"></i>
+          Đã tự động lưu vào kho nội dung của bạn
+        </span>
+        <button onclick="closePackageModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-1.5 rounded-lg font-medium transition">
+          Đóng
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl text-xs flex items-center gap-3 transition-all duration-300 transform translate-y-20 opacity-0 z-50">
+    <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
+    <span id="toast-msg">Thông báo thành công</span>
+  </div>
+
+  <script>
+    // App State
+    let currentProfile = {};
+
+    function showToast(msg, isSuccess = true) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      const toastIcon = document.getElementById('toast-icon');
+
+      toastMsg.innerText = msg;
+      toastIcon.className = isSuccess ? "fa-solid fa-circle-check text-emerald-400 text-sm" : "fa-solid fa-circle-exclamation text-rose-400 text-sm";
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3500);
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-item').forEach(el => {
+        el.classList.remove('bg-sky-500/10', 'text-sky-400', 'font-semibold');
+        el.classList.add('text-slate-300');
+      });
+
+      const targetPane = document.getElementById(tabId);
+      if (targetPane) targetPane.classList.remove('hidden');
+
+      const btnId = 'btn-' + tabId;
+      const targetBtn = document.getElementById(btnId);
+      if (targetBtn) {
+        targetBtn.classList.remove('text-slate-300');
+        targetBtn.classList.add('bg-sky-500/10', 'text-sky-400', 'font-semibold');
+      }
+
+      if (tabId === 'tab-competitors') loadDiscoveredCompetitors();
+      if (tabId === 'tab-calendar') loadCalendar();
+      if (tabId === 'tab-catalyst') loadLatestCatalyst();
+      if (tabId === 'tab-analytics') loadAnalytics();
+    }
+
+    // Load Profile
+    async function loadProfile() {
+      try {
+        const res = await fetch('/api/profile');
+        const data = await res.json();
+        currentProfile = data;
+
+        document.getElementById('nav-brand-name').innerText = data.brand_name || 'Chưa đặt tên';
+        document.getElementById('inp-brand-name').value = data.brand_name || '';
+        document.getElementById('inp-industry').value = data.industry || '';
+        document.getElementById('inp-business-model').value = data.business_model || 'B2C / Bán lẻ';
+        document.getElementById('inp-products').value = data.products_services || '';
+        document.getElementById('inp-price-range').value = data.price_range || '';
+        document.getElementById('inp-audience').value = data.target_audience || '';
+        document.getElementById('inp-competitors').value = data.competitors || '';
+        document.getElementById('inp-channels').value = data.channels || '';
+        document.getElementById('inp-budget').value = data.monthly_budget || 0;
+        document.getElementById('inp-voice').value = data.brand_voice || '';
+        document.getElementById('inp-gemini-key').value = data.gemini_api_key || '';
+        let modelVal = data.gemini_model || 'gemini-3.5-flash';
+        if (['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-2.0-flash-exp'].includes(modelVal)) {
+          modelVal = 'gemini-3.5-flash';
+        }
+        document.getElementById('inp-gemini-model').value = modelVal;
+
+        const warningBox = document.getElementById('ai-key-warning');
+        const navStatus = document.getElementById('nav-ai-status');
+
+        if (data.gemini_api_key && data.gemini_api_key.trim().length > 5) {
+          if (navStatus) {
+            navStatus.innerText = `Google AI Studio (${modelVal})`;
+            navStatus.className = 'font-bold text-emerald-400';
+          }
+          if (warningBox) warningBox.classList.add('hidden');
+        } else {
+          if (navStatus) {
+            navStatus.innerText = 'Chưa có Gemini Key (Mẫu dự phòng)';
+            navStatus.className = 'font-bold text-amber-400';
+          }
+          if (warningBox) warningBox.classList.remove('hidden');
+        }
+      } catch (err) {
+        console.error('Lỗi tải profile:', err);
+      }
+    }
+
+    // Save Profile
+    async function saveProfile() {
+      const payload = {
+        brand_name: document.getElementById('inp-brand-name').value,
+        industry: document.getElementById('inp-industry').value,
+        business_model: document.getElementById('inp-business-model').value,
+        products_services: document.getElementById('inp-products').value,
+        price_range: document.getElementById('inp-price-range').value,
+        target_audience: document.getElementById('inp-audience').value,
+        competitors: document.getElementById('inp-competitors').value,
+        channels: document.getElementById('inp-channels').value,
+        monthly_budget: parseFloat(document.getElementById('inp-budget').value) || 0,
+        brand_voice: document.getElementById('inp-voice').value,
+        gemini_api_key: document.getElementById('inp-gemini-key').value,
+        gemini_model: document.getElementById('inp-gemini-model').value
+      };
+
+      try {
+        const res = await fetch('/api/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        currentProfile = data.profile;
+        document.getElementById('nav-brand-name').innerText = currentProfile.brand_name;
+        showToast('Đã lưu hồ sơ và kích hoạt Auto-Pilot tự động chạy ngầm!');
+        // Tự động tải lại kết quả sau khi lưu
+        setTimeout(async () => {
+          await loadLatestResearch();
+          await loadCalendar();
+          await loadAutoPilotStatus();
+        }, 3000);
+      } catch (err) {
+        showToast('Lỗi khi lưu hồ sơ', false);
+      }
+    }
+
+    // Auto-Pilot Full Run
+    async function runAutoPilotNow() {
+      const btnHeader = document.getElementById('btn-header-autopilot');
+      const btnTab = document.getElementById('btn-autopilot-tab-run');
+      if (btnHeader) btnHeader.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang chạy tự động...</span>';
+      if (btnTab) btnTab.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang xử lý toàn trình...</span>';
+      
+      showToast('⚡ Đã kích hoạt Auto-Pilot: Hệ thống đang tự động cào dữ liệu và phân tích ngầm...');
+
+      try {
+        await fetch('/api/autopilot/run', { method: 'POST' });
+        // Polling loop
+        let pollCount = 0;
+        const interval = setInterval(async () => {
+          pollCount++;
+          await loadAutoPilotStatus();
+          await loadLatestResearch();
+          await loadCalendar();
+          await loadContentHistory();
+
+          if (pollCount >= 4) {
+            clearInterval(interval);
+            if (btnHeader) btnHeader.innerHTML = '<i class="fa-solid fa-bolt"></i> <span>Chạy Lại Toàn Trình (1-Click)</span>';
+            if (btnTab) btnTab.innerHTML = '<i class="fa-solid fa-bolt"></i> <span>Kích Hoạt Chạy Tự Động Toàn Trình</span>';
+            showToast('✅ Auto-Pilot đã hoàn tất 100% dữ liệu cho doanh nghiệp của bạn!');
+          }
+        }, 3000);
+      } catch (err) {
+        showToast('Lỗi kích hoạt Auto-Pilot', false);
+        if (btnHeader) btnHeader.innerHTML = '<i class="fa-solid fa-bolt"></i> <span>Chạy Lại Toàn Trình (1-Click)</span>';
+        if (btnTab) btnTab.innerHTML = '<i class="fa-solid fa-bolt"></i> <span>Kích Hoạt Chạy Tự Động Toàn Trình</span>';
+      }
+    }
+
+    // Load Auto-Pilot Status & Logs Feed
+    async function loadAutoPilotStatus() {
+      try {
+        const res = await fetch('/api/autopilot/status');
+        const data = await res.json();
+        
+        // Update counters
+        const cDays = document.getElementById('stat-calendar-days');
+        const cCount = document.getElementById('stat-content-count');
+        const cComp = document.getElementById('stat-comp-count');
+        const bStats = document.getElementById('banner-stats');
+
+        if (cDays) cDays.innerText = `${data.calendar_days || 30} Ngày`;
+        if (cCount) cCount.innerText = `${data.total_content || 5} Bài`;
+        if (cComp) cComp.innerText = `4 Website`;
+        if (bStats) bStats.innerText = `Lịch: ${data.calendar_days || 30} ngày | Kho nội dung: ${data.total_content || 5} bài | Đối thủ: 4 site`;
+
+        // Render live logs feed
+        const feed = document.getElementById('autopilot-log-feed');
+        if (feed && data.logs && data.logs.length > 0) {
+          feed.innerHTML = data.logs.map(log => {
+            let statusColor = "text-emerald-400";
+            let statusIcon = "fa-check";
+            if (log.status === "RUNNING") {
+              statusColor = "text-amber-400";
+              statusIcon = "fa-spinner fa-spin";
+            } else if (log.status === "FAILED") {
+              statusColor = "text-rose-400";
+              statusIcon = "fa-xmark";
+            }
+
+            return `
+              <div class="flex items-start gap-2 py-1 border-b border-slate-800/60 last:border-0 hover:bg-slate-800/30 px-2 rounded">
+                <span class="text-slate-500 shrink-0 text-[10px] mt-0.5">${log.created_at ? log.created_at.split(' ')[1] : ''}</span>
+                <span class="${statusColor} font-bold shrink-0 flex items-center gap-1">
+                  <i class="fa-solid ${statusIcon}"></i>
+                  [${log.task_code}]
+                </span>
+                <span class="text-slate-200 font-semibold">${log.task_name}:</span>
+                <span class="text-slate-400 truncate">${log.details || ''}</span>
+              </div>
+            `;
+          }).join('');
+        }
+      } catch (err) {
+        console.error('Error loading autopilot status:', err);
+      }
+    }
+
+    // Auto-Hydrate Latest Research from DB (No empty placeholders!)
+    async function loadLatestResearch() {
+      try {
+        const res = await fetch('/api/research/latest');
+        const data = await res.json();
+
+        // 1. Market research
+        if (data.market_research && data.market_research.content) {
+          const pBox = document.getElementById('research-placeholder');
+          const cBox = document.getElementById('research-content');
+          if (pBox) pBox.classList.add('hidden');
+          if (cBox) {
+            cBox.innerHTML = `
+              <div class="mb-4 p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-xs text-emerald-300 flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                  <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                  Dữ liệu phân tích thị trường đã được Auto-Pilot tự động tổng hợp & lưu trữ
+                </span>
+                <span class="text-[10px] bg-emerald-500/20 px-2 py-0.5 rounded font-mono">Tự Động 100%</span>
+              </div>
+            ` + marked.parse(data.market_research.content);
+            cBox.classList.remove('hidden');
+          }
+        }
+
+        // 2. Battlecards
+        if (data.battlecards && data.battlecards.content) {
+          const pBox = document.getElementById('competitor-placeholder');
+          const cBox = document.getElementById('competitor-content');
+          if (pBox) pBox.classList.add('hidden');
+          if (cBox) {
+            cBox.innerHTML = `
+              <div class="mb-4 p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-xs text-emerald-300 flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                  <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                  Hồ sơ tình báo đối thủ & Battlecards đã được cào trực tiếp từ Website
+                </span>
+                <span class="text-[10px] bg-emerald-500/20 px-2 py-0.5 rounded font-mono">Tự Động 100%</span>
+              </div>
+            ` + marked.parse(data.battlecards.content);
+            cBox.classList.remove('hidden');
+          }
+        }
+
+        // 3. Personas
+        if (data.personas && data.personas.content) {
+          const pBox = document.getElementById('personas-placeholder');
+          const cBox = document.getElementById('personas-content');
+          if (pBox) pBox.classList.add('hidden');
+          if (cBox) {
+            cBox.innerHTML = `
+              <div class="mb-4 p-3 bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-xs text-emerald-300 flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                  <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                  3 Chân dung khách hàng mục tiêu đã được phân tích tâm lý tự động
+                </span>
+                <span class="text-[10px] bg-emerald-500/20 px-2 py-0.5 rounded font-mono">Tự Động 100%</span>
+              </div>
+            ` + marked.parse(data.personas.content);
+            cBox.classList.remove('hidden');
+          }
+        }
+      } catch (err) {
+        console.error('Error loading latest research:', err);
+      }
+    }
+
+    // Run Custom Market Research by Selected Criteria
+    async function runCustomMarketResearch() {
+      const region = document.getElementById('sel-market-region').value;
+      const price_tier = document.getElementById('sel-market-price').value;
+      const objective = document.getElementById('sel-market-objective').value;
+
+      const pBox = document.getElementById('research-placeholder');
+      const lBox = document.getElementById('research-loading');
+      const cBox = document.getElementById('research-content');
+
+      if (pBox) pBox.classList.add('hidden');
+      if (lBox) lBox.classList.remove('hidden');
+      if (cBox) cBox.classList.add('hidden');
+
+      showToast(`🔍 AI đang phân tích thị trường: ${region} (${price_tier})...`);
+
+      try {
+        const res = await fetch('/api/research/market/custom', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ region, price_tier, objective })
+        });
+        const data = await res.json();
+        if (lBox) lBox.classList.add('hidden');
+        if (cBox) {
+          cBox.innerHTML = `
+            <div class="mb-4 p-3 bg-indigo-950/40 border border-indigo-500/30 rounded-xl text-xs text-indigo-300 flex items-center justify-between">
+              <span class="flex items-center gap-2">
+                <i class="fa-solid fa-map-location-dot text-indigo-400"></i>
+                Phân tích thị trường trọng tâm: <strong>${region}</strong> | Phân khúc: <strong>${price_tier}</strong>
+              </span>
+              <span class="text-[10px] bg-indigo-500/20 px-2 py-0.5 rounded font-mono">Chuyên Sâu</span>
+            </div>
+          ` + marked.parse(data.result);
+          cBox.classList.remove('hidden');
+        }
+        showToast(`✅ Đã phân tích thị trường khu vực: ${region}!`);
+        loadAutoPilotStatus();
+      } catch (err) {
+        if (lBox) lBox.classList.add('hidden');
+        showToast('Lỗi khi nghiên cứu thị trường', false);
+      }
+    }
+
+    // Run Market Research (Standard override)
+    async function runMarketResearch() {
+      return runCustomMarketResearch();
+    }
+
+    // Auto Discover Competitors via AI
+    async function autoDiscoverCompetitorsUI() {
+      const btn = document.getElementById('btn-discover-comp');
+      const btnTab = document.getElementById('btn-tab-discover-comp');
+      const origHtml1 = btn ? btn.innerHTML : '';
+      const origHtml2 = btnTab ? btnTab.innerHTML : '';
+
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-300"></i> <span>Đang rà quét web...</span>';
+      if (btnTab) btnTab.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-300"></i> <span>Đang rà quét web...</span>';
+
+      showToast('🔍 AI đang tìm kiếm và rà quét các đối thủ thực tế trên thị trường Việt Nam...');
+
+      try {
+        const res = await fetch('/api/competitors/discover', { method: 'POST' });
+        const data = await res.json();
+        if (data.status === 'success' && data.competitors && data.competitors.length > 0) {
+          const compNames = data.competitors.map(c => c.website ? `${c.name} (${c.website})` : c.name).join(', ');
+          const inp = document.getElementById('inp-competitors');
+          if (inp) inp.value = compNames;
+          
+          showToast(`✅ Đã tìm thấy ${data.competitors.length} đối thủ thực tế!`);
+          renderDiscoveredCards(data.competitors);
+        } else {
+          showToast('Không tìm thấy đối thủ mới hoặc lỗi kết nối', false);
+        }
+      } catch (err) {
+        showToast('Lỗi khi rà quét đối thủ', false);
+      } finally {
+        if (btn) btn.innerHTML = origHtml1;
+        if (btnTab) btnTab.innerHTML = origHtml2;
+      }
+    }
+
+    function renderDiscoveredCards(cards) {
+      const container = document.getElementById('discovered-cards-container');
+      if (!container || !cards || cards.length === 0) return;
+
+      container.innerHTML = cards.map(c => `
+        <div class="bg-slate-900/90 border border-indigo-500/30 rounded-xl p-3.5 space-y-2 hover:border-indigo-400 transition shadow-md flex flex-col justify-between">
+          <div class="space-y-1.5">
+            <div class="flex items-start justify-between gap-2">
+              <h4 class="text-xs font-bold text-white truncate flex items-center gap-1.5">
+                <i class="fa-solid fa-crosshairs text-rose-400"></i>
+                ${c.name}
+              </h4>
+              <span class="text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded shrink-0">${c.competitor_type || c.type || 'Trực tiếp'}</span>
+            </div>
+            ${c.website ? `<a href="${c.website}" target="_blank" class="text-[11px] text-sky-400 hover:underline block truncate"><i class="fa-solid fa-link text-[10px] mr-1"></i>${c.website.replace('https://', '').replace('http://', '').replace(/\/$/, '')}</a>` : ''}
+            <p class="text-[11px] text-slate-300 line-clamp-2">${c.core_products || c.key_strengths || ''}</p>
+            ${c.vulnerabilities ? `
+              <div class="pt-1.5 border-t border-slate-800 text-[10px] text-rose-300 flex items-start gap-1">
+                <i class="fa-solid fa-triangle-exclamation text-rose-400 shrink-0 mt-0.5"></i>
+                <span class="line-clamp-2">Tử huyệt: ${c.vulnerabilities}</span>
+              </div>
+            ` : ''}
+          </div>
+          <button onclick="runSingleBattlecard('${c.name.replace(/'/g, "\\'")}', '${(c.website || '').replace(/'/g, "\\'")}')" class="w-full mt-2 bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white text-[11px] font-semibold py-1.5 px-2.5 rounded-lg transition flex items-center justify-center gap-1.5 shadow">
+            <i class="fa-solid fa-swords"></i>
+            <span>Lập Battlecard 1-1</span>
+          </button>
+        </div>
+      `).join('');
+
+      container.classList.remove('hidden');
+    }
+
+    async function loadDiscoveredCompetitors() {
+      try {
+        const res = await fetch('/api/competitors/discovered');
+        const data = await res.json();
+        if (data.status === 'success' && data.competitors && data.competitors.length > 0) {
+          renderDiscoveredCards(data.competitors);
+        }
+      } catch (err) {
+        console.error('Error loading discovered competitors:', err);
+      }
+    }
+
+    // Run Single Battlecard against a discovered competitor
+    async function runSingleBattlecard(compName, compUrl) {
+      const pBox = document.getElementById('competitor-placeholder');
+      const lBox = document.getElementById('competitor-loading');
+      const cBox = document.getElementById('competitor-content');
+
+      if (pBox) pBox.classList.add('hidden');
+      if (lBox) lBox.classList.remove('hidden');
+      if (cBox) cBox.classList.add('hidden');
+
+      showToast(`⚔️ Đang lập chiến lược đối đầu 1-1 và kịch bản phản đòn với ${compName}...`);
+
+      try {
+        const res = await fetch('/api/competitors/battlecard', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: compName, website: compUrl })
+        });
+        const data = await res.json();
+        if (lBox) lBox.classList.add('hidden');
+        if (cBox) {
+          cBox.innerHTML = `
+            <div class="mb-4 p-3 bg-rose-950/40 border border-rose-500/30 rounded-xl text-xs text-rose-300 flex items-center justify-between">
+              <span class="flex items-center gap-2">
+                <i class="fa-solid fa-crosshairs text-rose-400"></i>
+                Chiến lược Battlecard đối đầu 1-1 với <strong>${compName}</strong>
+              </span>
+              <span class="text-[10px] bg-rose-500/20 px-2 py-0.5 rounded font-mono">Trực Diện</span>
+            </div>
+          ` + marked.parse(data.result);
+          cBox.classList.remove('hidden');
+        }
+        showToast(`✅ Đã lập xong Battlecard 1-1 với ${compName}!`);
+        loadAutoPilotStatus();
+      } catch (err) {
+        if (lBox) lBox.classList.add('hidden');
+        showToast('Lỗi khi lập Battlecard', false);
+      }
+    }
+
+    // Run Full Competitor Analysis (Matrix of all competitors)
+    async function runCompetitorAnalysis() {
+      const pBox = document.getElementById('competitor-placeholder');
+      const lBox = document.getElementById('competitor-loading');
+      const cBox = document.getElementById('competitor-content');
+
+      if (pBox) pBox.classList.add('hidden');
+      if (lBox) lBox.classList.remove('hidden');
+      if (cBox) cBox.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/research/competitors', { method: 'POST' });
+        const data = await res.json();
+        if (lBox) lBox.classList.add('hidden');
+        if (cBox) {
+          cBox.innerHTML = marked.parse(data.result);
+          cBox.classList.remove('hidden');
+        }
+        if (data.competitors) {
+          const inp = document.getElementById('inp-competitors');
+          if (inp) inp.value = data.competitors;
+        }
+        showToast('Đã cập nhật tình báo đối thủ & Battlecards!');
+        await loadDiscoveredCompetitors();
+        loadAutoPilotStatus();
+      } catch (err) {
+        if (lBox) lBox.classList.add('hidden');
+        showToast('Lỗi phân tích đối thủ', false);
+      }
+    }
+
+    // Run Personas (Manual override)
+    async function runPersonas() {
+      const pBox = document.getElementById('personas-placeholder');
+      const lBox = document.getElementById('personas-loading');
+      const cBox = document.getElementById('personas-content');
+
+      if (pBox) pBox.classList.add('hidden');
+      if (lBox) lBox.classList.remove('hidden');
+      if (cBox) cBox.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/strategy/personas', { method: 'POST' });
+        const data = await res.json();
+        if (lBox) lBox.classList.add('hidden');
+        if (cBox) {
+          cBox.innerHTML = marked.parse(data.result);
+          cBox.classList.remove('hidden');
+        }
+        showToast('Đã cập nhật 3 chân dung khách hàng!');
+        loadAutoPilotStatus();
+      } catch (err) {
+        if (lBox) lBox.classList.add('hidden');
+        showToast('Lỗi tạo personas', false);
+      }
+    }
+
+    // Content Studio
+    function pickTopic(t) {
+      document.getElementById('content-topic').value = t;
+    }
+
+    let lastRawContent = '';
+    async function generateContent() {
+      const channel = document.getElementById('content-channel').value;
+      const topic = document.getElementById('content-topic').value || 'Bài toán kinh tế khi đầu tư máy';
+      const output = document.getElementById('content-output');
+      const badge = document.getElementById('content-output-badge');
+
+      output.innerHTML = '<div class="py-12 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-teal-400"></i><p>AI đang viết kịch bản và tối ưu câu chữ...</p></div>';
+
+      try {
+        const res = await fetch('/api/content/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ channel, topic })
+        });
+        const data = await res.json();
+        lastRawContent = data.content.body;
+        output.innerHTML = marked.parse(data.content.body);
+        badge.innerText = `Kênh: ${channel} | ${topic}`;
+        showToast('Nội dung đã sẵn sàng!');
+        loadContentHistory();
+        loadAutoPilotStatus();
+      } catch (err) {
+        output.innerText = 'Lỗi tạo nội dung.';
+        showToast('Lỗi sinh nội dung', false);
+      }
+    }
+
+    function copyContent() {
+      if (!lastRawContent) return;
+      navigator.clipboard.writeText(lastRawContent).then(() => {
+        showToast('Đã sao chép vào bộ nhớ tạm!');
+      });
+    }
+
+    async function loadContentHistory() {
+      try {
+        const res = await fetch('/api/content/history');
+        const items = await res.json();
+        if (items && items.length > 0 && !lastRawContent) {
+          lastRawContent = items[0].body;
+          const output = document.getElementById('content-output');
+          const badge = document.getElementById('content-output-badge');
+          if (output) output.innerHTML = marked.parse(items[0].body);
+          if (badge) badge.innerText = `Kênh: ${items[0].channel} | ${items[0].topic}`;
+        }
+      } catch(e) {}
+    }
+
+    // Calendar
+    async function generateCalendar() {
+      const tbody = document.getElementById('calendar-table-body');
+      tbody.innerHTML = '<tr><td colspan="6" class="py-12 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin text-xl mb-2 text-purple-400"></i><p>AI đang lập lịch nội dung 30 ngày...</p></td></tr>';
+
+      try {
+        const res = await fetch('/api/calendar/generate', { method: 'POST' });
+        const data = await res.json();
+        renderCalendar(data.items);
+        showToast('Đã lập lại lịch nội dung 30 ngày!');
+        loadAutoPilotStatus();
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-rose-400">Lỗi sinh lịch nội dung</td></tr>';
+      }
+    }
+
+    async function generateCustomCalendarUI() {
+      const direction = document.getElementById('sel-content-direction').value;
+      const tbody = document.getElementById('calendar-table-body');
+      const btn = document.getElementById('btn-custom-calendar');
+      const origHtml = btn ? btn.innerHTML : '';
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-300"></i> <span>AI đang lập lịch...</span>';
+
+      tbody.innerHTML = '<tr><td colspan="6" class="py-12 text-center text-slate-400"><i class="fa-solid fa-spinner fa-spin text-xl mb-2 text-purple-400"></i><p>AI đang lập lịch nội dung 30 ngày theo thiên hướng đã chọn...</p></td></tr>';
+
+      showToast('📅 AI đang tạo 30 ngày nội dung chuyên sâu theo thiên hướng chiến lược...');
+
+      try {
+        const res = await fetch('/api/calendar/generate_custom', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ direction })
+        });
+        const data = await res.json();
+        renderCalendar(data.items);
+        showToast('✅ Đã tạo mới 30 ngày nội dung theo thiên hướng đã chọn!');
+        loadAutoPilotStatus();
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-rose-400">Lỗi sinh lịch nội dung</td></tr>';
+        showToast('Lỗi khi lập lịch nội dung', false);
+      } finally {
+        if (btn) btn.innerHTML = origHtml;
+      }
+    }
+
+    function renderCalendar(items) {
+      const tbody = document.getElementById('calendar-table-body');
+      if (!tbody) return;
+      if (!items || items.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-slate-500">Chưa có lịch</td></tr>';
+        return;
+      }
+      tbody.innerHTML = items.map(item => `
+        <tr class="hover:bg-slate-800/40 transition">
+          <td class="py-3 px-4 font-bold text-sky-400">Ngày ${item.day_number || item.day}</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded bg-slate-800 text-slate-200 border border-slate-700 font-medium">${item.channel}</span></td>
+          <td class="py-3 px-4 text-slate-400">${item.pillar}</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-500/10 text-indigo-400">${item.funnel_stage}</span></td>
+          <td class="py-3 px-4 font-semibold text-slate-200">${item.topic}</td>
+          <td class="py-3 px-4 text-center">
+            <button onclick="openGeneratePackageModal('${encodeURIComponent(item.topic || '')}', '${item.channel || ''}')" class="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-semibold text-[11px] px-3 py-1.5 rounded-lg shadow-sm transition inline-flex items-center gap-1.5">
+              <i class="fa-solid fa-wand-magic-sparkles text-amber-300 text-[10px]"></i>
+              <span>Tạo Trọn Gói</span>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadCalendar() {
+      try {
+        const res = await fetch('/api/calendar/list');
+        const data = await res.json();
+        renderCalendar(data.items);
+      } catch (err) {
+        console.error('Lỗi tải lịch:', err);
+      }
+    }
+
+    // MULTIMEDIA CONTENT PACKAGE MODAL HANDLERS
+    let currentPackageData = { body: '', video_script: '', image_prompt: '' };
+
+    function openGeneratePackageModal(topicEncoded, channel) {
+      const topic = decodeURIComponent(topicEncoded);
+      const modal = document.getElementById('modal-content-package');
+      const titleEl = document.getElementById('pkg-modal-title');
+      const chanEl = document.getElementById('pkg-modal-channel');
+      const loading = document.getElementById('pkg-modal-loading');
+
+      if (titleEl) titleEl.innerText = topic;
+      if (chanEl) chanEl.innerText = channel || 'Đa kênh';
+
+      modal.classList.remove('hidden');
+      switchPackageTab('tab-pkg-article');
+
+      loading.classList.remove('hidden');
+
+      fetch('/api/content/generate_package', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          topic: topic,
+          channel: channel || 'Facebook',
+          direction: document.getElementById('sel-content-direction')?.value || 'educational'
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        loading.classList.add('hidden');
+        if (data.status === 'success' && data.package) {
+          const pkg = data.package;
+          currentPackageData = {
+            body: pkg.body || '',
+            video_script: pkg.video_script || '',
+            image_prompt: pkg.image_prompt || ''
+          };
+
+          document.getElementById('pkg-article-content').innerHTML = marked.parse(pkg.body || '');
+          document.getElementById('pkg-video-content').innerHTML = marked.parse(pkg.video_script || '');
+          document.getElementById('pkg-image-prompt-text').innerText = pkg.image_prompt || 'Professional commercial photograph in industrial setting, cinematic lighting, photorealistic 8k, --ar 16:9';
+
+          showToast('✅ Đã tạo trọn gói Bài viết + Video dọc + Prompt ảnh AI thành công!');
+        } else {
+          showToast('Lỗi khi tạo gói nội dung', false);
+        }
+      })
+      .catch(err => {
+        loading.classList.add('hidden');
+        showToast('Lỗi kết nối khi tạo nội dung', false);
+      });
+    }
+
+    function switchPackageTab(tabId) {
+      document.querySelectorAll('.pkg-tab-btn').forEach(btn => {
+        btn.classList.remove('border-teal-400', 'text-teal-300', 'bg-teal-500/10');
+        btn.classList.add('border-transparent', 'text-slate-400');
+      });
+      const activeBtn = document.getElementById('btn-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.remove('border-transparent', 'text-slate-400');
+        activeBtn.classList.add('border-teal-400', 'text-teal-300', 'bg-teal-500/10');
+      }
+
+      document.querySelectorAll('.pkg-panel').forEach(p => p.classList.add('hidden'));
+      if (tabId === 'tab-pkg-article') document.getElementById('panel-pkg-article')?.classList.remove('hidden');
+      if (tabId === 'tab-pkg-video') document.getElementById('panel-pkg-video')?.classList.remove('hidden');
+      if (tabId === 'tab-pkg-image') document.getElementById('panel-pkg-image')?.classList.remove('hidden');
+    }
+
+    function closePackageModal() {
+      document.getElementById('modal-content-package')?.classList.add('hidden');
+    }
+
+    function copyPackagePart(part) {
+      let text = '';
+      if (part === 'article') text = currentPackageData.body;
+      else if (part === 'video') text = currentPackageData.video_script;
+      else if (part === 'image') text = currentPackageData.image_prompt;
+
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(`Đã sao chép ${part === 'article' ? 'bài viết' : (part === 'video' ? 'kịch bản video' : 'prompt ảnh')} vào clipboard!`);
+      });
+    }
+
+    // CATALYST Multi-Agent Campaign Orchestrator Handlers
+    let lastCatalystPlan = '';
+
+    async function runCatalystLoop(loopType) {
+      const pBox = document.getElementById('catalyst-placeholder');
+      const lBox = document.getElementById('catalyst-loading');
+      const cBox = document.getElementById('catalyst-content');
+      const briefInp = document.getElementById('catalyst-custom-brief');
+      const badge = document.getElementById('catalyst-loop-badge');
+      const mdBody = document.getElementById('catalyst-markdown-body');
+
+      if (pBox) pBox.classList.add('hidden');
+      if (lBox) lBox.classList.remove('hidden');
+      if (cBox) cBox.classList.add('hidden');
+
+      const customBrief = (loopType === 'custom_brief' && briefInp) ? briefInp.value : '';
+      showToast('🎛️ CATALYST đang điều phối 5 đại lý chuyên trách phân tích và tạo chiến dịch...');
+
+      try {
+        const res = await fetch('/api/catalyst/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            loop_type: loopType,
+            custom_brief: customBrief
+          })
+        });
+        const data = await res.json();
+        if (lBox) lBox.classList.add('hidden');
+        if (data.status === 'success' && data.data) {
+          const d = data.data;
+          lastCatalystPlan = d.content;
+          if (badge) badge.innerText = `${d.loop_name} | 5 Đại Lý Điều Phối`;
+
+          // Format Needs Input tags into prominent yellow badges
+          let htmlContent = marked.parse(d.content);
+          htmlContent = htmlContent.replace(/\[NEEDS INPUT:([^\]]+)\]/g, '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-lg text-xs font-semibold my-1"><i class="fa-solid fa-circle-exclamation text-amber-400"></i> CẦN XÁC THỰC: $1</span>');
+
+          if (mdBody) mdBody.innerHTML = htmlContent;
+          if (cBox) cBox.classList.remove('hidden');
+
+          showToast('✅ Đã hoàn tất điều phối chiến dịch Đa Đại Lý CATALYST!');
+          loadAutoPilotStatus();
+        } else {
+          showToast('Lỗi khi điều phối chiến dịch', false);
+        }
+      } catch (err) {
+        if (lBox) lBox.classList.add('hidden');
+        showToast('Lỗi kết nối khi chạy CATALYST', false);
+      }
+    }
+
+    async function loadLatestCatalyst() {
+      try {
+        const res = await fetch('/api/catalyst/latest');
+        const data = await res.json();
+        if (data.status === 'success' && data.item) {
+          const item = data.item;
+          lastCatalystPlan = item.content;
+          const pBox = document.getElementById('catalyst-placeholder');
+          const cBox = document.getElementById('catalyst-content');
+          const badge = document.getElementById('catalyst-loop-badge');
+          const mdBody = document.getElementById('catalyst-markdown-body');
+
+          if (pBox) pBox.classList.add('hidden');
+          if (badge) badge.innerText = item.title;
+
+          let htmlContent = marked.parse(item.content);
+          htmlContent = htmlContent.replace(/\[NEEDS INPUT:([^\]]+)\]/g, '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-lg text-xs font-semibold my-1"><i class="fa-solid fa-circle-exclamation text-amber-400"></i> CẦN XÁC THỰC: $1</span>');
+
+          if (mdBody) mdBody.innerHTML = htmlContent;
+          if (cBox) cBox.classList.remove('hidden');
+        }
+      } catch (e) {
+        console.error('Error loading latest catalyst run:', e);
+      }
+    }
+
+    function copyCatalystPlan() {
+      if (!lastCatalystPlan) return;
+      navigator.clipboard.writeText(lastCatalystPlan).then(() => {
+        showToast('Đã sao chép toàn bộ kế hoạch chiến dịch vào clipboard!');
+      });
+    }
+
+    // Analytics
+    async function loadAnalytics() {
+      try {
+        const res = await fetch('/api/analytics/summary');
+        const data = await res.json();
+        const t = data.totals;
+
+        document.getElementById('stat-revenue').innerText = `${Number(t.revenue).toLocaleString()} đ`;
+        document.getElementById('stat-spend').innerText = `${Number(t.spend).toLocaleString()} đ`;
+        document.getElementById('stat-mer').innerText = `${t.mer}x`;
+        document.getElementById('stat-cac').innerText = `${Number(t.cac).toLocaleString()} đ`;
+      } catch (err) {
+        console.error('Lỗi tải analytics:', err);
+      }
+    }
+
+    async function recordDailyMetric() {
+      const date = document.getElementById('metric-date').value || new Date().toISOString().split('T')[0];
+      const spend = parseFloat(document.getElementById('metric-spend').value) || 0;
+      const rev = parseFloat(document.getElementById('metric-rev').value) || 0;
+      const orders = parseInt(document.getElementById('metric-orders').value) || 0;
+
+      try {
+        await fetch('/api/analytics/record', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            date,
+            ad_spend: spend,
+            revenue: rev,
+            orders_count: orders
+          })
+        });
+        showToast('Đã lưu chỉ số ngày!');
+        loadAnalytics();
+      } catch (err) {
+        showToast('Lỗi ghi nhận số liệu', false);
+      }
+    }
+
+    // Init App: Fully Automatic Hydration on Page Load!
+    window.addEventListener('DOMContentLoaded', async () => {
+      document.getElementById('metric-date').value = new Date().toISOString().split('T')[0];
+      await loadProfile();
+      await loadLatestResearch();
+      await loadDiscoveredCompetitors();
+      await loadCalendar();
+      await loadContentHistory();
+      await loadLatestCatalyst();
+      await loadAutoPilotStatus();
+      switchTab('tab-profile');
+
+      // Auto-refresh logs every 8 seconds
+      setInterval(loadAutoPilotStatus, 8000);
+    });
+  </script>
+</body>
+</html>

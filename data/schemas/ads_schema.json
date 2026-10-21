@@ -1,0 +1,26 @@
+{
+  "table_name": "ads",
+  "description": "Dữ liệu hiệu quả quảng cáo từ Meta, Google, TikTok Ads",
+  "required_columns": [
+    "date",
+    "platform",
+    "campaign",
+    "adset",
+    "impressions",
+    "clicks",
+    "spend",
+    "conversions",
+    "revenue"
+  ],
+  "types": {
+    "date": "DATE",
+    "platform": "TEXT",
+    "campaign": "TEXT",
+    "adset": "TEXT",
+    "impressions": "INTEGER",
+    "clicks": "INTEGER",
+    "spend": "REAL",
+    "conversions": "INTEGER",
+    "revenue": "REAL"
+  }
+}

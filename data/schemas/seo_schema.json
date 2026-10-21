@@ -1,0 +1,22 @@
+{
+  "table_name": "seo",
+  "description": "Dữ liệu thứ hạng tìm kiếm từ Google Search Console",
+  "required_columns": [
+    "date",
+    "query",
+    "page",
+    "clicks",
+    "impressions",
+    "ctr",
+    "position"
+  ],
+  "types": {
+    "date": "DATE",
+    "query": "TEXT",
+    "page": "TEXT",
+    "clicks": "INTEGER",
+    "impressions": "INTEGER",
+    "ctr": "REAL",
+    "position": "REAL"
+  }
+}

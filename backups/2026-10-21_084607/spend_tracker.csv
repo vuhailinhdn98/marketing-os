@@ -1,0 +1,7 @@
+date,expense_id,category,vendor,amount,approved_by,campaign_id
+2026-10-05,EXP-1001,Paid Media,Meta Platforms Ireland,25000000,CMO,Novapos_Omni_Launch
+2026-10-08,EXP-1002,Content Production,Freelance Production Studio,18000000,Content Lead,Brand_Story_Videos
+2026-10-12,EXP-1003,Paid Media,Google Asia Pacific,22000000,CMO,Search_Inbound_HighIntent
+2026-10-15,EXP-1004,PR & Event,Cafebiz / VnExpress,16000000,CMO,Q4_Press_Coverage
+2026-10-18,EXP-1005,Influencer / KOL,KOL Nguyen Van A,15000000,CMO,Omnichannel_Expert_Review
+2026-10-20,EXP-1006,Paid Media,TikTok Pte Ltd,12000000,Perf Lead,Retail_Tet_2026

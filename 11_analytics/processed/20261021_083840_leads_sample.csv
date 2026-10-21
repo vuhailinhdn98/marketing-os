@@ -1,0 +1,1117 @@
+date,lead_id,source,campaign,stage,value
+2026-07-23,LEAD_5001,Google Search,Inbound_SEO,Contacted,0
+2026-07-23,LEAD_5002,Referral,Inbound_SEO,Proposal,24000000
+2026-07-23,LEAD_5003,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-07-23,LEAD_5004,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-07-23,LEAD_5005,Referral,Inbound_SEO,Contacted,0
+2026-07-23,LEAD_5006,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-07-23,LEAD_5007,Referral,Inbound_SEO,Won,6500000
+2026-07-23,LEAD_5008,Website Form,Inbound_SEO,New,0
+2026-07-23,LEAD_5009,Google Search,Inbound_SEO,Proposal,3588000
+2026-07-23,LEAD_5010,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-07-23,LEAD_5011,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-07-23,LEAD_5012,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-07-23,LEAD_5013,Meta Ads,Novapos_Omni_Launch,New,0
+2026-07-23,LEAD_5014,Website Form,Inbound_SEO,Lost,0
+2026-07-23,LEAD_5015,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-07-23,LEAD_5016,Event_Webinar,Inbound_SEO,New,0
+2026-07-24,LEAD_5017,Google Search,Inbound_SEO,Won,3588000
+2026-07-24,LEAD_5018,Google Search,Inbound_SEO,New,0
+2026-07-24,LEAD_5019,Google Search,Inbound_SEO,Contacted,0
+2026-07-24,LEAD_5020,Google Search,Inbound_SEO,Contacted,0
+2026-07-24,LEAD_5021,Referral,Inbound_SEO,New,0
+2026-07-24,LEAD_5022,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-07-24,LEAD_5023,Event_Webinar,Inbound_SEO,Proposal,24000000
+2026-07-24,LEAD_5024,Referral,Inbound_SEO,Contacted,0
+2026-07-24,LEAD_5025,Referral,Inbound_SEO,Lost,0
+2026-07-25,LEAD_5026,Google Search,Inbound_SEO,New,0
+2026-07-25,LEAD_5027,Website Form,Inbound_SEO,Lost,0
+2026-07-25,LEAD_5028,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-07-25,LEAD_5029,Event_Webinar,Inbound_SEO,Contacted,0
+2026-07-25,LEAD_5030,Google Search,Inbound_SEO,Lost,0
+2026-07-25,LEAD_5031,Referral,Inbound_SEO,Contacted,0
+2026-07-25,LEAD_5032,Referral,Inbound_SEO,Contacted,0
+2026-07-25,LEAD_5033,Website Form,Inbound_SEO,Won,3588000
+2026-07-25,LEAD_5034,Event_Webinar,Inbound_SEO,Contacted,0
+2026-07-25,LEAD_5035,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-07-25,LEAD_5036,Website Form,Inbound_SEO,Won,3588000
+2026-07-25,LEAD_5037,Referral,Inbound_SEO,New,0
+2026-07-25,LEAD_5038,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-07-26,LEAD_5039,Event_Webinar,Inbound_SEO,Contacted,0
+2026-07-26,LEAD_5040,Event_Webinar,Inbound_SEO,Won,12000000
+2026-07-26,LEAD_5041,Referral,Inbound_SEO,New,0
+2026-07-26,LEAD_5042,Google Search,Inbound_SEO,Won,24000000
+2026-07-26,LEAD_5043,Google Search,Inbound_SEO,Contacted,0
+2026-07-26,LEAD_5044,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-07-26,LEAD_5045,Website Form,Inbound_SEO,Contacted,0
+2026-07-26,LEAD_5046,Website Form,Inbound_SEO,New,0
+2026-07-26,LEAD_5047,Website Form,Inbound_SEO,Proposal,12000000
+2026-07-26,LEAD_5048,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-07-26,LEAD_5049,Website Form,Inbound_SEO,Won,3588000
+2026-07-26,LEAD_5050,Referral,Inbound_SEO,Contacted,0
+2026-07-26,LEAD_5051,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-07-27,LEAD_5052,Event_Webinar,Inbound_SEO,Contacted,0
+2026-07-27,LEAD_5053,Event_Webinar,Inbound_SEO,Lost,0
+2026-07-27,LEAD_5054,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-07-27,LEAD_5055,Referral,Inbound_SEO,Proposal,24000000
+2026-07-27,LEAD_5056,Website Form,Inbound_SEO,Won,6500000
+2026-07-27,LEAD_5057,Google Search,Inbound_SEO,New,0
+2026-07-27,LEAD_5058,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-07-27,LEAD_5059,Website Form,Inbound_SEO,Contacted,0
+2026-07-28,LEAD_5060,Referral,Inbound_SEO,New,0
+2026-07-28,LEAD_5061,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-07-28,LEAD_5062,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-07-28,LEAD_5063,Website Form,Inbound_SEO,New,0
+2026-07-28,LEAD_5064,Event_Webinar,Inbound_SEO,Lost,0
+2026-07-28,LEAD_5065,Referral,Inbound_SEO,Contacted,0
+2026-07-28,LEAD_5066,Referral,Inbound_SEO,New,0
+2026-07-28,LEAD_5067,Event_Webinar,Inbound_SEO,Won,3588000
+2026-07-29,LEAD_5068,Meta Ads,Novapos_Omni_Launch,New,0
+2026-07-29,LEAD_5069,Meta Ads,Novapos_Omni_Launch,Won,24000000
+2026-07-29,LEAD_5070,Website Form,Inbound_SEO,Contacted,0
+2026-07-29,LEAD_5071,Website Form,Inbound_SEO,Contacted,0
+2026-07-29,LEAD_5072,Event_Webinar,Inbound_SEO,Proposal,24000000
+2026-07-29,LEAD_5073,Event_Webinar,Inbound_SEO,New,0
+2026-07-29,LEAD_5074,Website Form,Inbound_SEO,Proposal,24000000
+2026-07-29,LEAD_5075,Referral,Inbound_SEO,Won,3588000
+2026-07-29,LEAD_5076,Website Form,Inbound_SEO,Lost,0
+2026-07-29,LEAD_5077,Meta Ads,Novapos_Omni_Launch,New,0
+2026-07-29,LEAD_5078,Meta Ads,Novapos_Omni_Launch,Won,6500000
+2026-07-29,LEAD_5079,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-07-29,LEAD_5080,Referral,Inbound_SEO,Contacted,0
+2026-07-29,LEAD_5081,Meta Ads,Novapos_Omni_Launch,New,0
+2026-07-29,LEAD_5082,Website Form,Inbound_SEO,Won,3588000
+2026-07-30,LEAD_5083,Website Form,Inbound_SEO,Won,3588000
+2026-07-30,LEAD_5084,Meta Ads,Novapos_Omni_Launch,New,0
+2026-07-30,LEAD_5085,Website Form,Inbound_SEO,New,0
+2026-07-30,LEAD_5086,Website Form,Inbound_SEO,Proposal,24000000
+2026-07-30,LEAD_5087,Website Form,Inbound_SEO,Proposal,6500000
+2026-07-30,LEAD_5088,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-07-31,LEAD_5089,Website Form,Inbound_SEO,Won,24000000
+2026-07-31,LEAD_5090,Referral,Inbound_SEO,Proposal,6500000
+2026-07-31,LEAD_5091,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-07-31,LEAD_5092,Referral,Inbound_SEO,Lost,0
+2026-07-31,LEAD_5093,Website Form,Inbound_SEO,Proposal,24000000
+2026-07-31,LEAD_5094,Google Search,Inbound_SEO,New,0
+2026-07-31,LEAD_5095,Website Form,Inbound_SEO,Proposal,12000000
+2026-07-31,LEAD_5096,Event_Webinar,Inbound_SEO,Won,6500000
+2026-07-31,LEAD_5097,Google Search,Inbound_SEO,Proposal,3588000
+2026-08-01,LEAD_5098,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-01,LEAD_5099,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-01,LEAD_5100,Referral,Inbound_SEO,New,0
+2026-08-01,LEAD_5101,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-01,LEAD_5102,Event_Webinar,Inbound_SEO,Proposal,12000000
+2026-08-01,LEAD_5103,Website Form,Inbound_SEO,Proposal,6500000
+2026-08-01,LEAD_5104,Event_Webinar,Inbound_SEO,New,0
+2026-08-01,LEAD_5105,Google Search,Inbound_SEO,Contacted,0
+2026-08-01,LEAD_5106,Website Form,Inbound_SEO,Contacted,0
+2026-08-01,LEAD_5107,Referral,Inbound_SEO,Won,6500000
+2026-08-01,LEAD_5108,Referral,Inbound_SEO,New,0
+2026-08-01,LEAD_5109,Website Form,Inbound_SEO,Contacted,0
+2026-08-01,LEAD_5110,Website Form,Inbound_SEO,Lost,0
+2026-08-01,LEAD_5111,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-01,LEAD_5112,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-01,LEAD_5113,Meta Ads,Novapos_Omni_Launch,Proposal,6500000
+2026-08-01,LEAD_5114,Meta Ads,Novapos_Omni_Launch,Won,6500000
+2026-08-01,LEAD_5115,Website Form,Inbound_SEO,New,0
+2026-08-01,LEAD_5116,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-01,LEAD_5117,Website Form,Inbound_SEO,New,0
+2026-08-02,LEAD_5118,Website Form,Inbound_SEO,Contacted,0
+2026-08-02,LEAD_5119,Google Search,Inbound_SEO,Contacted,0
+2026-08-02,LEAD_5120,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-02,LEAD_5121,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-02,LEAD_5122,Website Form,Inbound_SEO,New,0
+2026-08-02,LEAD_5123,Referral,Inbound_SEO,Proposal,24000000
+2026-08-02,LEAD_5124,Google Search,Inbound_SEO,Contacted,0
+2026-08-03,LEAD_5125,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-03,LEAD_5126,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-03,LEAD_5127,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-03,LEAD_5128,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-03,LEAD_5129,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-03,LEAD_5130,Meta Ads,Novapos_Omni_Launch,Won,12000000
+2026-08-03,LEAD_5131,Google Search,Inbound_SEO,New,0
+2026-08-03,LEAD_5132,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-03,LEAD_5133,Event_Webinar,Inbound_SEO,Proposal,24000000
+2026-08-03,LEAD_5134,Referral,Inbound_SEO,Contacted,0
+2026-08-03,LEAD_5135,Google Search,Inbound_SEO,Proposal,12000000
+2026-08-03,LEAD_5136,Referral,Inbound_SEO,Contacted,0
+2026-08-03,LEAD_5137,Google Search,Inbound_SEO,Contacted,0
+2026-08-03,LEAD_5138,Website Form,Inbound_SEO,Proposal,12000000
+2026-08-03,LEAD_5139,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-03,LEAD_5140,Event_Webinar,Inbound_SEO,Won,24000000
+2026-08-03,LEAD_5141,Website Form,Inbound_SEO,Won,6500000
+2026-08-04,LEAD_5142,Website Form,Inbound_SEO,Proposal,6500000
+2026-08-04,LEAD_5143,Google Search,Inbound_SEO,Contacted,0
+2026-08-04,LEAD_5144,Referral,Inbound_SEO,New,0
+2026-08-04,LEAD_5145,Meta Ads,Novapos_Omni_Launch,Proposal,24000000
+2026-08-04,LEAD_5146,Website Form,Inbound_SEO,New,0
+2026-08-04,LEAD_5147,Website Form,Inbound_SEO,Won,6500000
+2026-08-04,LEAD_5148,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-04,LEAD_5149,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-04,LEAD_5150,Referral,Inbound_SEO,Won,24000000
+2026-08-04,LEAD_5151,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-05,LEAD_5152,Event_Webinar,Inbound_SEO,Proposal,12000000
+2026-08-05,LEAD_5153,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-05,LEAD_5154,Google Search,Inbound_SEO,Proposal,3588000
+2026-08-05,LEAD_5155,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-05,LEAD_5156,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-06,LEAD_5157,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-06,LEAD_5158,Referral,Inbound_SEO,Contacted,0
+2026-08-06,LEAD_5159,Referral,Inbound_SEO,New,0
+2026-08-06,LEAD_5160,Website Form,Inbound_SEO,Contacted,0
+2026-08-06,LEAD_5161,Website Form,Inbound_SEO,Won,24000000
+2026-08-06,LEAD_5162,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-06,LEAD_5163,Event_Webinar,Inbound_SEO,Proposal,3588000
+2026-08-06,LEAD_5164,Google Search,Inbound_SEO,Lost,0
+2026-08-06,LEAD_5165,Google Search,Inbound_SEO,Proposal,6500000
+2026-08-06,LEAD_5166,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-06,LEAD_5167,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-06,LEAD_5168,Referral,Inbound_SEO,Contacted,0
+2026-08-06,LEAD_5169,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-06,LEAD_5170,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-06,LEAD_5171,Website Form,Inbound_SEO,Won,24000000
+2026-08-06,LEAD_5172,Event_Webinar,Inbound_SEO,New,0
+2026-08-07,LEAD_5173,Website Form,Inbound_SEO,Contacted,0
+2026-08-07,LEAD_5174,Referral,Inbound_SEO,Lost,0
+2026-08-07,LEAD_5175,Website Form,Inbound_SEO,Contacted,0
+2026-08-07,LEAD_5176,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-07,LEAD_5177,Website Form,Inbound_SEO,Won,3588000
+2026-08-07,LEAD_5178,Referral,Inbound_SEO,Proposal,12000000
+2026-08-07,LEAD_5179,Website Form,Inbound_SEO,New,0
+2026-08-07,LEAD_5180,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-07,LEAD_5181,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-07,LEAD_5182,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-07,LEAD_5183,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-07,LEAD_5184,Google Search,Inbound_SEO,Contacted,0
+2026-08-07,LEAD_5185,Website Form,Inbound_SEO,New,0
+2026-08-07,LEAD_5186,Website Form,Inbound_SEO,New,0
+2026-08-07,LEAD_5187,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-07,LEAD_5188,Event_Webinar,Inbound_SEO,New,0
+2026-08-08,LEAD_5189,Website Form,Inbound_SEO,New,0
+2026-08-08,LEAD_5190,Website Form,Inbound_SEO,Proposal,3588000
+2026-08-08,LEAD_5191,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-08,LEAD_5192,Website Form,Inbound_SEO,Won,6500000
+2026-08-08,LEAD_5193,Meta Ads,Novapos_Omni_Launch,Proposal,6500000
+2026-08-08,LEAD_5194,Google Search,Inbound_SEO,Contacted,0
+2026-08-08,LEAD_5195,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-08,LEAD_5196,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-08,LEAD_5197,Website Form,Inbound_SEO,Contacted,0
+2026-08-08,LEAD_5198,Referral,Inbound_SEO,Contacted,0
+2026-08-08,LEAD_5199,Meta Ads,Novapos_Omni_Launch,Won,12000000
+2026-08-08,LEAD_5200,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-08,LEAD_5201,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-08,LEAD_5202,Website Form,Inbound_SEO,Won,6500000
+2026-08-08,LEAD_5203,Google Search,Inbound_SEO,Contacted,0
+2026-08-08,LEAD_5204,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-08,LEAD_5205,Website Form,Inbound_SEO,Contacted,0
+2026-08-08,LEAD_5206,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-08,LEAD_5207,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-08,LEAD_5208,Referral,Inbound_SEO,Proposal,24000000
+2026-08-09,LEAD_5209,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-09,LEAD_5210,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-09,LEAD_5211,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-09,LEAD_5212,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-09,LEAD_5213,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-09,LEAD_5214,Event_Webinar,Inbound_SEO,New,0
+2026-08-09,LEAD_5215,Referral,Inbound_SEO,New,0
+2026-08-09,LEAD_5216,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-10,LEAD_5217,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-10,LEAD_5218,Website Form,Inbound_SEO,New,0
+2026-08-10,LEAD_5219,Event_Webinar,Inbound_SEO,Won,12000000
+2026-08-10,LEAD_5220,Meta Ads,Novapos_Omni_Launch,Proposal,24000000
+2026-08-10,LEAD_5221,Google Search,Inbound_SEO,Contacted,0
+2026-08-10,LEAD_5222,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-10,LEAD_5223,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-10,LEAD_5224,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-10,LEAD_5225,Website Form,Inbound_SEO,Won,3588000
+2026-08-10,LEAD_5226,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-10,LEAD_5227,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-10,LEAD_5228,Website Form,Inbound_SEO,Won,3588000
+2026-08-10,LEAD_5229,Event_Webinar,Inbound_SEO,Proposal,3588000
+2026-08-10,LEAD_5230,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-11,LEAD_5231,Google Search,Inbound_SEO,Contacted,0
+2026-08-11,LEAD_5232,Google Search,Inbound_SEO,Contacted,0
+2026-08-11,LEAD_5233,Website Form,Inbound_SEO,Proposal,3588000
+2026-08-11,LEAD_5234,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-11,LEAD_5235,Google Search,Inbound_SEO,New,0
+2026-08-11,LEAD_5236,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-11,LEAD_5237,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-11,LEAD_5238,Google Search,Inbound_SEO,Contacted,0
+2026-08-11,LEAD_5239,Referral,Inbound_SEO,New,0
+2026-08-11,LEAD_5240,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-11,LEAD_5241,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-08-11,LEAD_5242,Website Form,Inbound_SEO,Contacted,0
+2026-08-11,LEAD_5243,Google Search,Inbound_SEO,Won,12000000
+2026-08-11,LEAD_5244,Event_Webinar,Inbound_SEO,Proposal,3588000
+2026-08-11,LEAD_5245,Referral,Inbound_SEO,New,0
+2026-08-11,LEAD_5246,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-11,LEAD_5247,Google Search,Inbound_SEO,New,0
+2026-08-11,LEAD_5248,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-11,LEAD_5249,Referral,Inbound_SEO,Contacted,0
+2026-08-11,LEAD_5250,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-08-12,LEAD_5251,Website Form,Inbound_SEO,Proposal,24000000
+2026-08-12,LEAD_5252,Referral,Inbound_SEO,Proposal,3588000
+2026-08-12,LEAD_5253,Referral,Inbound_SEO,Contacted,0
+2026-08-12,LEAD_5254,Referral,Inbound_SEO,New,0
+2026-08-12,LEAD_5255,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-12,LEAD_5256,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-12,LEAD_5257,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-12,LEAD_5258,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-12,LEAD_5259,Website Form,Inbound_SEO,Lost,0
+2026-08-12,LEAD_5260,Referral,Inbound_SEO,Won,24000000
+2026-08-12,LEAD_5261,Website Form,Inbound_SEO,New,0
+2026-08-12,LEAD_5262,Google Search,Inbound_SEO,Contacted,0
+2026-08-12,LEAD_5263,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-12,LEAD_5264,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-12,LEAD_5265,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-12,LEAD_5266,Google Search,Inbound_SEO,Contacted,0
+2026-08-12,LEAD_5267,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-12,LEAD_5268,Google Search,Inbound_SEO,Contacted,0
+2026-08-12,LEAD_5269,Website Form,Inbound_SEO,Lost,0
+2026-08-12,LEAD_5270,Meta Ads,Novapos_Omni_Launch,Won,24000000
+2026-08-13,LEAD_5271,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-13,LEAD_5272,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-13,LEAD_5273,Event_Webinar,Inbound_SEO,Proposal,12000000
+2026-08-13,LEAD_5274,Google Search,Inbound_SEO,Proposal,12000000
+2026-08-13,LEAD_5275,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-13,LEAD_5276,Referral,Inbound_SEO,New,0
+2026-08-13,LEAD_5277,Meta Ads,Novapos_Omni_Launch,Won,6500000
+2026-08-13,LEAD_5278,Google Search,Inbound_SEO,New,0
+2026-08-13,LEAD_5279,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-13,LEAD_5280,Referral,Inbound_SEO,Contacted,0
+2026-08-13,LEAD_5281,Google Search,Inbound_SEO,Lost,0
+2026-08-13,LEAD_5282,Google Search,Inbound_SEO,New,0
+2026-08-13,LEAD_5283,Google Search,Inbound_SEO,Proposal,24000000
+2026-08-13,LEAD_5284,Referral,Inbound_SEO,Lost,0
+2026-08-13,LEAD_5285,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-13,LEAD_5286,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-13,LEAD_5287,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-14,LEAD_5288,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-14,LEAD_5289,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-08-14,LEAD_5290,Website Form,Inbound_SEO,New,0
+2026-08-14,LEAD_5291,Referral,Inbound_SEO,Contacted,0
+2026-08-14,LEAD_5292,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-14,LEAD_5293,Google Search,Inbound_SEO,Contacted,0
+2026-08-14,LEAD_5294,Referral,Inbound_SEO,Proposal,6500000
+2026-08-14,LEAD_5295,Google Search,Inbound_SEO,Proposal,24000000
+2026-08-14,LEAD_5296,Event_Webinar,Inbound_SEO,Won,6500000
+2026-08-14,LEAD_5297,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-14,LEAD_5298,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-14,LEAD_5299,Google Search,Inbound_SEO,Won,12000000
+2026-08-14,LEAD_5300,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-14,LEAD_5301,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-14,LEAD_5302,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-14,LEAD_5303,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-15,LEAD_5304,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-15,LEAD_5305,Event_Webinar,Inbound_SEO,Won,6500000
+2026-08-15,LEAD_5306,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-15,LEAD_5307,Referral,Inbound_SEO,Won,3588000
+2026-08-15,LEAD_5308,Google Search,Inbound_SEO,Proposal,12000000
+2026-08-15,LEAD_5309,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-15,LEAD_5310,Google Search,Inbound_SEO,New,0
+2026-08-15,LEAD_5311,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-15,LEAD_5312,Google Search,Inbound_SEO,Won,12000000
+2026-08-15,LEAD_5313,Website Form,Inbound_SEO,Contacted,0
+2026-08-15,LEAD_5314,Website Form,Inbound_SEO,New,0
+2026-08-15,LEAD_5315,Google Search,Inbound_SEO,Lost,0
+2026-08-15,LEAD_5316,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-15,LEAD_5317,Google Search,Inbound_SEO,Won,12000000
+2026-08-15,LEAD_5318,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-15,LEAD_5319,Event_Webinar,Inbound_SEO,Proposal,3588000
+2026-08-15,LEAD_5320,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-15,LEAD_5321,Website Form,Inbound_SEO,Proposal,3588000
+2026-08-15,LEAD_5322,Website Form,Inbound_SEO,Contacted,0
+2026-08-15,LEAD_5323,Google Search,Inbound_SEO,Contacted,0
+2026-08-16,LEAD_5324,Google Search,Inbound_SEO,Contacted,0
+2026-08-16,LEAD_5325,Website Form,Inbound_SEO,Lost,0
+2026-08-16,LEAD_5326,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-16,LEAD_5327,Meta Ads,Novapos_Omni_Launch,Won,3588000
+2026-08-16,LEAD_5328,Website Form,Inbound_SEO,Lost,0
+2026-08-16,LEAD_5329,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-17,LEAD_5330,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-17,LEAD_5331,Google Search,Inbound_SEO,Contacted,0
+2026-08-17,LEAD_5332,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-17,LEAD_5333,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-17,LEAD_5334,Website Form,Inbound_SEO,Contacted,0
+2026-08-17,LEAD_5335,Website Form,Inbound_SEO,Proposal,6500000
+2026-08-17,LEAD_5336,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-08-18,LEAD_5337,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-18,LEAD_5338,Referral,Inbound_SEO,Proposal,3588000
+2026-08-18,LEAD_5339,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-18,LEAD_5340,Referral,Inbound_SEO,Proposal,6500000
+2026-08-18,LEAD_5341,Referral,Inbound_SEO,Proposal,6500000
+2026-08-19,LEAD_5342,Referral,Inbound_SEO,New,0
+2026-08-19,LEAD_5343,Event_Webinar,Inbound_SEO,Lost,0
+2026-08-19,LEAD_5344,Website Form,Inbound_SEO,Contacted,0
+2026-08-19,LEAD_5345,Website Form,Inbound_SEO,Contacted,0
+2026-08-19,LEAD_5346,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-19,LEAD_5347,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-19,LEAD_5348,Google Search,Inbound_SEO,Contacted,0
+2026-08-19,LEAD_5349,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-20,LEAD_5350,Google Search,Inbound_SEO,Won,3588000
+2026-08-20,LEAD_5351,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-20,LEAD_5352,Google Search,Inbound_SEO,Contacted,0
+2026-08-20,LEAD_5353,Website Form,Inbound_SEO,Contacted,0
+2026-08-20,LEAD_5354,Google Search,Inbound_SEO,Lost,0
+2026-08-21,LEAD_5355,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-21,LEAD_5356,Meta Ads,Novapos_Omni_Launch,Proposal,3588000
+2026-08-21,LEAD_5357,Website Form,Inbound_SEO,Lost,0
+2026-08-21,LEAD_5358,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-21,LEAD_5359,Website Form,Inbound_SEO,Won,6500000
+2026-08-21,LEAD_5360,Referral,Inbound_SEO,Proposal,12000000
+2026-08-21,LEAD_5361,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-21,LEAD_5362,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-21,LEAD_5363,Website Form,Inbound_SEO,Contacted,0
+2026-08-22,LEAD_5364,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-22,LEAD_5365,Referral,Inbound_SEO,Proposal,24000000
+2026-08-22,LEAD_5366,Website Form,Inbound_SEO,New,0
+2026-08-22,LEAD_5367,Google Search,Inbound_SEO,Won,6500000
+2026-08-22,LEAD_5368,Website Form,Inbound_SEO,Proposal,6500000
+2026-08-22,LEAD_5369,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-22,LEAD_5370,Google Search,Inbound_SEO,New,0
+2026-08-22,LEAD_5371,Google Search,Inbound_SEO,Proposal,24000000
+2026-08-23,LEAD_5372,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-23,LEAD_5373,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-23,LEAD_5374,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-23,LEAD_5375,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-23,LEAD_5376,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-23,LEAD_5377,Meta Ads,Novapos_Omni_Launch,Won,24000000
+2026-08-23,LEAD_5378,Referral,Inbound_SEO,New,0
+2026-08-23,LEAD_5379,Google Search,Inbound_SEO,Contacted,0
+2026-08-24,LEAD_5380,Event_Webinar,Inbound_SEO,New,0
+2026-08-24,LEAD_5381,Website Form,Inbound_SEO,New,0
+2026-08-24,LEAD_5382,Website Form,Inbound_SEO,Lost,0
+2026-08-24,LEAD_5383,Event_Webinar,Inbound_SEO,Proposal,12000000
+2026-08-24,LEAD_5384,Website Form,Inbound_SEO,Won,6500000
+2026-08-24,LEAD_5385,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-24,LEAD_5386,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-24,LEAD_5387,Referral,Inbound_SEO,Proposal,3588000
+2026-08-24,LEAD_5388,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-24,LEAD_5389,Website Form,Inbound_SEO,Won,24000000
+2026-08-24,LEAD_5390,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-24,LEAD_5391,Event_Webinar,Inbound_SEO,Proposal,12000000
+2026-08-24,LEAD_5392,Google Search,Inbound_SEO,Lost,0
+2026-08-24,LEAD_5393,Referral,Inbound_SEO,Proposal,6500000
+2026-08-24,LEAD_5394,Google Search,Inbound_SEO,Won,12000000
+2026-08-24,LEAD_5395,Website Form,Inbound_SEO,New,0
+2026-08-24,LEAD_5396,Google Search,Inbound_SEO,Proposal,12000000
+2026-08-24,LEAD_5397,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-25,LEAD_5398,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-25,LEAD_5399,Website Form,Inbound_SEO,Proposal,3588000
+2026-08-25,LEAD_5400,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-25,LEAD_5401,Website Form,Inbound_SEO,Won,6500000
+2026-08-25,LEAD_5402,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-25,LEAD_5403,Referral,Inbound_SEO,New,0
+2026-08-26,LEAD_5404,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-26,LEAD_5405,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-26,LEAD_5406,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-26,LEAD_5407,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-26,LEAD_5408,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-26,LEAD_5409,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-27,LEAD_5410,Website Form,Inbound_SEO,Contacted,0
+2026-08-27,LEAD_5411,Referral,Inbound_SEO,New,0
+2026-08-27,LEAD_5412,Google Search,Inbound_SEO,New,0
+2026-08-27,LEAD_5413,Event_Webinar,Inbound_SEO,Proposal,6500000
+2026-08-27,LEAD_5414,Meta Ads,Novapos_Omni_Launch,Proposal,6500000
+2026-08-27,LEAD_5415,Event_Webinar,Inbound_SEO,Won,12000000
+2026-08-27,LEAD_5416,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-08-27,LEAD_5417,Google Search,Inbound_SEO,New,0
+2026-08-27,LEAD_5418,Website Form,Inbound_SEO,Lost,0
+2026-08-27,LEAD_5419,Meta Ads,Novapos_Omni_Launch,Proposal,12000000
+2026-08-27,LEAD_5420,Event_Webinar,Inbound_SEO,Proposal,6500000
+2026-08-27,LEAD_5421,Website Form,Inbound_SEO,New,0
+2026-08-27,LEAD_5422,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-28,LEAD_5423,Google Search,Inbound_SEO,Contacted,0
+2026-08-28,LEAD_5424,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-28,LEAD_5425,Referral,Inbound_SEO,New,0
+2026-08-28,LEAD_5426,Referral,Inbound_SEO,Won,6500000
+2026-08-28,LEAD_5427,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-08-28,LEAD_5428,Website Form,Inbound_SEO,Contacted,0
+2026-08-28,LEAD_5429,Referral,Inbound_SEO,Won,12000000
+2026-08-29,LEAD_5430,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-29,LEAD_5431,Google Search,Inbound_SEO,Contacted,0
+2026-08-29,LEAD_5432,Website Form,Inbound_SEO,Lost,0
+2026-08-29,LEAD_5433,Event_Webinar,Inbound_SEO,New,0
+2026-08-29,LEAD_5434,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-29,LEAD_5435,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-29,LEAD_5436,Event_Webinar,Inbound_SEO,Proposal,12000000
+2026-08-29,LEAD_5437,Google Search,Inbound_SEO,Contacted,0
+2026-08-29,LEAD_5438,Event_Webinar,Inbound_SEO,New,0
+2026-08-29,LEAD_5439,Google Search,Inbound_SEO,Contacted,0
+2026-08-29,LEAD_5440,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-08-29,LEAD_5441,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-29,LEAD_5442,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-29,LEAD_5443,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-29,LEAD_5444,Meta Ads,Novapos_Omni_Launch,Won,3588000
+2026-08-29,LEAD_5445,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-29,LEAD_5446,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-08-29,LEAD_5447,Website Form,Inbound_SEO,Contacted,0
+2026-08-29,LEAD_5448,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-29,LEAD_5449,Google Search,Inbound_SEO,Contacted,0
+2026-08-30,LEAD_5450,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-30,LEAD_5451,Meta Ads,Novapos_Omni_Launch,Proposal,24000000
+2026-08-30,LEAD_5452,Referral,Inbound_SEO,Contacted,0
+2026-08-30,LEAD_5453,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-30,LEAD_5454,Meta Ads,Novapos_Omni_Launch,Won,24000000
+2026-08-30,LEAD_5455,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-30,LEAD_5456,Referral,Inbound_SEO,Contacted,0
+2026-08-30,LEAD_5457,Google Search,Inbound_SEO,Lost,0
+2026-08-30,LEAD_5458,Google Search,Inbound_SEO,Proposal,24000000
+2026-08-30,LEAD_5459,Event_Webinar,Inbound_SEO,Proposal,12000000
+2026-08-30,LEAD_5460,Website Form,Inbound_SEO,Contacted,0
+2026-08-30,LEAD_5461,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-30,LEAD_5462,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-30,LEAD_5463,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-30,LEAD_5464,Google Search,Inbound_SEO,Won,24000000
+2026-08-30,LEAD_5465,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-31,LEAD_5466,Website Form,Inbound_SEO,Proposal,24000000
+2026-08-31,LEAD_5467,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-31,LEAD_5468,Meta Ads,Novapos_Omni_Launch,Won,3588000
+2026-08-31,LEAD_5469,Google Search,Inbound_SEO,Lost,0
+2026-08-31,LEAD_5470,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-08-31,LEAD_5471,Event_Webinar,Inbound_SEO,Won,24000000
+2026-08-31,LEAD_5472,Website Form,Inbound_SEO,New,0
+2026-08-31,LEAD_5473,Event_Webinar,Inbound_SEO,Contacted,0
+2026-08-31,LEAD_5474,Website Form,Inbound_SEO,New,0
+2026-08-31,LEAD_5475,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-08-31,LEAD_5476,Event_Webinar,Inbound_SEO,New,0
+2026-08-31,LEAD_5477,Meta Ads,Novapos_Omni_Launch,New,0
+2026-08-31,LEAD_5478,Website Form,Inbound_SEO,Lost,0
+2026-08-31,LEAD_5479,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-08-31,LEAD_5480,Referral,Inbound_SEO,Contacted,0
+2026-08-31,LEAD_5481,Referral,Inbound_SEO,Proposal,6500000
+2026-08-31,LEAD_5482,Event_Webinar,Inbound_SEO,Won,3588000
+2026-08-31,LEAD_5483,Google Search,Inbound_SEO,Won,12000000
+2026-09-01,LEAD_5484,Referral,Inbound_SEO,Contacted,0
+2026-09-01,LEAD_5485,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-01,LEAD_5486,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-01,LEAD_5487,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-01,LEAD_5488,Referral,Inbound_SEO,Contacted,0
+2026-09-01,LEAD_5489,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-01,LEAD_5490,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-01,LEAD_5491,Referral,Inbound_SEO,Contacted,0
+2026-09-01,LEAD_5492,Referral,Inbound_SEO,Contacted,0
+2026-09-01,LEAD_5493,Google Search,Inbound_SEO,Lost,0
+2026-09-01,LEAD_5494,Meta Ads,Novapos_Omni_Launch,Won,6500000
+2026-09-01,LEAD_5495,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-01,LEAD_5496,Event_Webinar,Inbound_SEO,Won,12000000
+2026-09-01,LEAD_5497,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-01,LEAD_5498,Google Search,Inbound_SEO,New,0
+2026-09-01,LEAD_5499,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-01,LEAD_5500,Google Search,Inbound_SEO,Won,12000000
+2026-09-01,LEAD_5501,Website Form,Inbound_SEO,Lost,0
+2026-09-01,LEAD_5502,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-09-02,LEAD_5503,Google Search,Inbound_SEO,New,0
+2026-09-02,LEAD_5504,Event_Webinar,Inbound_SEO,Won,6500000
+2026-09-02,LEAD_5505,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-02,LEAD_5506,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-09-02,LEAD_5507,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-02,LEAD_5508,Google Search,Inbound_SEO,New,0
+2026-09-02,LEAD_5509,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-02,LEAD_5510,Website Form,Inbound_SEO,Lost,0
+2026-09-02,LEAD_5511,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-02,LEAD_5512,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-02,LEAD_5513,Referral,Inbound_SEO,Contacted,0
+2026-09-02,LEAD_5514,Meta Ads,Novapos_Omni_Launch,Proposal,3588000
+2026-09-02,LEAD_5515,Referral,Inbound_SEO,Won,24000000
+2026-09-03,LEAD_5516,Meta Ads,Novapos_Omni_Launch,Won,12000000
+2026-09-03,LEAD_5517,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-09-03,LEAD_5518,Meta Ads,Novapos_Omni_Launch,Proposal,6500000
+2026-09-03,LEAD_5519,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-03,LEAD_5520,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-03,LEAD_5521,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-03,LEAD_5522,Event_Webinar,Inbound_SEO,Proposal,3588000
+2026-09-03,LEAD_5523,Website Form,Inbound_SEO,Won,3588000
+2026-09-03,LEAD_5524,Referral,Inbound_SEO,New,0
+2026-09-03,LEAD_5525,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-03,LEAD_5526,Event_Webinar,Inbound_SEO,Proposal,3588000
+2026-09-03,LEAD_5527,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-03,LEAD_5528,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-04,LEAD_5529,Google Search,Inbound_SEO,Contacted,0
+2026-09-04,LEAD_5530,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-04,LEAD_5531,Google Search,Inbound_SEO,Proposal,12000000
+2026-09-04,LEAD_5532,Google Search,Inbound_SEO,New,0
+2026-09-04,LEAD_5533,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-09-04,LEAD_5534,Google Search,Inbound_SEO,New,0
+2026-09-04,LEAD_5535,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-04,LEAD_5536,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-04,LEAD_5537,Google Search,Inbound_SEO,New,0
+2026-09-04,LEAD_5538,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-04,LEAD_5539,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-04,LEAD_5540,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-05,LEAD_5541,Website Form,Inbound_SEO,Won,12000000
+2026-09-05,LEAD_5542,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-05,LEAD_5543,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-05,LEAD_5544,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-05,LEAD_5545,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-05,LEAD_5546,Website Form,Inbound_SEO,Contacted,0
+2026-09-05,LEAD_5547,Referral,Inbound_SEO,Contacted,0
+2026-09-05,LEAD_5548,Referral,Inbound_SEO,New,0
+2026-09-05,LEAD_5549,Referral,Inbound_SEO,Lost,0
+2026-09-05,LEAD_5550,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-06,LEAD_5551,Google Search,Inbound_SEO,Proposal,24000000
+2026-09-06,LEAD_5552,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-06,LEAD_5553,Google Search,Inbound_SEO,New,0
+2026-09-06,LEAD_5554,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-06,LEAD_5555,Referral,Inbound_SEO,New,0
+2026-09-06,LEAD_5556,Website Form,Inbound_SEO,Contacted,0
+2026-09-06,LEAD_5557,Website Form,Inbound_SEO,Contacted,0
+2026-09-06,LEAD_5558,Referral,Inbound_SEO,Contacted,0
+2026-09-06,LEAD_5559,Website Form,Inbound_SEO,Won,12000000
+2026-09-06,LEAD_5560,Referral,Inbound_SEO,Proposal,12000000
+2026-09-06,LEAD_5561,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-06,LEAD_5562,Referral,Inbound_SEO,Contacted,0
+2026-09-06,LEAD_5563,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-06,LEAD_5564,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-09-06,LEAD_5565,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-06,LEAD_5566,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-06,LEAD_5567,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-09-07,LEAD_5568,Referral,Inbound_SEO,New,0
+2026-09-07,LEAD_5569,Website Form,Inbound_SEO,Won,3588000
+2026-09-07,LEAD_5570,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-07,LEAD_5571,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-07,LEAD_5572,Google Search,Inbound_SEO,Won,24000000
+2026-09-08,LEAD_5573,Website Form,Inbound_SEO,Won,12000000
+2026-09-08,LEAD_5574,Website Form,Inbound_SEO,Contacted,0
+2026-09-08,LEAD_5575,Event_Webinar,Inbound_SEO,Proposal,3588000
+2026-09-08,LEAD_5576,Meta Ads,Novapos_Omni_Launch,Won,3588000
+2026-09-08,LEAD_5577,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-08,LEAD_5578,Referral,Inbound_SEO,New,0
+2026-09-08,LEAD_5579,Website Form,Inbound_SEO,Contacted,0
+2026-09-08,LEAD_5580,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-08,LEAD_5581,Google Search,Inbound_SEO,New,0
+2026-09-08,LEAD_5582,Meta Ads,Novapos_Omni_Launch,Won,24000000
+2026-09-08,LEAD_5583,Referral,Inbound_SEO,New,0
+2026-09-08,LEAD_5584,Website Form,Inbound_SEO,Won,3588000
+2026-09-09,LEAD_5585,Event_Webinar,Inbound_SEO,Proposal,24000000
+2026-09-09,LEAD_5586,Meta Ads,Novapos_Omni_Launch,New,0
+2026-09-09,LEAD_5587,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-09,LEAD_5588,Google Search,Inbound_SEO,New,0
+2026-09-09,LEAD_5589,Event_Webinar,Inbound_SEO,Proposal,6500000
+2026-09-09,LEAD_5590,Event_Webinar,Inbound_SEO,Won,12000000
+2026-09-09,LEAD_5591,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-10,LEAD_5592,Website Form,Inbound_SEO,Contacted,0
+2026-09-10,LEAD_5593,Google Search,Inbound_SEO,New,0
+2026-09-10,LEAD_5594,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-10,LEAD_5595,Website Form,Inbound_SEO,Contacted,0
+2026-09-10,LEAD_5596,Google Search,Inbound_SEO,Lost,0
+2026-09-11,LEAD_5597,Referral,Inbound_SEO,Contacted,0
+2026-09-11,LEAD_5598,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-11,LEAD_5599,Referral,Inbound_SEO,New,0
+2026-09-11,LEAD_5600,Referral,Inbound_SEO,Proposal,12000000
+2026-09-11,LEAD_5601,Event_Webinar,Inbound_SEO,Proposal,24000000
+2026-09-11,LEAD_5602,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-11,LEAD_5603,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-11,LEAD_5604,Google Search,Inbound_SEO,Contacted,0
+2026-09-11,LEAD_5605,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-11,LEAD_5606,Website Form,Inbound_SEO,Contacted,0
+2026-09-11,LEAD_5607,Meta Ads,Novapos_Omni_Launch,New,0
+2026-09-11,LEAD_5608,Google Search,Inbound_SEO,Contacted,0
+2026-09-11,LEAD_5609,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-12,LEAD_5610,Google Search,Inbound_SEO,Contacted,0
+2026-09-12,LEAD_5611,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-12,LEAD_5612,Event_Webinar,Inbound_SEO,Proposal,3588000
+2026-09-12,LEAD_5613,Referral,Inbound_SEO,Contacted,0
+2026-09-12,LEAD_5614,Website Form,Inbound_SEO,Proposal,6500000
+2026-09-12,LEAD_5615,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-12,LEAD_5616,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-13,LEAD_5617,Website Form,Inbound_SEO,Proposal,24000000
+2026-09-13,LEAD_5618,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-13,LEAD_5619,Google Search,Inbound_SEO,Contacted,0
+2026-09-13,LEAD_5620,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-13,LEAD_5621,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-09-14,LEAD_5622,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-14,LEAD_5623,Meta Ads,Novapos_Omni_Launch,New,0
+2026-09-14,LEAD_5624,Meta Ads,Novapos_Omni_Launch,New,0
+2026-09-14,LEAD_5625,Referral,Inbound_SEO,Won,3588000
+2026-09-14,LEAD_5626,Meta Ads,Novapos_Omni_Launch,Won,24000000
+2026-09-14,LEAD_5627,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-14,LEAD_5628,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-14,LEAD_5629,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-14,LEAD_5630,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-14,LEAD_5631,Referral,Inbound_SEO,Lost,0
+2026-09-14,LEAD_5632,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-14,LEAD_5633,Event_Webinar,Inbound_SEO,Won,6500000
+2026-09-14,LEAD_5634,Google Search,Inbound_SEO,Contacted,0
+2026-09-14,LEAD_5635,Google Search,Inbound_SEO,Won,12000000
+2026-09-14,LEAD_5636,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-14,LEAD_5637,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-14,LEAD_5638,Website Form,Inbound_SEO,Lost,0
+2026-09-14,LEAD_5639,Google Search,Inbound_SEO,New,0
+2026-09-15,LEAD_5640,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-15,LEAD_5641,Google Search,Inbound_SEO,New,0
+2026-09-15,LEAD_5642,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-09-15,LEAD_5643,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-15,LEAD_5644,Google Search,Inbound_SEO,New,0
+2026-09-15,LEAD_5645,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-15,LEAD_5646,Website Form,Inbound_SEO,New,0
+2026-09-15,LEAD_5647,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-15,LEAD_5648,Google Search,Inbound_SEO,New,0
+2026-09-15,LEAD_5649,Event_Webinar,Inbound_SEO,Won,12000000
+2026-09-15,LEAD_5650,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-09-15,LEAD_5651,Website Form,Inbound_SEO,Contacted,0
+2026-09-15,LEAD_5652,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-15,LEAD_5653,Website Form,Inbound_SEO,Contacted,0
+2026-09-15,LEAD_5654,Referral,Inbound_SEO,Lost,0
+2026-09-15,LEAD_5655,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-15,LEAD_5656,Google Search,Inbound_SEO,New,0
+2026-09-15,LEAD_5657,Google Search,Inbound_SEO,New,0
+2026-09-15,LEAD_5658,Google Search,Inbound_SEO,Contacted,0
+2026-09-15,LEAD_5659,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-16,LEAD_5660,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-16,LEAD_5661,Referral,Inbound_SEO,Contacted,0
+2026-09-16,LEAD_5662,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-16,LEAD_5663,Event_Webinar,Inbound_SEO,Proposal,24000000
+2026-09-16,LEAD_5664,Google Search,Inbound_SEO,New,0
+2026-09-16,LEAD_5665,Google Search,Inbound_SEO,Lost,0
+2026-09-16,LEAD_5666,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-09-16,LEAD_5667,Event_Webinar,Inbound_SEO,New,0
+2026-09-16,LEAD_5668,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-17,LEAD_5669,Website Form,Inbound_SEO,New,0
+2026-09-17,LEAD_5670,Meta Ads,Novapos_Omni_Launch,New,0
+2026-09-17,LEAD_5671,Referral,Inbound_SEO,Contacted,0
+2026-09-17,LEAD_5672,Referral,Inbound_SEO,Contacted,0
+2026-09-17,LEAD_5673,Event_Webinar,Inbound_SEO,Proposal,6500000
+2026-09-18,LEAD_5674,Referral,Inbound_SEO,Proposal,24000000
+2026-09-18,LEAD_5675,Website Form,Inbound_SEO,Contacted,0
+2026-09-18,LEAD_5676,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-18,LEAD_5677,Meta Ads,Novapos_Omni_Launch,Won,6500000
+2026-09-18,LEAD_5678,Google Search,Inbound_SEO,Lost,0
+2026-09-18,LEAD_5679,Website Form,Inbound_SEO,Proposal,24000000
+2026-09-18,LEAD_5680,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-18,LEAD_5681,Website Form,Inbound_SEO,Proposal,24000000
+2026-09-18,LEAD_5682,Website Form,Inbound_SEO,New,0
+2026-09-18,LEAD_5683,Website Form,Inbound_SEO,Won,12000000
+2026-09-18,LEAD_5684,Referral,Inbound_SEO,Contacted,0
+2026-09-18,LEAD_5685,Event_Webinar,Inbound_SEO,Won,6500000
+2026-09-18,LEAD_5686,Referral,Inbound_SEO,Contacted,0
+2026-09-18,LEAD_5687,Meta Ads,Novapos_Omni_Launch,New,0
+2026-09-18,LEAD_5688,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-18,LEAD_5689,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-18,LEAD_5690,Website Form,Inbound_SEO,New,0
+2026-09-19,LEAD_5691,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-19,LEAD_5692,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-19,LEAD_5693,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-19,LEAD_5694,Referral,Inbound_SEO,Contacted,0
+2026-09-19,LEAD_5695,Website Form,Inbound_SEO,Contacted,0
+2026-09-19,LEAD_5696,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-09-19,LEAD_5697,Meta Ads,Novapos_Omni_Launch,Won,24000000
+2026-09-19,LEAD_5698,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-19,LEAD_5699,Referral,Inbound_SEO,New,0
+2026-09-19,LEAD_5700,Event_Webinar,Inbound_SEO,Won,3588000
+2026-09-19,LEAD_5701,Website Form,Inbound_SEO,New,0
+2026-09-19,LEAD_5702,Google Search,Inbound_SEO,Proposal,6500000
+2026-09-19,LEAD_5703,Google Search,Inbound_SEO,New,0
+2026-09-19,LEAD_5704,Meta Ads,Novapos_Omni_Launch,New,0
+2026-09-19,LEAD_5705,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-19,LEAD_5706,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-20,LEAD_5707,Event_Webinar,Inbound_SEO,Proposal,12000000
+2026-09-20,LEAD_5708,Website Form,Inbound_SEO,Won,6500000
+2026-09-20,LEAD_5709,Event_Webinar,Inbound_SEO,Proposal,12000000
+2026-09-20,LEAD_5710,Event_Webinar,Inbound_SEO,New,0
+2026-09-20,LEAD_5711,Referral,Inbound_SEO,Contacted,0
+2026-09-20,LEAD_5712,Meta Ads,Novapos_Omni_Launch,New,0
+2026-09-20,LEAD_5713,Event_Webinar,Inbound_SEO,New,0
+2026-09-20,LEAD_5714,Website Form,Inbound_SEO,New,0
+2026-09-20,LEAD_5715,Referral,Inbound_SEO,New,0
+2026-09-20,LEAD_5716,Event_Webinar,Inbound_SEO,New,0
+2026-09-20,LEAD_5717,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-21,LEAD_5718,Website Form,Inbound_SEO,Contacted,0
+2026-09-21,LEAD_5719,Website Form,Inbound_SEO,New,0
+2026-09-21,LEAD_5720,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-21,LEAD_5721,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-21,LEAD_5722,Referral,Inbound_SEO,New,0
+2026-09-22,LEAD_5723,Google Search,Inbound_SEO,Proposal,6500000
+2026-09-22,LEAD_5724,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-22,LEAD_5725,Meta Ads,Novapos_Omni_Launch,Proposal,3588000
+2026-09-22,LEAD_5726,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-22,LEAD_5727,Referral,Inbound_SEO,New,0
+2026-09-22,LEAD_5728,Google Search,Inbound_SEO,Contacted,0
+2026-09-22,LEAD_5729,Google Search,Inbound_SEO,Proposal,6500000
+2026-09-23,LEAD_5730,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-23,LEAD_5731,Website Form,Inbound_SEO,New,0
+2026-09-23,LEAD_5732,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-23,LEAD_5733,Referral,Inbound_SEO,Contacted,0
+2026-09-23,LEAD_5734,Google Search,Inbound_SEO,Contacted,0
+2026-09-23,LEAD_5735,Google Search,Inbound_SEO,New,0
+2026-09-23,LEAD_5736,Website Form,Inbound_SEO,Contacted,0
+2026-09-23,LEAD_5737,Referral,Inbound_SEO,Contacted,0
+2026-09-23,LEAD_5738,Referral,Inbound_SEO,Contacted,0
+2026-09-23,LEAD_5739,Website Form,Inbound_SEO,Contacted,0
+2026-09-23,LEAD_5740,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-23,LEAD_5741,Google Search,Inbound_SEO,New,0
+2026-09-23,LEAD_5742,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-23,LEAD_5743,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-24,LEAD_5744,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-24,LEAD_5745,Website Form,Inbound_SEO,Contacted,0
+2026-09-24,LEAD_5746,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-24,LEAD_5747,Website Form,Inbound_SEO,New,0
+2026-09-24,LEAD_5748,Google Search,Inbound_SEO,Contacted,0
+2026-09-24,LEAD_5749,Referral,Inbound_SEO,Contacted,0
+2026-09-24,LEAD_5750,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-24,LEAD_5751,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-24,LEAD_5752,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-24,LEAD_5753,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-24,LEAD_5754,Event_Webinar,Inbound_SEO,Won,12000000
+2026-09-24,LEAD_5755,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-24,LEAD_5756,Meta Ads,Novapos_Omni_Launch,New,0
+2026-09-24,LEAD_5757,Referral,Inbound_SEO,Contacted,0
+2026-09-24,LEAD_5758,Meta Ads,Novapos_Omni_Launch,New,0
+2026-09-24,LEAD_5759,Website Form,Inbound_SEO,Contacted,0
+2026-09-24,LEAD_5760,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-24,LEAD_5761,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-25,LEAD_5762,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-25,LEAD_5763,Referral,Inbound_SEO,Proposal,24000000
+2026-09-25,LEAD_5764,Google Search,Inbound_SEO,Contacted,0
+2026-09-25,LEAD_5765,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-25,LEAD_5766,Referral,Inbound_SEO,Proposal,12000000
+2026-09-25,LEAD_5767,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-09-25,LEAD_5768,Google Search,Inbound_SEO,Proposal,3588000
+2026-09-25,LEAD_5769,Referral,Inbound_SEO,Contacted,0
+2026-09-25,LEAD_5770,Website Form,Inbound_SEO,Lost,0
+2026-09-25,LEAD_5771,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-25,LEAD_5772,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-25,LEAD_5773,Website Form,Inbound_SEO,Won,6500000
+2026-09-25,LEAD_5774,Event_Webinar,Inbound_SEO,Proposal,6500000
+2026-09-25,LEAD_5775,Website Form,Inbound_SEO,Proposal,3588000
+2026-09-25,LEAD_5776,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-25,LEAD_5777,Google Search,Inbound_SEO,Won,24000000
+2026-09-25,LEAD_5778,Referral,Inbound_SEO,New,0
+2026-09-25,LEAD_5779,Meta Ads,Novapos_Omni_Launch,Proposal,6500000
+2026-09-25,LEAD_5780,Google Search,Inbound_SEO,Contacted,0
+2026-09-26,LEAD_5781,Google Search,Inbound_SEO,Contacted,0
+2026-09-26,LEAD_5782,Google Search,Inbound_SEO,Contacted,0
+2026-09-26,LEAD_5783,Google Search,Inbound_SEO,New,0
+2026-09-26,LEAD_5784,Event_Webinar,Inbound_SEO,Won,12000000
+2026-09-26,LEAD_5785,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-26,LEAD_5786,Website Form,Inbound_SEO,New,0
+2026-09-26,LEAD_5787,Event_Webinar,Inbound_SEO,Proposal,6500000
+2026-09-27,LEAD_5788,Referral,Inbound_SEO,Won,6500000
+2026-09-27,LEAD_5789,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-27,LEAD_5790,Website Form,Inbound_SEO,Proposal,6500000
+2026-09-27,LEAD_5791,Referral,Inbound_SEO,Proposal,12000000
+2026-09-27,LEAD_5792,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-27,LEAD_5793,Event_Webinar,Inbound_SEO,New,0
+2026-09-27,LEAD_5794,Referral,Inbound_SEO,Proposal,3588000
+2026-09-27,LEAD_5795,Google Search,Inbound_SEO,Won,6500000
+2026-09-27,LEAD_5796,Google Search,Inbound_SEO,Contacted,0
+2026-09-27,LEAD_5797,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-27,LEAD_5798,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-27,LEAD_5799,Referral,Inbound_SEO,Won,6500000
+2026-09-27,LEAD_5800,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-27,LEAD_5801,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-27,LEAD_5802,Referral,Inbound_SEO,New,0
+2026-09-27,LEAD_5803,Referral,Inbound_SEO,Proposal,24000000
+2026-09-27,LEAD_5804,Google Search,Inbound_SEO,Contacted,0
+2026-09-27,LEAD_5805,Referral,Inbound_SEO,Proposal,24000000
+2026-09-27,LEAD_5806,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-27,LEAD_5807,Referral,Inbound_SEO,New,0
+2026-09-28,LEAD_5808,Event_Webinar,Inbound_SEO,Won,24000000
+2026-09-28,LEAD_5809,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-28,LEAD_5810,Meta Ads,Novapos_Omni_Launch,Proposal,24000000
+2026-09-28,LEAD_5811,Meta Ads,Novapos_Omni_Launch,New,0
+2026-09-28,LEAD_5812,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-09-28,LEAD_5813,Referral,Inbound_SEO,Proposal,3588000
+2026-09-28,LEAD_5814,Referral,Inbound_SEO,Proposal,24000000
+2026-09-28,LEAD_5815,Referral,Inbound_SEO,Proposal,12000000
+2026-09-28,LEAD_5816,Referral,Inbound_SEO,Contacted,0
+2026-09-28,LEAD_5817,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-28,LEAD_5818,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-28,LEAD_5819,Referral,Inbound_SEO,Proposal,12000000
+2026-09-28,LEAD_5820,Meta Ads,Novapos_Omni_Launch,Proposal,24000000
+2026-09-28,LEAD_5821,Event_Webinar,Inbound_SEO,Proposal,3588000
+2026-09-28,LEAD_5822,Google Search,Inbound_SEO,New,0
+2026-09-28,LEAD_5823,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-28,LEAD_5824,Event_Webinar,Inbound_SEO,Won,24000000
+2026-09-29,LEAD_5825,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-29,LEAD_5826,Meta Ads,Novapos_Omni_Launch,New,0
+2026-09-29,LEAD_5827,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-09-29,LEAD_5828,Meta Ads,Novapos_Omni_Launch,Won,12000000
+2026-09-29,LEAD_5829,Website Form,Inbound_SEO,Contacted,0
+2026-09-29,LEAD_5830,Website Form,Inbound_SEO,Proposal,3588000
+2026-09-29,LEAD_5831,Event_Webinar,Inbound_SEO,Contacted,0
+2026-09-29,LEAD_5832,Website Form,Inbound_SEO,Contacted,0
+2026-09-29,LEAD_5833,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-29,LEAD_5834,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-09-29,LEAD_5835,Event_Webinar,Inbound_SEO,New,0
+2026-09-29,LEAD_5836,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-29,LEAD_5837,Referral,Inbound_SEO,Contacted,0
+2026-09-29,LEAD_5838,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-09-29,LEAD_5839,Google Search,Inbound_SEO,Proposal,24000000
+2026-09-29,LEAD_5840,Referral,Inbound_SEO,Won,12000000
+2026-09-29,LEAD_5841,Referral,Inbound_SEO,Proposal,6500000
+2026-09-29,LEAD_5842,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-09-30,LEAD_5843,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-30,LEAD_5844,Meta Ads,Novapos_Omni_Launch,New,0
+2026-09-30,LEAD_5845,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-30,LEAD_5846,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-09-30,LEAD_5847,Website Form,Inbound_SEO,Contacted,0
+2026-09-30,LEAD_5848,Meta Ads,Novapos_Omni_Launch,New,0
+2026-10-01,LEAD_5849,Meta Ads,Novapos_Omni_Launch,Won,24000000
+2026-10-01,LEAD_5850,Meta Ads,Novapos_Omni_Launch,Proposal,12000000
+2026-10-01,LEAD_5851,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-01,LEAD_5852,Event_Webinar,Inbound_SEO,Won,6500000
+2026-10-01,LEAD_5853,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-10-01,LEAD_5854,Referral,Inbound_SEO,Contacted,0
+2026-10-01,LEAD_5855,Referral,Inbound_SEO,Contacted,0
+2026-10-01,LEAD_5856,Google Search,Inbound_SEO,Contacted,0
+2026-10-01,LEAD_5857,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-10-01,LEAD_5858,Google Search,Inbound_SEO,Proposal,12000000
+2026-10-01,LEAD_5859,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-10-01,LEAD_5860,Meta Ads,Novapos_Omni_Launch,Proposal,6500000
+2026-10-01,LEAD_5861,Website Form,Inbound_SEO,Contacted,0
+2026-10-02,LEAD_5862,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-10-02,LEAD_5863,Meta Ads,Novapos_Omni_Launch,Proposal,6500000
+2026-10-02,LEAD_5864,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-10-02,LEAD_5865,Event_Webinar,Inbound_SEO,Won,24000000
+2026-10-02,LEAD_5866,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-02,LEAD_5867,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-10-02,LEAD_5868,Event_Webinar,Inbound_SEO,New,0
+2026-10-02,LEAD_5869,Website Form,Inbound_SEO,Contacted,0
+2026-10-02,LEAD_5870,Referral,Inbound_SEO,New,0
+2026-10-02,LEAD_5871,Referral,Inbound_SEO,Contacted,0
+2026-10-02,LEAD_5872,Google Search,Inbound_SEO,Proposal,12000000
+2026-10-02,LEAD_5873,Referral,Inbound_SEO,New,0
+2026-10-02,LEAD_5874,Event_Webinar,Inbound_SEO,Lost,0
+2026-10-02,LEAD_5875,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-10-02,LEAD_5876,Website Form,Inbound_SEO,New,0
+2026-10-03,LEAD_5877,Website Form,Inbound_SEO,Contacted,0
+2026-10-03,LEAD_5878,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-03,LEAD_5879,Referral,Inbound_SEO,New,0
+2026-10-03,LEAD_5880,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-10-03,LEAD_5881,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-03,LEAD_5882,Referral,Inbound_SEO,Contacted,0
+2026-10-03,LEAD_5883,Meta Ads,Novapos_Omni_Launch,Proposal,12000000
+2026-10-03,LEAD_5884,Event_Webinar,Inbound_SEO,Proposal,6500000
+2026-10-03,LEAD_5885,Referral,Inbound_SEO,Lost,0
+2026-10-03,LEAD_5886,Google Search,Inbound_SEO,Contacted,0
+2026-10-03,LEAD_5887,Meta Ads,Novapos_Omni_Launch,New,0
+2026-10-03,LEAD_5888,Google Search,Inbound_SEO,Contacted,0
+2026-10-03,LEAD_5889,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-10-03,LEAD_5890,Google Search,Inbound_SEO,Won,24000000
+2026-10-03,LEAD_5891,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-03,LEAD_5892,Google Search,Inbound_SEO,Contacted,0
+2026-10-04,LEAD_5893,Website Form,Inbound_SEO,Proposal,3588000
+2026-10-04,LEAD_5894,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-04,LEAD_5895,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-04,LEAD_5896,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-10-04,LEAD_5897,Referral,Inbound_SEO,Contacted,0
+2026-10-04,LEAD_5898,Referral,Inbound_SEO,New,0
+2026-10-04,LEAD_5899,Google Search,Inbound_SEO,Contacted,0
+2026-10-04,LEAD_5900,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-10-04,LEAD_5901,Website Form,Inbound_SEO,Proposal,6500000
+2026-10-04,LEAD_5902,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-10-04,LEAD_5903,Referral,Inbound_SEO,Lost,0
+2026-10-04,LEAD_5904,Referral,Inbound_SEO,New,0
+2026-10-04,LEAD_5905,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-10-05,LEAD_5906,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-10-05,LEAD_5907,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-10-05,LEAD_5908,Referral,Inbound_SEO,Lost,0
+2026-10-05,LEAD_5909,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-05,LEAD_5910,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-10-05,LEAD_5911,Referral,Inbound_SEO,Proposal,12000000
+2026-10-05,LEAD_5912,Meta Ads,Novapos_Omni_Launch,Proposal,24000000
+2026-10-05,LEAD_5913,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-10-05,LEAD_5914,Google Search,Inbound_SEO,Won,6500000
+2026-10-06,LEAD_5915,Website Form,Inbound_SEO,Proposal,6500000
+2026-10-06,LEAD_5916,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-10-06,LEAD_5917,Google Search,Inbound_SEO,Contacted,0
+2026-10-06,LEAD_5918,Website Form,Inbound_SEO,New,0
+2026-10-06,LEAD_5919,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-10-06,LEAD_5920,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-10-06,LEAD_5921,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-06,LEAD_5922,Google Search,Inbound_SEO,Proposal,24000000
+2026-10-06,LEAD_5923,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-10-06,LEAD_5924,Event_Webinar,Inbound_SEO,Won,6500000
+2026-10-06,LEAD_5925,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-10-06,LEAD_5926,Meta Ads,Novapos_Omni_Launch,New,0
+2026-10-06,LEAD_5927,Meta Ads,Novapos_Omni_Launch,Proposal,24000000
+2026-10-06,LEAD_5928,Event_Webinar,Inbound_SEO,Lost,0
+2026-10-06,LEAD_5929,Referral,Inbound_SEO,New,0
+2026-10-06,LEAD_5930,Referral,Inbound_SEO,Lost,0
+2026-10-06,LEAD_5931,Event_Webinar,Inbound_SEO,New,0
+2026-10-06,LEAD_5932,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-10-06,LEAD_5933,Event_Webinar,Inbound_SEO,Proposal,24000000
+2026-10-07,LEAD_5934,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-10-07,LEAD_5935,Referral,Inbound_SEO,Won,3588000
+2026-10-07,LEAD_5936,Website Form,Inbound_SEO,Contacted,0
+2026-10-07,LEAD_5937,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-10-07,LEAD_5938,Referral,Inbound_SEO,Contacted,0
+2026-10-07,LEAD_5939,Meta Ads,Novapos_Omni_Launch,New,0
+2026-10-07,LEAD_5940,Website Form,Inbound_SEO,Proposal,3588000
+2026-10-07,LEAD_5941,Google Search,Inbound_SEO,Contacted,0
+2026-10-07,LEAD_5942,Website Form,Inbound_SEO,New,0
+2026-10-07,LEAD_5943,Google Search,Inbound_SEO,Proposal,6500000
+2026-10-07,LEAD_5944,Website Form,Inbound_SEO,New,0
+2026-10-07,LEAD_5945,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-10-07,LEAD_5946,Referral,Inbound_SEO,Proposal,12000000
+2026-10-07,LEAD_5947,Website Form,Inbound_SEO,Contacted,0
+2026-10-07,LEAD_5948,Referral,Inbound_SEO,Contacted,0
+2026-10-07,LEAD_5949,Referral,Inbound_SEO,Proposal,12000000
+2026-10-07,LEAD_5950,Event_Webinar,Inbound_SEO,New,0
+2026-10-07,LEAD_5951,Google Search,Inbound_SEO,New,0
+2026-10-07,LEAD_5952,Website Form,Inbound_SEO,New,0
+2026-10-07,LEAD_5953,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-08,LEAD_5954,Website Form,Inbound_SEO,Lost,0
+2026-10-08,LEAD_5955,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-10-08,LEAD_5956,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-08,LEAD_5957,Referral,Inbound_SEO,Proposal,6500000
+2026-10-08,LEAD_5958,Google Search,Inbound_SEO,New,0
+2026-10-08,LEAD_5959,Website Form,Inbound_SEO,Won,12000000
+2026-10-08,LEAD_5960,Google Search,Inbound_SEO,New,0
+2026-10-08,LEAD_5961,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-10-08,LEAD_5962,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-10-08,LEAD_5963,Website Form,Inbound_SEO,Contacted,0
+2026-10-08,LEAD_5964,Event_Webinar,Inbound_SEO,Proposal,24000000
+2026-10-08,LEAD_5965,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-10-08,LEAD_5966,Google Search,Inbound_SEO,Lost,0
+2026-10-08,LEAD_5967,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-10-09,LEAD_5968,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-09,LEAD_5969,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-10-09,LEAD_5970,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-10-09,LEAD_5971,Referral,Inbound_SEO,Won,3588000
+2026-10-09,LEAD_5972,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-10-09,LEAD_5973,Website Form,Inbound_SEO,Contacted,0
+2026-10-09,LEAD_5974,Google Search,Inbound_SEO,Contacted,0
+2026-10-09,LEAD_5975,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-10-09,LEAD_5976,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-09,LEAD_5977,Event_Webinar,Inbound_SEO,Won,3588000
+2026-10-09,LEAD_5978,Event_Webinar,Inbound_SEO,Won,6500000
+2026-10-09,LEAD_5979,Website Form,Inbound_SEO,Proposal,24000000
+2026-10-09,LEAD_5980,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-10-09,LEAD_5981,Event_Webinar,Inbound_SEO,New,0
+2026-10-09,LEAD_5982,Event_Webinar,Inbound_SEO,Lost,0
+2026-10-10,LEAD_5983,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-10-10,LEAD_5984,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-10,LEAD_5985,Website Form,Inbound_SEO,Proposal,6500000
+2026-10-10,LEAD_5986,Google Search,Inbound_SEO,Contacted,0
+2026-10-10,LEAD_5987,Referral,Inbound_SEO,New,0
+2026-10-10,LEAD_5988,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-10,LEAD_5989,Website Form,Inbound_SEO,New,0
+2026-10-11,LEAD_5990,Meta Ads,Novapos_Omni_Launch,Won,6500000
+2026-10-11,LEAD_5991,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-11,LEAD_5992,Google Search,Inbound_SEO,Contacted,0
+2026-10-11,LEAD_5993,Event_Webinar,Inbound_SEO,Proposal,24000000
+2026-10-11,LEAD_5994,Referral,Inbound_SEO,New,0
+2026-10-11,LEAD_5995,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-10-11,LEAD_5996,Meta Ads,Novapos_Omni_Launch,New,0
+2026-10-11,LEAD_5997,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-10-11,LEAD_5998,Referral,Inbound_SEO,New,0
+2026-10-11,LEAD_5999,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-10-11,LEAD_6000,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-10-12,LEAD_6001,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-12,LEAD_6002,Meta Ads,Novapos_Omni_Launch,Proposal,24000000
+2026-10-12,LEAD_6003,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-10-12,LEAD_6004,Event_Webinar,Inbound_SEO,Proposal,3588000
+2026-10-12,LEAD_6005,Website Form,Inbound_SEO,Proposal,12000000
+2026-10-13,LEAD_6006,Google Search,Inbound_SEO,Contacted,0
+2026-10-13,LEAD_6007,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-10-13,LEAD_6008,Website Form,Inbound_SEO,Contacted,0
+2026-10-13,LEAD_6009,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-13,LEAD_6010,Website Form,Inbound_SEO,Proposal,12000000
+2026-10-13,LEAD_6011,Referral,Inbound_SEO,New,0
+2026-10-13,LEAD_6012,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-10-13,LEAD_6013,Website Form,Inbound_SEO,Won,24000000
+2026-10-13,LEAD_6014,Referral,Inbound_SEO,New,0
+2026-10-13,LEAD_6015,Meta Ads,Novapos_Omni_Launch,Proposal,12000000
+2026-10-13,LEAD_6016,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-10-13,LEAD_6017,Referral,Inbound_SEO,Contacted,0
+2026-10-13,LEAD_6018,Event_Webinar,Inbound_SEO,Won,6500000
+2026-10-13,LEAD_6019,Meta Ads,Novapos_Omni_Launch,Proposal,6500000
+2026-10-13,LEAD_6020,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-13,LEAD_6021,Website Form,Inbound_SEO,Proposal,24000000
+2026-10-13,LEAD_6022,Meta Ads,Novapos_Omni_Launch,Proposal,6500000
+2026-10-13,LEAD_6023,Event_Webinar,Inbound_SEO,Proposal,12000000
+2026-10-13,LEAD_6024,Google Search,Inbound_SEO,New,0
+2026-10-13,LEAD_6025,Referral,Inbound_SEO,Proposal,6500000
+2026-10-14,LEAD_6026,Website Form,Inbound_SEO,Lost,0
+2026-10-14,LEAD_6027,Referral,Inbound_SEO,Proposal,24000000
+2026-10-14,LEAD_6028,Website Form,Inbound_SEO,Contacted,0
+2026-10-14,LEAD_6029,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-14,LEAD_6030,Website Form,Inbound_SEO,Contacted,0
+2026-10-14,LEAD_6031,Website Form,Inbound_SEO,Contacted,0
+2026-10-14,LEAD_6032,Website Form,Inbound_SEO,Won,12000000
+2026-10-14,LEAD_6033,Referral,Inbound_SEO,Contacted,0
+2026-10-14,LEAD_6034,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-14,LEAD_6035,Referral,Inbound_SEO,New,0
+2026-10-15,LEAD_6036,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-10-15,LEAD_6037,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-15,LEAD_6038,Google Search,Inbound_SEO,Lost,0
+2026-10-15,LEAD_6039,Website Form,Inbound_SEO,New,0
+2026-10-15,LEAD_6040,Google Search,Inbound_SEO,Contacted,0
+2026-10-15,LEAD_6041,Website Form,Inbound_SEO,Contacted,0
+2026-10-15,LEAD_6042,Website Form,Inbound_SEO,New,0
+2026-10-15,LEAD_6043,Referral,Inbound_SEO,Proposal,12000000
+2026-10-15,LEAD_6044,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-10-15,LEAD_6045,Google Search,Inbound_SEO,Proposal,24000000
+2026-10-15,LEAD_6046,Website Form,Inbound_SEO,New,0
+2026-10-15,LEAD_6047,Google Search,Inbound_SEO,New,0
+2026-10-15,LEAD_6048,Referral,Inbound_SEO,Lost,0
+2026-10-15,LEAD_6049,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-10-15,LEAD_6050,Meta Ads,Novapos_Omni_Launch,Proposal,24000000
+2026-10-15,LEAD_6051,Referral,Inbound_SEO,Contacted,0
+2026-10-15,LEAD_6052,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-10-16,LEAD_6053,Meta Ads,Novapos_Omni_Launch,New,0
+2026-10-16,LEAD_6054,Website Form,Inbound_SEO,Contacted,0
+2026-10-16,LEAD_6055,Website Form,Inbound_SEO,Contacted,0
+2026-10-16,LEAD_6056,Website Form,Inbound_SEO,New,0
+2026-10-16,LEAD_6057,Google Search,Inbound_SEO,Won,3588000
+2026-10-16,LEAD_6058,Website Form,Inbound_SEO,Lost,0
+2026-10-17,LEAD_6059,Google Search,Inbound_SEO,Won,12000000
+2026-10-17,LEAD_6060,Event_Webinar,Inbound_SEO,New,0
+2026-10-17,LEAD_6061,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-10-17,LEAD_6062,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-17,LEAD_6063,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-17,LEAD_6064,Website Form,Inbound_SEO,Proposal,6500000
+2026-10-17,LEAD_6065,Meta Ads,Novapos_Omni_Launch,Won,12000000
+2026-10-17,LEAD_6066,Website Form,Inbound_SEO,Won,24000000
+2026-10-17,LEAD_6067,Google Search,Inbound_SEO,New,0
+2026-10-17,LEAD_6068,Referral,Inbound_SEO,Contacted,0
+2026-10-17,LEAD_6069,Website Form,Inbound_SEO,Contacted,0
+2026-10-17,LEAD_6070,Website Form,Inbound_SEO,Contacted,0
+2026-10-17,LEAD_6071,Meta Ads,Novapos_Omni_Launch,New,0
+2026-10-17,LEAD_6072,Referral,Inbound_SEO,Contacted,0
+2026-10-17,LEAD_6073,Referral,Inbound_SEO,Proposal,3588000
+2026-10-17,LEAD_6074,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-17,LEAD_6075,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-17,LEAD_6076,Meta Ads,Novapos_Omni_Launch,Lost,0
+2026-10-18,LEAD_6077,Event_Webinar,Inbound_SEO,Demo_Scheduled,0
+2026-10-18,LEAD_6078,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-18,LEAD_6079,Meta Ads,Novapos_Omni_Launch,Proposal,3588000
+2026-10-18,LEAD_6080,Event_Webinar,Inbound_SEO,Proposal,6500000
+2026-10-18,LEAD_6081,Event_Webinar,Inbound_SEO,Won,3588000
+2026-10-18,LEAD_6082,Event_Webinar,Inbound_SEO,Lost,0
+2026-10-18,LEAD_6083,Event_Webinar,Inbound_SEO,Proposal,6500000
+2026-10-18,LEAD_6084,Meta Ads,Novapos_Omni_Launch,Proposal,24000000
+2026-10-18,LEAD_6085,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-18,LEAD_6086,Google Search,Inbound_SEO,Proposal,3588000
+2026-10-18,LEAD_6087,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-10-18,LEAD_6088,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-18,LEAD_6089,Referral,Inbound_SEO,Won,24000000
+2026-10-18,LEAD_6090,Event_Webinar,Inbound_SEO,Contacted,0
+2026-10-18,LEAD_6091,Event_Webinar,Inbound_SEO,Won,3588000
+2026-10-19,LEAD_6092,Google Search,Inbound_SEO,Contacted,0
+2026-10-19,LEAD_6093,Google Search,Inbound_SEO,Contacted,0
+2026-10-19,LEAD_6094,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-10-19,LEAD_6095,Website Form,Inbound_SEO,Demo_Scheduled,0
+2026-10-19,LEAD_6096,Google Search,Inbound_SEO,Proposal,12000000
+2026-10-20,LEAD_6097,Google Search,Inbound_SEO,Proposal,6500000
+2026-10-20,LEAD_6098,Website Form,Inbound_SEO,New,0
+2026-10-20,LEAD_6099,Meta Ads,Novapos_Omni_Launch,Demo_Scheduled,0
+2026-10-20,LEAD_6100,Meta Ads,Novapos_Omni_Launch,Proposal,12000000
+2026-10-20,LEAD_6101,Meta Ads,Novapos_Omni_Launch,Contacted,0
+2026-10-20,LEAD_6102,Website Form,Inbound_SEO,Lost,0
+2026-10-20,LEAD_6103,Google Search,Inbound_SEO,Contacted,0
+2026-10-20,LEAD_6104,Google Search,Inbound_SEO,Contacted,0
+2026-10-20,LEAD_6105,Website Form,Inbound_SEO,Contacted,0
+2026-10-21,LEAD_6106,Website Form,Inbound_SEO,New,0
+2026-10-21,LEAD_6107,Referral,Inbound_SEO,New,0
+2026-10-21,LEAD_6108,Referral,Inbound_SEO,New,0
+2026-10-21,LEAD_6109,Google Search,Inbound_SEO,Contacted,0
+2026-10-21,LEAD_6110,Referral,Inbound_SEO,Contacted,0
+2026-10-21,LEAD_6111,Google Search,Inbound_SEO,Contacted,0
+2026-10-21,LEAD_6112,Referral,Inbound_SEO,Demo_Scheduled,0
+2026-10-21,LEAD_6113,Meta Ads,Novapos_Omni_Launch,New,0
+2026-10-21,LEAD_6114,Google Search,Inbound_SEO,Demo_Scheduled,0
+2026-10-21,LEAD_6115,Event_Webinar,Inbound_SEO,Proposal,3588000
+2026-10-21,LEAD_6116,Google Search,Inbound_SEO,Proposal,3588000

@@ -1,0 +1,231 @@
+date,query,page,clicks,impressions,ctr,position
+2026-07-23,phan mem quan ly ban hang,/phan-mem-pos,147,2549,5.77,3.2
+2026-07-23,may in hoa don pos,/thiet-bi/may-in-bill,113,1414,7.99,2.8
+2026-07-23,quan ly kho da kenh,/blog/quan-ly-ton-kho,128,3327,3.85,4.6
+2026-07-23,phan mem ban hang shopee,/tinh-nang/dong-bo-san,128,2398,5.34,3.9
+2026-07-23,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,80,3105,2.58,7.4
+2026-07-25,phan mem quan ly ban hang,/phan-mem-pos,187,2332,8.02,3.4
+2026-07-25,may in hoa don pos,/thiet-bi/may-in-bill,116,1378,8.42,2.3
+2026-07-25,quan ly kho da kenh,/blog/quan-ly-ton-kho,143,3592,3.98,5.5
+2026-07-25,phan mem ban hang shopee,/tinh-nang/dong-bo-san,110,2273,4.84,4.2
+2026-07-25,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,87,3089,2.82,8.2
+2026-07-27,phan mem quan ly ban hang,/phan-mem-pos,150,2897,5.18,3.0
+2026-07-27,may in hoa don pos,/thiet-bi/may-in-bill,77,1224,6.29,2.6
+2026-07-27,quan ly kho da kenh,/blog/quan-ly-ton-kho,178,3307,5.38,5.4
+2026-07-27,phan mem ban hang shopee,/tinh-nang/dong-bo-san,131,1720,7.62,4.7
+2026-07-27,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,99,2441,4.06,8.2
+2026-07-29,phan mem quan ly ban hang,/phan-mem-pos,204,2892,7.05,2.8
+2026-07-29,may in hoa don pos,/thiet-bi/may-in-bill,93,1317,7.06,2.7
+2026-07-29,quan ly kho da kenh,/blog/quan-ly-ton-kho,124,3327,3.73,4.7
+2026-07-29,phan mem ban hang shopee,/tinh-nang/dong-bo-san,127,1817,6.99,4.8
+2026-07-29,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,78,2507,3.11,7.8
+2026-07-31,phan mem quan ly ban hang,/phan-mem-pos,228,2596,8.78,3.7
+2026-07-31,may in hoa don pos,/thiet-bi/may-in-bill,85,1377,6.17,2.5
+2026-07-31,quan ly kho da kenh,/blog/quan-ly-ton-kho,136,2966,4.59,5.3
+2026-07-31,phan mem ban hang shopee,/tinh-nang/dong-bo-san,103,1706,6.04,4.1
+2026-07-31,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,88,2969,2.96,7.4
+2026-08-02,phan mem quan ly ban hang,/phan-mem-pos,207,2691,7.69,3.2
+2026-08-02,may in hoa don pos,/thiet-bi/may-in-bill,89,1318,6.75,3.1
+2026-08-02,quan ly kho da kenh,/blog/quan-ly-ton-kho,178,3637,4.89,5.5
+2026-08-02,phan mem ban hang shopee,/tinh-nang/dong-bo-san,91,2353,3.87,4.3
+2026-08-02,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,71,3385,2.1,7.6
+2026-08-04,phan mem quan ly ban hang,/phan-mem-pos,230,2144,10.73,3.0
+2026-08-04,may in hoa don pos,/thiet-bi/may-in-bill,109,1258,8.66,3.2
+2026-08-04,quan ly kho da kenh,/blog/quan-ly-ton-kho,148,3412,4.34,4.9
+2026-08-04,phan mem ban hang shopee,/tinh-nang/dong-bo-san,141,2079,6.78,3.9
+2026-08-04,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,82,2877,2.85,7.9
+2026-08-06,phan mem quan ly ban hang,/phan-mem-pos,170,2100,8.1,3.6
+2026-08-06,may in hoa don pos,/thiet-bi/may-in-bill,87,1474,5.9,2.9
+2026-08-06,quan ly kho da kenh,/blog/quan-ly-ton-kho,140,3060,4.58,5.2
+2026-08-06,phan mem ban hang shopee,/tinh-nang/dong-bo-san,105,2120,4.95,4.5
+2026-08-06,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,103,2878,3.58,7.6
+2026-08-08,phan mem quan ly ban hang,/phan-mem-pos,155,2797,5.54,2.9
+2026-08-08,may in hoa don pos,/thiet-bi/may-in-bill,88,1252,7.03,3.3
+2026-08-08,quan ly kho da kenh,/blog/quan-ly-ton-kho,165,2693,6.13,5.0
+2026-08-08,phan mem ban hang shopee,/tinh-nang/dong-bo-san,113,1787,6.32,4.7
+2026-08-08,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,98,2699,3.63,8.3
+2026-08-10,phan mem quan ly ban hang,/phan-mem-pos,219,2705,8.1,3.4
+2026-08-10,may in hoa don pos,/thiet-bi/may-in-bill,83,1134,7.32,2.3
+2026-08-10,quan ly kho da kenh,/blog/quan-ly-ton-kho,134,2791,4.8,4.9
+2026-08-10,phan mem ban hang shopee,/tinh-nang/dong-bo-san,98,2096,4.68,3.8
+2026-08-10,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,81,2765,2.93,7.7
+2026-08-12,phan mem quan ly ban hang,/phan-mem-pos,192,2196,8.74,3.0
+2026-08-12,may in hoa don pos,/thiet-bi/may-in-bill,119,1214,9.8,2.8
+2026-08-12,quan ly kho da kenh,/blog/quan-ly-ton-kho,122,3202,3.81,4.9
+2026-08-12,phan mem ban hang shopee,/tinh-nang/dong-bo-san,88,2233,3.94,4.8
+2026-08-12,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,82,3170,2.59,7.8
+2026-08-14,phan mem quan ly ban hang,/phan-mem-pos,170,2946,5.77,3.7
+2026-08-14,may in hoa don pos,/thiet-bi/may-in-bill,103,1090,9.45,2.9
+2026-08-14,quan ly kho da kenh,/blog/quan-ly-ton-kho,175,3183,5.5,5.3
+2026-08-14,phan mem ban hang shopee,/tinh-nang/dong-bo-san,128,2359,5.43,3.9
+2026-08-14,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,91,2725,3.34,7.7
+2026-08-16,phan mem quan ly ban hang,/phan-mem-pos,219,2468,8.87,2.8
+2026-08-16,may in hoa don pos,/thiet-bi/may-in-bill,78,1327,5.88,2.9
+2026-08-16,quan ly kho da kenh,/blog/quan-ly-ton-kho,127,3795,3.35,4.9
+2026-08-16,phan mem ban hang shopee,/tinh-nang/dong-bo-san,89,2077,4.29,4.2
+2026-08-16,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,96,2477,3.88,7.8
+2026-08-18,phan mem quan ly ban hang,/phan-mem-pos,161,2345,6.87,3.3
+2026-08-18,may in hoa don pos,/thiet-bi/may-in-bill,120,1456,8.24,2.7
+2026-08-18,quan ly kho da kenh,/blog/quan-ly-ton-kho,122,3693,3.3,5.0
+2026-08-18,phan mem ban hang shopee,/tinh-nang/dong-bo-san,108,1879,5.75,4.2
+2026-08-18,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,109,3359,3.25,7.4
+2026-08-20,phan mem quan ly ban hang,/phan-mem-pos,209,2466,8.48,3.7
+2026-08-20,may in hoa don pos,/thiet-bi/may-in-bill,114,1158,9.84,3.1
+2026-08-20,quan ly kho da kenh,/blog/quan-ly-ton-kho,179,3160,5.66,5.5
+2026-08-20,phan mem ban hang shopee,/tinh-nang/dong-bo-san,95,2115,4.49,3.9
+2026-08-20,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,76,2911,2.61,8.2
+2026-08-22,phan mem quan ly ban hang,/phan-mem-pos,232,2103,11.03,3.7
+2026-08-22,may in hoa don pos,/thiet-bi/may-in-bill,111,1062,10.45,2.7
+2026-08-22,quan ly kho da kenh,/blog/quan-ly-ton-kho,176,3148,5.59,5.2
+2026-08-22,phan mem ban hang shopee,/tinh-nang/dong-bo-san,127,2246,5.65,3.9
+2026-08-22,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,75,2807,2.67,7.9
+2026-08-24,phan mem quan ly ban hang,/phan-mem-pos,147,2833,5.19,3.5
+2026-08-24,may in hoa don pos,/thiet-bi/may-in-bill,90,1288,6.99,2.8
+2026-08-24,quan ly kho da kenh,/blog/quan-ly-ton-kho,113,2638,4.28,4.9
+2026-08-24,phan mem ban hang shopee,/tinh-nang/dong-bo-san,140,2308,6.07,4.3
+2026-08-24,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,95,3379,2.81,7.7
+2026-08-26,phan mem quan ly ban hang,/phan-mem-pos,188,2700,6.96,2.9
+2026-08-26,may in hoa don pos,/thiet-bi/may-in-bill,81,1153,7.03,3.3
+2026-08-26,quan ly kho da kenh,/blog/quan-ly-ton-kho,116,3559,3.26,5.2
+2026-08-26,phan mem ban hang shopee,/tinh-nang/dong-bo-san,119,2334,5.1,4.4
+2026-08-26,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,88,3157,2.79,7.4
+2026-08-28,phan mem quan ly ban hang,/phan-mem-pos,190,2592,7.33,3.5
+2026-08-28,may in hoa don pos,/thiet-bi/may-in-bill,83,1048,7.92,2.6
+2026-08-28,quan ly kho da kenh,/blog/quan-ly-ton-kho,173,2803,6.17,4.8
+2026-08-28,phan mem ban hang shopee,/tinh-nang/dong-bo-san,102,1984,5.14,4.7
+2026-08-28,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,83,2704,3.07,7.8
+2026-08-30,phan mem quan ly ban hang,/phan-mem-pos,228,2533,9.0,3.5
+2026-08-30,may in hoa don pos,/thiet-bi/may-in-bill,84,1065,7.89,3.1
+2026-08-30,quan ly kho da kenh,/blog/quan-ly-ton-kho,150,3716,4.04,5.4
+2026-08-30,phan mem ban hang shopee,/tinh-nang/dong-bo-san,125,1892,6.61,4.5
+2026-08-30,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,97,2487,3.9,7.9
+2026-09-01,phan mem quan ly ban hang,/phan-mem-pos,218,2052,10.62,3.2
+2026-09-01,may in hoa don pos,/thiet-bi/may-in-bill,93,1252,7.43,2.6
+2026-09-01,quan ly kho da kenh,/blog/quan-ly-ton-kho,175,2761,6.34,4.8
+2026-09-01,phan mem ban hang shopee,/tinh-nang/dong-bo-san,100,1804,5.54,4.7
+2026-09-01,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,94,3311,2.84,7.8
+2026-09-03,phan mem quan ly ban hang,/phan-mem-pos,191,2569,7.43,3.5
+2026-09-03,may in hoa don pos,/thiet-bi/may-in-bill,81,1241,6.53,2.4
+2026-09-03,quan ly kho da kenh,/blog/quan-ly-ton-kho,169,3780,4.47,5.1
+2026-09-03,phan mem ban hang shopee,/tinh-nang/dong-bo-san,105,1940,5.41,4.6
+2026-09-03,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,105,3049,3.44,8.1
+2026-09-05,phan mem quan ly ban hang,/phan-mem-pos,174,2721,6.39,2.7
+2026-09-05,may in hoa don pos,/thiet-bi/may-in-bill,114,1126,10.12,3.2
+2026-09-05,quan ly kho da kenh,/blog/quan-ly-ton-kho,121,2915,4.15,4.7
+2026-09-05,phan mem ban hang shopee,/tinh-nang/dong-bo-san,95,1718,5.53,4.5
+2026-09-05,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,101,2467,4.09,8.1
+2026-09-07,phan mem quan ly ban hang,/phan-mem-pos,212,2080,10.19,2.8
+2026-09-07,may in hoa don pos,/thiet-bi/may-in-bill,113,1266,8.93,2.4
+2026-09-07,quan ly kho da kenh,/blog/quan-ly-ton-kho,120,2948,4.07,4.7
+2026-09-07,phan mem ban hang shopee,/tinh-nang/dong-bo-san,124,2246,5.52,4.6
+2026-09-07,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,107,2610,4.1,8.2
+2026-09-09,phan mem quan ly ban hang,/phan-mem-pos,160,2377,6.73,2.8
+2026-09-09,may in hoa don pos,/thiet-bi/may-in-bill,116,1472,7.88,3.2
+2026-09-09,quan ly kho da kenh,/blog/quan-ly-ton-kho,136,2834,4.8,5.1
+2026-09-09,phan mem ban hang shopee,/tinh-nang/dong-bo-san,128,1846,6.93,4.4
+2026-09-09,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,72,3027,2.38,7.3
+2026-09-11,phan mem quan ly ban hang,/phan-mem-pos,163,2223,7.33,3.0
+2026-09-11,may in hoa don pos,/thiet-bi/may-in-bill,118,1277,9.24,3.3
+2026-09-11,quan ly kho da kenh,/blog/quan-ly-ton-kho,118,2900,4.07,5.1
+2026-09-11,phan mem ban hang shopee,/tinh-nang/dong-bo-san,126,1943,6.48,4.4
+2026-09-11,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,86,3452,2.49,7.5
+2026-09-13,phan mem quan ly ban hang,/phan-mem-pos,175,2404,7.28,2.9
+2026-09-13,may in hoa don pos,/thiet-bi/may-in-bill,86,1074,8.01,3.3
+2026-09-13,quan ly kho da kenh,/blog/quan-ly-ton-kho,120,2771,4.33,4.7
+2026-09-13,phan mem ban hang shopee,/tinh-nang/dong-bo-san,129,2207,5.85,4.4
+2026-09-13,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,69,2747,2.51,7.4
+2026-09-15,phan mem quan ly ban hang,/phan-mem-pos,169,2616,6.46,3.0
+2026-09-15,may in hoa don pos,/thiet-bi/may-in-bill,122,1233,9.89,2.9
+2026-09-15,quan ly kho da kenh,/blog/quan-ly-ton-kho,132,3695,3.57,4.8
+2026-09-15,phan mem ban hang shopee,/tinh-nang/dong-bo-san,91,2313,3.93,4.3
+2026-09-15,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,96,2580,3.72,8.3
+2026-09-17,phan mem quan ly ban hang,/phan-mem-pos,188,2140,8.79,3.1
+2026-09-17,may in hoa don pos,/thiet-bi/may-in-bill,107,1060,10.09,2.4
+2026-09-17,quan ly kho da kenh,/blog/quan-ly-ton-kho,140,3367,4.16,4.7
+2026-09-17,phan mem ban hang shopee,/tinh-nang/dong-bo-san,138,2420,5.7,3.9
+2026-09-17,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,109,2759,3.95,7.9
+2026-09-19,phan mem quan ly ban hang,/phan-mem-pos,233,2157,10.8,3.5
+2026-09-19,may in hoa don pos,/thiet-bi/may-in-bill,110,1153,9.54,3.0
+2026-09-19,quan ly kho da kenh,/blog/quan-ly-ton-kho,152,2973,5.11,5.4
+2026-09-19,phan mem ban hang shopee,/tinh-nang/dong-bo-san,123,1969,6.25,4.3
+2026-09-19,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,93,2832,3.28,7.8
+2026-09-21,phan mem quan ly ban hang,/phan-mem-pos,169,2777,6.09,2.8
+2026-09-21,may in hoa don pos,/thiet-bi/may-in-bill,87,1258,6.92,2.9
+2026-09-21,quan ly kho da kenh,/blog/quan-ly-ton-kho,121,2758,4.39,4.7
+2026-09-21,phan mem ban hang shopee,/tinh-nang/dong-bo-san,91,2186,4.16,4.8
+2026-09-21,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,84,3140,2.68,7.5
+2026-09-23,phan mem quan ly ban hang,/phan-mem-pos,199,2132,9.33,2.8
+2026-09-23,may in hoa don pos,/thiet-bi/may-in-bill,111,1388,8.0,3.1
+2026-09-23,quan ly kho da kenh,/blog/quan-ly-ton-kho,126,3455,3.65,5.1
+2026-09-23,phan mem ban hang shopee,/tinh-nang/dong-bo-san,102,1925,5.3,4.7
+2026-09-23,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,91,3446,2.64,7.3
+2026-09-25,phan mem quan ly ban hang,/phan-mem-pos,182,2918,6.24,3.1
+2026-09-25,may in hoa don pos,/thiet-bi/may-in-bill,90,1200,7.5,2.8
+2026-09-25,quan ly kho da kenh,/blog/quan-ly-ton-kho,114,3325,3.43,5.5
+2026-09-25,phan mem ban hang shopee,/tinh-nang/dong-bo-san,104,2208,4.71,4.3
+2026-09-25,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,73,3181,2.29,7.8
+2026-09-27,phan mem quan ly ban hang,/phan-mem-pos,153,2688,5.69,3.4
+2026-09-27,may in hoa don pos,/thiet-bi/may-in-bill,108,1294,8.35,2.8
+2026-09-27,quan ly kho da kenh,/blog/quan-ly-ton-kho,171,3263,5.24,5.0
+2026-09-27,phan mem ban hang shopee,/tinh-nang/dong-bo-san,115,2414,4.76,4.4
+2026-09-27,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,82,3475,2.36,7.6
+2026-09-29,phan mem quan ly ban hang,/phan-mem-pos,146,2083,7.01,3.5
+2026-09-29,may in hoa don pos,/thiet-bi/may-in-bill,92,1376,6.69,2.3
+2026-09-29,quan ly kho da kenh,/blog/quan-ly-ton-kho,174,3058,5.69,4.7
+2026-09-29,phan mem ban hang shopee,/tinh-nang/dong-bo-san,106,1936,5.48,4.2
+2026-09-29,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,96,2657,3.61,7.9
+2026-10-01,phan mem quan ly ban hang,/phan-mem-pos,197,2913,6.76,2.8
+2026-10-01,may in hoa don pos,/thiet-bi/may-in-bill,90,1182,7.61,2.3
+2026-10-01,quan ly kho da kenh,/blog/quan-ly-ton-kho,134,3206,4.18,5.5
+2026-10-01,phan mem ban hang shopee,/tinh-nang/dong-bo-san,119,2360,5.04,4.1
+2026-10-01,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,97,3038,3.19,8.3
+2026-10-03,phan mem quan ly ban hang,/phan-mem-pos,177,2414,7.33,3.3
+2026-10-03,may in hoa don pos,/thiet-bi/may-in-bill,114,1068,10.67,3.0
+2026-10-03,quan ly kho da kenh,/blog/quan-ly-ton-kho,135,3258,4.14,5.4
+2026-10-03,phan mem ban hang shopee,/tinh-nang/dong-bo-san,106,2137,4.96,4.2
+2026-10-03,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,86,2936,2.93,8.1
+2026-10-05,phan mem quan ly ban hang,/phan-mem-pos,214,2846,7.52,3.2
+2026-10-05,may in hoa don pos,/thiet-bi/may-in-bill,89,1042,8.54,3.3
+2026-10-05,quan ly kho da kenh,/blog/quan-ly-ton-kho,140,2915,4.8,5.3
+2026-10-05,phan mem ban hang shopee,/tinh-nang/dong-bo-san,93,2315,4.02,3.9
+2026-10-05,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,82,2455,3.34,8.1
+2026-10-07,phan mem quan ly ban hang,/phan-mem-pos,186,2241,8.3,3.5
+2026-10-07,may in hoa don pos,/thiet-bi/may-in-bill,106,1164,9.11,3.1
+2026-10-07,quan ly kho da kenh,/blog/quan-ly-ton-kho,142,3304,4.3,4.8
+2026-10-07,phan mem ban hang shopee,/tinh-nang/dong-bo-san,110,2144,5.13,4.3
+2026-10-07,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,100,2582,3.87,7.3
+2026-10-09,phan mem quan ly ban hang,/phan-mem-pos,207,2868,7.22,3.3
+2026-10-09,may in hoa don pos,/thiet-bi/may-in-bill,86,1481,5.81,3.0
+2026-10-09,quan ly kho da kenh,/blog/quan-ly-ton-kho,144,3797,3.79,5.1
+2026-10-09,phan mem ban hang shopee,/tinh-nang/dong-bo-san,121,2257,5.36,4.2
+2026-10-09,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,92,3081,2.99,7.8
+2026-10-11,phan mem quan ly ban hang,/phan-mem-pos,176,2181,8.07,2.9
+2026-10-11,may in hoa don pos,/thiet-bi/may-in-bill,108,1164,9.28,2.7
+2026-10-11,quan ly kho da kenh,/blog/quan-ly-ton-kho,134,3664,3.66,4.7
+2026-10-11,phan mem ban hang shopee,/tinh-nang/dong-bo-san,99,1979,5.0,4.6
+2026-10-11,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,95,2667,3.56,7.9
+2026-10-13,phan mem quan ly ban hang,/phan-mem-pos,180,2149,8.38,2.9
+2026-10-13,may in hoa don pos,/thiet-bi/may-in-bill,87,1417,6.14,2.8
+2026-10-13,quan ly kho da kenh,/blog/quan-ly-ton-kho,151,3175,4.76,5.2
+2026-10-13,phan mem ban hang shopee,/tinh-nang/dong-bo-san,90,1781,5.05,3.9
+2026-10-13,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,78,3279,2.38,8.0
+2026-10-15,phan mem quan ly ban hang,/phan-mem-pos,159,2858,5.56,3.7
+2026-10-15,may in hoa don pos,/thiet-bi/may-in-bill,99,1029,9.62,3.2
+2026-10-15,quan ly kho da kenh,/blog/quan-ly-ton-kho,117,3380,3.46,5.5
+2026-10-15,phan mem ban hang shopee,/tinh-nang/dong-bo-san,137,1974,6.94,4.2
+2026-10-15,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,95,2481,3.83,8.2
+2026-10-17,phan mem quan ly ban hang,/phan-mem-pos,209,2174,9.61,2.8
+2026-10-17,may in hoa don pos,/thiet-bi/may-in-bill,110,1467,7.5,2.8
+2026-10-17,quan ly kho da kenh,/blog/quan-ly-ton-kho,170,3812,4.46,5.5
+2026-10-17,phan mem ban hang shopee,/tinh-nang/dong-bo-san,101,2347,4.3,4.0
+2026-10-17,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,73,3283,2.22,7.6
+2026-10-19,phan mem quan ly ban hang,/phan-mem-pos,196,2414,8.12,3.4
+2026-10-19,may in hoa don pos,/thiet-bi/may-in-bill,87,1222,7.12,2.4
+2026-10-19,quan ly kho da kenh,/blog/quan-ly-ton-kho,124,3837,3.23,5.0
+2026-10-19,phan mem ban hang shopee,/tinh-nang/dong-bo-san,101,2117,4.77,4.3
+2026-10-19,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,83,3442,2.41,7.6
+2026-10-21,phan mem quan ly ban hang,/phan-mem-pos,182,2695,6.75,3.7
+2026-10-21,may in hoa don pos,/thiet-bi/may-in-bill,117,1469,7.96,2.7
+2026-10-21,quan ly kho da kenh,/blog/quan-ly-ton-kho,162,3653,4.43,4.6
+2026-10-21,phan mem ban hang shopee,/tinh-nang/dong-bo-san,141,2130,6.62,4.6
+2026-10-21,cach quan ly chuoi cua hang,/blog/quan-ly-chuoi-ban-le,96,3433,2.8,8.0

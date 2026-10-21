@@ -1,0 +1,18 @@
+{
+  "table_name": "spend",
+  "description": "Dữ liệu chi phí marketing thực tế từ kế toán nội bộ",
+  "required_columns": [
+    "date",
+    "category",
+    "vendor",
+    "amount",
+    "campaign"
+  ],
+  "types": {
+    "date": "DATE",
+    "category": "TEXT",
+    "vendor": "TEXT",
+    "amount": "REAL",
+    "campaign": "TEXT"
+  }
+}

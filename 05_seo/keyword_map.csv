@@ -1,0 +1,11 @@
+keyword,intent,cluster,search_volume,difficulty,target_url,priority,status
+phan mem quan ly ban hang,Commercial,Core Product,18500,68,/phan-mem-pos,P1,Ranking Top 3
+phan mem quan ly kho,Informational,Inventory,12200,55,/blog/quan-ly-ton-kho,P1,Ranking Top 4
+may in hoa don pos,Transactional,Hardware,8400,42,/thiet-bi/may-in-bill,P1,Ranking Top 2
+phan mem ban hang shopee,Commercial,Omnichannel,6500,48,/tinh-nang/dong-bo-san,P1,Ranking Top 4
+dong bo don hang tiktok shop,Commercial,Omnichannel,4800,39,/tinh-nang/tiktok-shop,P1,Ranking Top 3
+may tinh tien cam ung,Transactional,Hardware,5200,45,/thiet-bi/may-pos-cam-ung,P2,Ranking Top 5
+cach quan ly chuoi cua hang,Informational,Management,3100,35,/blog/quan-ly-chuoi-ban-le,P2,Ranking Top 7
+hoa don dien tu tu may tinh tien,Commercial,Compliance,7800,50,/blog/hoa-don-dien-tu-may-tinh-tien,P1,Content Planned
+kinh nghiem mo tap hoa nho,Informational,Startup,9200,28,/blog/kinh-nghiem-mo-tap-hoa,P2,Content Brief Ready
+quan ly khach hang than thiet,Informational,Loyalty,2400,31,/blog/quan-ly-loyalty-cskh,P3,Content Brief Ready

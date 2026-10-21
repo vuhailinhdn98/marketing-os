@@ -1,0 +1,26 @@
+{
+  "table_name": "email",
+  "description": "Dữ liệu chiến dịch email từ Mailchimp, Brevo, GetResponse",
+  "required_columns": [
+    "date",
+    "campaign",
+    "sent",
+    "delivered",
+    "opens",
+    "clicks",
+    "unsubscribes",
+    "conversions",
+    "revenue"
+  ],
+  "types": {
+    "date": "DATE",
+    "campaign": "TEXT",
+    "sent": "INTEGER",
+    "delivered": "INTEGER",
+    "opens": "INTEGER",
+    "clicks": "INTEGER",
+    "unsubscribes": "INTEGER",
+    "conversions": "INTEGER",
+    "revenue": "REAL"
+  }
+}

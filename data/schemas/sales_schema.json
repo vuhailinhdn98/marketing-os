@@ -1,0 +1,24 @@
+{
+  "table_name": "sales",
+  "description": "Dữ liệu giao dịch đơn hàng bán lẻ từ CRM / POS / Sàn TMĐT",
+  "required_columns": [
+    "date",
+    "order_id",
+    "customer_id",
+    "channel",
+    "product",
+    "quantity",
+    "revenue",
+    "is_new_customer"
+  ],
+  "types": {
+    "date": "DATE",
+    "order_id": "TEXT",
+    "customer_id": "TEXT",
+    "channel": "TEXT",
+    "product": "TEXT",
+    "quantity": "INTEGER",
+    "revenue": "REAL",
+    "is_new_customer": "INTEGER"
+  }
+}

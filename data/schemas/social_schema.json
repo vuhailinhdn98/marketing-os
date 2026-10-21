@@ -1,0 +1,24 @@
+{
+  "table_name": "social",
+  "description": "Dữ liệu tương tác mạng xã hội từ Facebook, TikTok, YouTube, Zalo",
+  "required_columns": [
+    "date",
+    "platform",
+    "post_id",
+    "post_type",
+    "reach",
+    "impressions",
+    "engagements",
+    "followers"
+  ],
+  "types": {
+    "date": "DATE",
+    "platform": "TEXT",
+    "post_id": "TEXT",
+    "post_type": "TEXT",
+    "reach": "INTEGER",
+    "impressions": "INTEGER",
+    "engagements": "INTEGER",
+    "followers": "INTEGER"
+  }
+}

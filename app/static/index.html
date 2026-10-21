@@ -207,7 +207,7 @@
       </button>
       <button onclick="switchTab('tab-catalyst')" id="btn-tab-catalyst" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
         <i class="fa-solid fa-network-wired text-cyan-400 w-5"></i>
-        <span>Đại Lý CATALYST (Loops)</span>
+        <span>Biệt Đội AI (CATALYST)</span>
       </button>
 
       <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-2 pt-4">Vận hành & Đo lường</div>
@@ -312,7 +312,41 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kênh tiếp thị đang dùng</label>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                  <i class="fa-solid fa-phone text-emerald-400"></i>
+                  Số điện thoại Hotline / Zalo tư vấn
+                </label>
+                <input type="text" id="inp-phone-hotline" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Ví dụ: 0987.654.321 / 028.777.999">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                  <i class="fa-solid fa-globe text-sky-400"></i>
+                  Website chính thức của doanh nghiệp
+                </label>
+                <input type="text" id="inp-website-url" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Ví dụ: https://thuonghieu.com">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <i class="fa-solid fa-share-nodes text-indigo-400"></i>
+                Các trang Social & Kênh phân phối đang hoạt động
+              </label>
+              <input type="text" id="inp-social-channels" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Ví dụ: Fanpage Facebook: fb.com/thuonghieu, TikTok: @thuonghieu, Kênh YouTube, Shopee...">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                <i class="fa-solid fa-crown text-amber-400"></i>
+                Ưu điểm vượt trội / Lợi thế cạnh tranh độc nhất của sản phẩm (USP) *
+                <span class="text-[11px] text-amber-300 font-normal">(AI sẽ dùng thế mạnh này để lập Battlecard đè bẹp đối thủ & chốt sale)</span>
+              </label>
+              <textarea id="inp-usp-advantages" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Mô tả 2-4 ưu điểm lớn nhất: Ví dụ: 1. Hỗ trợ tận nơi trong 24h. 2. Chiết khấu cao & chính sách bảo hành dài hạn. 3. Thành phần cao cấp có chứng nhận quốc tế. 4. Tiết kiệm 30% chi phí vận hành..."></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kênh tiếp thị dự kiến đẩy mạnh</label>
                 <input type="text" id="inp-channels" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Facebook, TikTok Shop, Shopee, Cửa hàng...">
               </div>
               <div>
@@ -869,10 +903,10 @@
           <div>
             <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
               <i class="fa-solid fa-network-wired text-cyan-400"></i>
-              Điều Phối Đa Đại Lý CATALYST & Marketing Loops
+              Điều Phối Biệt Đội AI CATALYST & Marketing Loops
             </h2>
             <p class="text-sm text-slate-400 mt-1">
-              Kiến trúc Multi-Agent phối hợp 5 chuyên gia tiếp thị độc lập (PMM, Competitive Intel, Sales Coach, Content Creator, AEO Optimizer) theo chuẩn SaaS Marketing Agents.
+              Kiến trúc Multi-Agent phối hợp 5 chuyên viên AI độc lập (PMM, Competitive Intel, Sales Coach, Content Creator, AEO Optimizer) theo chuẩn SaaS Marketing Agents.
             </p>
           </div>
           <span class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 px-3.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 shrink-0">
@@ -929,7 +963,7 @@
               <span class="text-[10px] font-bold bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded uppercase">Loop 3 (Poaching)</span>
               <h3 class="text-sm font-bold text-white">Hớt Tay Trên Khách Đối Thủ</h3>
               <p class="text-xs text-slate-400 leading-relaxed">
-                Khai thác tử huyệt máy nóng nhớt & bảo hành chậm của đối thủ, kích hoạt gói ưu đãi chuyển đổi và thu cũ đổi mới.
+                Khai thác điểm yếu và lời phàn nàn của khách hàng về đối thủ, kích hoạt kịch bản chuyển đổi và gói ưu đãi đặc quyền.
               </p>
             </div>
             <button onclick="runCatalystLoop('competitor_poaching')" class="w-full mt-3 bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white font-semibold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow">
@@ -945,9 +979,9 @@
                 <i class="fa-solid fa-rocket"></i>
               </div>
               <span class="text-[10px] font-bold bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded uppercase">Loop 4 (Sprint)</span>
-              <h3 class="text-sm font-bold text-white">Ra Mắt Dòng Máy Mới</h3>
+              <h3 class="text-sm font-bold text-white">Ra Mắt Sản Phẩm / Dịch Vụ Mới</h3>
               <p class="text-xs text-slate-400 leading-relaxed">
-                Chiến dịch Go-To-Market 4 tuần phối hợp trọn vẹn từ định vị, video thử tải thực tế, kịch bản chốt hợp đồng đến đo lường KPI.
+                Chiến dịch Go-To-Market 4 tuần phối hợp từ định vị, video giới thiệu thực tế, kịch bản chốt hợp đồng đến đo lường KPI.
               </p>
             </div>
             <button onclick="runCatalystLoop('product_launch')" class="w-full mt-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold text-xs py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow">
@@ -962,10 +996,10 @@
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
           <h3 class="text-sm font-bold text-white flex items-center gap-2">
             <i class="fa-solid fa-terminal text-cyan-400"></i>
-            Hoặc giao nhiệm vụ tùy biến cho Đội Ngũ Đại Lý CATALYST
+            Hoặc giao nhiệm vụ tùy biến cho Biệt Đội AI CATALYST
           </h3>
           <div class="flex flex-col sm:flex-row gap-3">
-            <input type="text" id="catalyst-custom-brief" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500" placeholder="Ví dụ: Chiến dịch chiếm lĩnh thị phần máy bẻ đai tại khu vực Miền Tây trong quý tới...">
+            <input type="text" id="catalyst-custom-brief" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500" placeholder="Ví dụ: Chiến dịch bứt phá doanh số cho sản phẩm chủ lực và gia tăng nhận diện thương hiệu...">
             <button onclick="runCatalystLoop('custom_brief')" id="btn-run-catalyst-custom" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-lg shadow-cyan-500/20 transition flex items-center justify-center gap-2 shrink-0">
               <i class="fa-solid fa-wand-magic-sparkles"></i>
               <span>Điều Phối Theo Yêu Cầu</span>
@@ -977,7 +1011,7 @@
         <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
           <span class="text-slate-400 font-semibold flex items-center gap-2">
             <i class="fa-solid fa-users-gear text-cyan-400"></i>
-            5 Đại Lý Chuyên Biệt Sẵn Sàng:
+            5 Chuyên Viên AI Sẵn Sàng Phối Hợp:
           </span>
           <div class="flex flex-wrap gap-2 text-[11px]">
             <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-cyan-300 border border-cyan-500/30 font-medium">🧑‍💼 PMM Lead (Định vị)</span>
@@ -996,13 +1030,13 @@
             </div>
             <h3 class="text-lg font-semibold text-slate-200">Chưa có phiên điều phối chiến dịch</h3>
             <p class="text-sm text-slate-400 max-w-md mx-auto">
-              Nhấp vào một trong 4 Vòng lặp chiến lược (Loops) ở trên để kích hoạt hệ thống điều phối 5 đại lý phối hợp giải quyết bài toán marketing thực tế.
+              Nhấp vào một trong 4 Vòng lặp chiến lược (Loops) ở trên để kích hoạt hệ thống điều phối 5 chuyên viên AI chuyên trách phối hợp giải quyết bài toán marketing thực tế.
             </p>
           </div>
           
           <div id="catalyst-loading" class="hidden text-center py-20 space-y-4">
             <i class="fa-solid fa-circle-notch fa-spin text-4xl text-cyan-400"></i>
-            <p class="text-sm text-slate-300 font-medium animate-pulse">CATALYST đang phân công nhiệm vụ và điều phối 5 đại lý chuyên trách...</p>
+            <p class="text-sm text-slate-300 font-medium animate-pulse">CATALYST đang phân công nhiệm vụ và điều phối 5 chuyên viên AI chuyên trách...</p>
             <p class="text-xs text-slate-500">Đang quét dữ liệu thị trường thực tế và thiết lập Objection Register + Nội dung AEO</p>
           </div>
 
@@ -1206,6 +1240,10 @@
         document.getElementById('inp-channels').value = data.channels || '';
         document.getElementById('inp-budget').value = data.monthly_budget || 0;
         document.getElementById('inp-voice').value = data.brand_voice || '';
+        document.getElementById('inp-phone-hotline').value = data.phone_hotline || '';
+        document.getElementById('inp-website-url').value = data.website_url || '';
+        document.getElementById('inp-social-channels').value = data.social_channels || '';
+        document.getElementById('inp-usp-advantages').value = data.usp_advantages || '';
         document.getElementById('inp-gemini-key').value = data.gemini_api_key || '';
         let modelVal = data.gemini_model || 'gemini-3.5-flash';
         if (['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-2.0-flash-exp'].includes(modelVal)) {
@@ -1255,6 +1293,10 @@
         channels: document.getElementById('inp-channels').value,
         monthly_budget: parseFloat(document.getElementById('inp-budget').value) || 0,
         brand_voice: document.getElementById('inp-voice').value,
+        phone_hotline: document.getElementById('inp-phone-hotline').value,
+        website_url: document.getElementById('inp-website-url').value,
+        social_channels: document.getElementById('inp-social-channels').value,
+        usp_advantages: document.getElementById('inp-usp-advantages').value,
         gemini_api_key: document.getElementById('inp-gemini-key').value,
         gemini_model: document.getElementById('inp-gemini-model').value,
         market_scope_type: document.getElementById('sel-market-scope-type') ? document.getElementById('sel-market-scope-type').value : 'province',
@@ -2006,7 +2048,7 @@
       if (cBox) cBox.classList.add('hidden');
 
       const customBrief = (loopType === 'custom_brief' && briefInp) ? briefInp.value : '';
-      showToast('🎛️ CATALYST đang điều phối 5 đại lý chuyên trách phân tích và tạo chiến dịch...');
+      showToast('🎛️ CATALYST đang điều phối 5 chuyên viên AI chuyên trách phân tích và tạo chiến dịch...');
 
       try {
         const res = await fetch('/api/catalyst/run', {
@@ -2022,7 +2064,7 @@
         if (data.status === 'success' && data.data) {
           const d = data.data;
           lastCatalystPlan = d.content;
-          if (badge) badge.innerText = `${d.loop_name} | 5 Đại Lý Điều Phối`;
+          if (badge) badge.innerText = `${d.loop_name} | 5 Chuyên Viên AI Phối Hợp`;
 
           // Format Needs Input tags into prominent yellow badges
           let htmlContent = marked.parse(d.content);
@@ -2031,7 +2073,7 @@
           if (mdBody) mdBody.innerHTML = htmlContent;
           if (cBox) cBox.classList.remove('hidden');
 
-          showToast('✅ Đã hoàn tất điều phối chiến dịch Đa Đại Lý CATALYST!');
+          showToast('✅ Đã hoàn tất điều phối chiến dịch Biệt Đội AI CATALYST!');
           loadAutoPilotStatus();
         } else {
           showToast('Lỗi khi điều phối chiến dịch', false);

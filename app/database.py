@@ -69,6 +69,10 @@ def init_app_db():
         market_scope_type TEXT DEFAULT 'province',
         market_location TEXT DEFAULT 'Toàn quốc',
         content_direction TEXT DEFAULT 'educational',
+        phone_hotline TEXT DEFAULT '',
+        website_url TEXT DEFAULT '',
+        social_channels TEXT DEFAULT '',
+        usp_advantages TEXT DEFAULT '',
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """)
@@ -168,6 +172,10 @@ def init_app_db():
         ("business_profile", "market_location", "TEXT DEFAULT 'Toàn quốc'"),
         ("business_profile", "region", "TEXT DEFAULT 'Toàn quốc'"),
         ("business_profile", "content_direction", "TEXT DEFAULT 'educational'"),
+        ("business_profile", "phone_hotline", "TEXT DEFAULT ''"),
+        ("business_profile", "website_url", "TEXT DEFAULT ''"),
+        ("business_profile", "social_channels", "TEXT DEFAULT ''"),
+        ("business_profile", "usp_advantages", "TEXT DEFAULT ''"),
         ("content_items", "video_script", "TEXT"),
         ("content_items", "image_prompt", "TEXT"),
     ]
@@ -282,6 +290,10 @@ def reset_database_clean():
         market_scope_type = 'province',
         market_location = 'Toàn quốc',
         content_direction = 'educational',
+        phone_hotline = '',
+        website_url = '',
+        social_channels = '',
+        usp_advantages = '',
         updated_at = CURRENT_TIMESTAMP
     WHERE id = 1
     """)
@@ -323,6 +335,10 @@ def update_profile(data: dict):
         market_location = ?,
         region = ?,
         content_direction = ?,
+        phone_hotline = ?,
+        website_url = ?,
+        social_channels = ?,
+        usp_advantages = ?,
         updated_at = CURRENT_TIMESTAMP
     WHERE id = 1
     """, (
@@ -341,7 +357,11 @@ def update_profile(data: dict):
         data.get("market_scope_type", "province"),
         data.get("market_location", data.get("region", "Toàn quốc")),
         data.get("market_location", data.get("region", "Toàn quốc")),
-        data.get("content_direction", "educational")
+        data.get("content_direction", "educational"),
+        data.get("phone_hotline", ""),
+        data.get("website_url", ""),
+        data.get("social_channels", ""),
+        data.get("usp_advantages", "")
     ))
     conn.commit()
     conn.close()

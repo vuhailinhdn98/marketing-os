@@ -74,6 +74,10 @@ class ProfileUpdate(BaseModel):
     market_scope_type: Optional[str] = "province"
     market_location: Optional[str] = "Toàn quốc"
     content_direction: Optional[str] = "educational"
+    phone_hotline: Optional[str] = ""
+    website_url: Optional[str] = ""
+    social_channels: Optional[str] = ""
+    usp_advantages: Optional[str] = ""
 
 class CustomMarketRequest(BaseModel):
     scope_type: Optional[str] = "province"
@@ -463,7 +467,7 @@ def api_run_catalyst(req: CatalystRunRequest):
     profile = get_profile()
     result = run_catalyst_orchestrator(profile, req.loop_type or "weekly_intel", req.custom_brief or "")
     save_research_record("catalyst_loop", f"CATALYST: {result['loop_name']}", result["content"])
-    log_automation("CATALYST_LOOP", result["loop_name"], "SUCCESS", f"Đã điều phối 5 đại lý hoàn thành {len(result['deliverables'])} tài nguyên")
+    log_automation("CATALYST_LOOP", result["loop_name"], "SUCCESS", f"Đã điều phối 5 chuyên viên AI hoàn thành {len(result['deliverables'])} tài nguyên")
     return {"status": "success", "data": result}
 
 @app.get("/api/catalyst/latest")

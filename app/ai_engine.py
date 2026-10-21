@@ -297,17 +297,17 @@ DOMAIN_DATA = {
 def detect_domain(industry_str: str, products_str: str = "") -> str:
     """Nhận diện chính xác ngành hàng dựa trên tên ngành và sản phẩm"""
     s = (industry_str + " " + products_str).lower()
-    if any(k in s for k in ["máy", "cơ khí", "chế tạo", "xây dựng", "uốn thép", "bẻ đai", "thép", "thiết bị", "công nghiệp", "nhà xưởng", "máy uốn", "máy bẻ"]):
-        return "machinery_construction"
+    if any(k in s for k in ["f&b", "ăn uống", "nhà hàng", "quán", "cà phê", "cafe", "trà", "thực phẩm", "đồ uống", "pha chế", "ẩm thực"]):
+        return "fnb"
     elif any(k in s for k in ["thời trang", "may mặc", "quần áo", "giày dép", "phụ kiện", "túi xách", "fashion"]):
         return "fashion"
     elif any(k in s for k in ["spa", "thẩm mỹ", "da", "mỹ phẩm", "làm đẹp", "skincare", "clinic", "nha khoa", "trị mụn", "nám"]):
         return "spa_beauty"
-    elif any(k in s for k in ["f&b", "ăn uống", "nhà hàng", "quán", "cafe", "trà", "thực phẩm", "đồ uống"]):
-        return "fnb"
-    elif any(k in s for k in ["phần mềm", "pos", "công nghệ", "saas", "quản lý", "máy tính", "app"]):
+    elif any(k in s for k in ["phần mềm", "pos", "công nghệ", "saas", "quản lý", "máy tính", "app", "digital"]):
         return "tech_retail"
-    elif any(k in s for k in ["b2b", "nhà máy", "gia công", "oem", "vật tư"]):
+    elif any(k in s for k in ["uốn thép", "bẻ đai", "uốn sắt", "máy bẻ đai", "cơ khí xây dựng", "cốt thép", "kết cấu thép"]):
+        return "machinery_construction"
+    elif any(k in s for k in ["b2b", "nhà máy", "gia công", "oem", "vật tư", "sản xuất"]):
         return "b2b_industrial"
     return "general"
 
@@ -375,6 +375,10 @@ def generate_custom_market_research(profile: dict, options: dict = None) -> str:
     products = profile.get("products_services", "Sản phẩm & Dịch vụ")
     audience = profile.get("target_audience", "Khách hàng mục tiêu")
     competitors = profile.get("competitors", "")
+    usp = profile.get("usp_advantages", "") or "Chất lượng vượt trội, may đo chuyên sâu và hỗ trợ tận tâm"
+    hotline = profile.get("phone_hotline", "")
+    website = profile.get("website_url", "")
+    social = profile.get("social_channels", "")
 
     # Xác định loại phạm vi
     scope_label = "Tỉnh / Thành phố" if scope_type == "province" else ("Quốc gia" if scope_type == "country" else "Khu vực / Vùng miền")
@@ -414,6 +418,8 @@ Hãy lập BÁO CÁO NGHIÊN CỨU THỊ TRƯỜNG CHUYÊN SÂU & CHIẾN LƯỢ
 - Mô hình: {model}
 - Sản phẩm/Dịch vụ chủ lực: {products}
 - Mức giá/Phân khúc đầu tư: {price_tier}
+- ƯU THẾ ĐỘC QUYỀN / ĐIỂM BÁN HÀNG ĐỘC NHẤT (USP): {usp}
+- Hotline/Zalo: {hotline or 'Đang cập nhật'} | Website: {website or 'Đang cập nhật'} | Kênh Social: {social or 'Đang cập nhật'}
 - Phạm vi địa bàn ({scope_label}): {location}
 - Khách hàng mục tiêu: {audience}
 - Mục tiêu chiến dịch: {objective}
@@ -435,7 +441,7 @@ YÊU CẦU NỘI DUNG SÂU SẮC, SẮC BÉN, 100% SÁT VỚI THỰC TẾ ĐỊA
 3. PHÂN TÍCH 5 LỰC LƯỢNG CẠNH TRANH PORTER TRÊN ĐỊA BÀN {location.upper()}:
    - Áp lực đối thủ hiện hữu tại {location}, quyền lực đàm phán của khách hàng, giải pháp thay thế, rào cản gia nhập.
 4. MA TRẬN SWOT CHIẾN LƯỢC TẠI {location.upper()}:
-   - 3 Điểm mạnh cốt lõi, 3 Điểm yếu cần khắc phục, 3 Cơ hội bứt phá tại {location}, 3 Nguy cơ thị trường cần phòng vệ.
+   - 3 Điểm mạnh cốt lõi (tận dụng USP: {usp}), 3 Điểm yếu cần khắc phục, 3 Cơ hội bứt phá tại {location}, 3 Nguy cơ thị trường cần phòng vệ.
 5. BẢN ĐỒ HÀNH ĐỘNG GO-TO-MARKET (GTM) 4 TUẦN ĐỂ ĐẠT MỤC TIÊU: {objective.upper()}:
    - Lộ trình 4 tuần rõ ràng về công việc, thông điệp truyền thông, kênh tiếp cận và KPI đo lường thực tế tại {location}.
 6. DANH MỤC NGUỒN DẪN THỰC TẾ (Citations)."""
@@ -445,9 +451,13 @@ YÊU CẦU NỘI DUNG SÂU SẮC, SẮC BÉN, 100% SÁT VỚI THỰC TẾ ĐỊA
         return gemini_out
 
     # Dynamic Fallback
+    region = location
+    contact_info = f"Hotline/Zalo: {hotline} | Website: {website}" if (hotline or website) else "Kênh bán hàng trực tiếp"
     return f"""# 📊 BÁO CÁO NGHIÊN CỨU THỊ TRƯỜNG: {brand.upper() or 'DOANH NGHIỆP'}
 *Phạm vi: {scope_label} - {location} | Phân khúc giá: {price_tier} | Mục tiêu: {objective}*
 *Sản phẩm/Dịch vụ: {products} | Ngành: {industry}*
+*Lợi thế độc quyền (USP): {usp}*
+*Kênh liên hệ: {contact_info}*
 *Ngày cập nhật: {datetime.now().strftime('%d/%m/%Y')}*
 
 ---
@@ -460,17 +470,17 @@ YÊU CẦU NỘI DUNG SÂU SẮC, SẮC BÉN, 100% SÁT VỚI THỰC TẾ ĐỊA
 ---
 
 ## 2. PHÂN TÍCH VĨ MÔ PESTEL SÁT THỰC TẾ {region.upper()}
-- **Chính sách (Political):** Khách hàng B2B ưu tiên các đơn vị có pháp nhân minh bạch, xuất hóa đơn VAT đầy đủ và hồ sơ kiểm định an toàn chất lượng.
-- **Kinh tế (Economic):** Áp lực chi phí buộc khách hàng phải tìm giải pháp {products} ({price_tier}) có khả năng hoàn vốn nhanh trong vòng 3-6 tháng.
-- **Xã hội (Social):** Khách hàng tin tưởng bằng chứng thực tế (video chạy thử, hình ảnh bàn giao thật, đánh giá từ đồng nghiệp).
-- **Công nghệ (Tech):** Chuyển dịch mạnh mẽ sang tự động hóa, dễ sử dụng và ít phụ thuộc vào nhân công lành nghề.
+- **Chính sách (Political):** Khách hàng ưu tiên các đơn vị có pháp nhân minh bạch, xuất hóa đơn VAT và bảo hành cam kết rõ ràng.
+- **Kinh tế (Economic):** Áp lực chi phí buộc khách hàng phải tìm giải pháp {products} ({price_tier}) có khả năng hoàn vốn nhanh và tiết kiệm chi phí vận hành.
+- **Xã hội (Social):** Khách hàng tin tưởng bằng chứng thực tế, sự minh bạch và dịch vụ chăm sóc tận tâm.
+- **Công nghệ (Tech):** Chuyển dịch mạnh mẽ sang tự động hóa, quy trình tinh gọn và tương tác đa kênh thuận tiện.
 
 ---
 
 ## 3. BẢN ĐỒ HÀNH ĐỘNG GO-TO-MARKET 4 TUẦN (MỤC TIÊU: {objective.upper()})
-- **Tuần 1:** Chuẩn hóa tài liệu bán hàng, video thực tế sản phẩm {products} và bảng tính bài toán ROI hoàn vốn.
-- **Tuần 2:** Triển khai chiến dịch đa kênh tập trung vào khu vực {region}, tiếp cận trực diện tệp khách hàng {audience}.
-- **Tuần 3:** Kích hoạt chính sách trải nghiệm thực tế / bảo hành cam kết 1-1 để xóa tan rào cản do dự.
+- **Tuần 1:** Chuẩn hóa tài liệu bán hàng, truyền thông lợi thế độc quyền ({usp}) và bài toán hiệu quả kinh tế.
+- **Tuần 2:** Triển khai chiến dịch tiếp cận tập trung vào địa bàn {region}, nhắm trúng tệp khách hàng {audience}.
+- **Tuần 3:** Kích hoạt chính sách dùng thử / cam kết chất lượng 1-1 để xóa tan rào cản do dự của khách hàng.
 - **Tuần 4:** Đo lường chuyển đổi, tối ưu tỷ lệ chốt đơn và mở rộng mạng lưới khách hàng giới thiệu (Referral).
 
 ---
@@ -590,6 +600,10 @@ def generate_competitor_analysis(profile: dict) -> str:
     products = profile.get("products_services", "Sản phẩm")
     price = profile.get("price_range", "Tiêu chuẩn")
     audience = profile.get("target_audience", "Khách hàng")
+    usp = profile.get("usp_advantages", "") or "Chất lượng vượt trội, may đo chuyên sâu và hỗ trợ tận tâm"
+    hotline = profile.get("phone_hotline", "")
+    website = profile.get("website_url", "")
+    social = profile.get("social_channels", "")
 
     # TỰ ĐỘNG RÀ QUÉT ĐỐI THỦ NẾU CHƯA CÓ HOẶC BỊ TRỐNG
     discovered_list = []
@@ -648,6 +662,8 @@ def generate_competitor_analysis(profile: dict) -> str:
 - Thương hiệu của ta: {brand}
 - Ngành hàng: {industry}
 - Sản phẩm của ta: {products} (Giá: {price})
+- ƯU ĐIỂM VƯỢT TRỘI / LỢI THẾ CẠNH TRANH ĐỘC NHẤT (USP): {usp}
+- Hotline/Zalo: {hotline or 'Đang cập nhật'} | Website: {website or 'Đang cập nhật'} | Kênh Social: {social or 'Đang cập nhật'}
 - Tệp khách hàng: {audience}
 - Danh sách đối thủ thực tế đã rà quét trên thị trường: {', '.join(comp_entries)}
 
@@ -656,12 +672,12 @@ DỮ LIỆU ĐÃ CÀO TRỰC TIẾP TỪ WEBSITE ĐỐI THỦ:
 
 YÊU CẦU ĐẶC BIỆT:
 1. BẢNG PHÁT HIỆN & PHÂN LOẠI ĐỐI THỦ THỰC TẾ: Nêu rõ từng đối thủ, website, phân khúc và mô hình kinh doanh của họ.
-2. MA TRẬN SO SÁNH VỊ THẾ CẠNH TRANH TOÀN DIỆN: So sánh giữa {brand} và các đối thủ về giá, chất lượng, dịch vụ hỗ trợ, độ linh hoạt và mức độ cam kết.
+2. MA TRẬN SO SÁNH VỊ THẾ CẠNH TRANH TOÀN DIỆN: So sánh giữa {brand} và các đối thủ về giá, chất lượng, dịch vụ hỗ trợ, độ linh hoạt và mức độ cam kết (sử dụng USP: {usp}).
 3. CHI TIẾT BATTLECARD TỪNG ĐỐI THỦ:
    - Hồ sơ tình báo & website.
    - Điểm mạnh nhất của họ mà khách hàng khen ngợi.
    - Tử huyệt & Điểm yếu cốt tử (Nơi khách hàng hay phàn nàn, rủi ro tiềm ẩn).
-   - Vũ khí đè bẹp của {brand} (Where We Win: Tại sao khách hàng nên chọn {brand} thay vì đối thủ).
+   - Vũ khí đè bẹp của {brand} (Where We Win: Khai thác USP: {usp} và cam kết từ {brand}).
    - Kịch bản Xử Lý Từ Chối Thực Chiến (Objection Handling Script) cực kỳ tự nhiên, sắc bén khi khách hàng ngập ngừng so sánh với đối thủ này.
 4. 3 CHIẾN LƯỢC HỚT TAY TRÊN (Customer Poaching) khách hàng đang bức xúc hoặc gặp vấn đề từ đối thủ.
 Tuyệt đối không dùng khung mẫu sáo rỗng, hãy phân tích sát thực tế của ngành {industry} và sản phẩm {products}."""
@@ -684,9 +700,9 @@ Tuyệt đối không dùng khung mẫu sáo rỗng, hãy phân tích sát thự
         
         site_url = sc.get("url", "")
         site_title = sc.get("title") or f"Thương hiệu cơ sở trong ngành {industry}"
-        site_desc = sc.get("description") or "Cung cấp các dòng sản phẩm máy móc thiết bị trên toàn quốc."
+        site_desc = sc.get("description") or f"Cung cấp các sản phẩm và dịch vụ trong ngành {industry} trên toàn quốc."
         hotlines = ", ".join(sc.get("hotlines")) if sc.get("hotlines") else "Đang cập nhật"
-        headlines_str = " • ".join(sc.get("headlines")[:3]) if sc.get("headlines") else "Thiết bị tiêu chuẩn"
+        headlines_str = " • ".join(sc.get("headlines")[:3]) if sc.get("headlines") else f"Sản phẩm / Dịch vụ {industry} tiêu chuẩn"
 
         # Chọn điểm yếu riêng cho từng đối thủ
         f1 = flaws_pool[idx % len(flaws_pool)]
@@ -713,8 +729,9 @@ Tuyệt đối không dùng khung mẫu sáo rỗng, hãy phân tích sát thự
 - ❌ **Hỗ trợ thiếu linh hoạt:** Do quy mô lớn hoặc quy trình rườm rà, khi khách hàng gặp vướng mắc kỹ thuật thường phải chờ đợi qua nhiều cấp phê duyệt.
 
 **4. Vũ khí đè bẹp của {brand} (Where We Win):**
+- 🎯 **Ưu thế độc quyền (USP):** {usp}
 - 🎯 **Chuyên sâu và May đo theo nhu cầu:** {brand} tập trung trực tiếp vào {products}, tối ưu riêng theo bài toán thực tế của {audience} với chi phí hợp lý nhất ({price}).
-- 🎯 **Tốc độ phản hồi & Hỗ trợ kỹ thuật SLA cam kết:** Đội ngũ chuyên gia trực tiếp hỗ trợ 1-1, xử lý sự cố trong ngày thay vì đùn đẩy trách nhiệm.
+- 🎯 **Tốc độ phản hồi & Hỗ trợ SLA cam kết:** Đội ngũ chuyên gia trực tiếp hỗ trợ 1-1 qua Hotline/Zalo {hotline or 'trực tiếp'}, xử lý sự cố nhanh chóng thay vì đùn đẩy trách nhiệm.
 - 🎯 **Minh bạch chi phí và Quyền làm chủ giải pháp:** Khách hàng toàn quyền sở hữu, không bị phụ thuộc vào các chi phí ẩn hoặc phí duy trì đắt đỏ.
 
 **5. Kịch bản Xử Lý Từ Chối Thực Chiến (Objection Handling Script):**
@@ -726,11 +743,11 @@ Tuyệt đối không dùng khung mẫu sáo rỗng, hãy phân tích sát thự
 > Tuy nhiên, nhiều khách hàng sau khi làm việc với họ đã chọn chuyển sang giải pháp {products} của {brand} vì bài toán thực tế: **Các đơn vị lớn thường áp dụng khung mẫu đóng gói sẵn, chi phí phát sinh tùy biến rất cao và khi cần hỗ trợ kỹ thuật gấp thì thủ tục rất chậm trễ**.
 > 
 > Tại {brand}, tụi em tập trung giải quyết đúng nỗi đau của anh/chị:
-> 1. Giải pháp {products} được thiết kế tối ưu riêng theo đặc thù mô hình của anh/chị với mức đầu tư hợp lý ({price}).
-> 2. Cam kết hỗ trợ đồng hành 1-1, bàn giao đầy đủ và đào tạo đội ngũ vận hành thành thạo.
+> 1. Giải pháp {products} mang lại ưu điểm vượt trội: **{usp}**, được thiết kế tối ưu riêng theo đặc thù mô hình của anh/chị với mức đầu tư hợp lý ({price}).
+> 2. Cam kết hỗ trợ đồng hành 1-1 qua Hotline/Zalo {hotline or 'trực tiếp'}, bàn giao đầy đủ và đào tạo đội ngũ vận hành thành thạo.
 > 3. Chính sách bảo hành và cam kết hiệu quả bằng hợp đồng rõ ràng.
 > 
-> Em xin phép gửi anh/chị bản demo thực tế và lộ trình triển khai chi tiết để anh/chị thấy rõ sự khác biệt trước khi quyết định ạ!"*
+> Em xin phép gửi anh/chị bản demo thực tế và lộ trình triển khai chi tiết qua Zalo/Website {website or 'trực tuyến'} để anh/chị thấy rõ sự khác biệt trước khi quyết định ạ!"*
 """)
 
         matrix_rows.append(f"| **{d_name}** | {site_url or 'Thương mại'} | Nhận diện lâu năm | {f1} | {f2} |")
@@ -739,6 +756,7 @@ Tuyệt đối không dùng khung mẫu sáo rỗng, hãy phân tích sát thự
 
     return f"""# ⚔️ BÁO CÁO TÌNH BÁO ĐỐI THỦ & BATTLECARDS CHIẾN LƯỢC TOÀN DIỆN
 *Thương hiệu: {brand} | Ngành: {industry}*
+*Lợi thế cốt lõi (USP): {usp}*
 *Phân tích dựa trên dữ liệu website thực tế của từng đối thủ*
 *Ngày cập nhật: {datetime.now().strftime('%d/%m/%Y')}*
 
@@ -747,7 +765,7 @@ Tuyệt đối không dùng khung mẫu sáo rỗng, hãy phân tích sát thự
 ## 1. MA TRẬN SO SÁNH VỊ THẾ & TỬ HUYỆT ĐỐI THỦ
 | Đơn vị | Kênh Website | Điểm mạnh chính | Điểm yếu / Nơi khách phàn nàn | Lợi thế cạnh tranh của ta |
 |---|---|---|---|---|
-| ⭐ **{brand} (Của Ta)** | **Trực tiếp** | **Chuyên sâu {products}, tối ưu {price}, hỗ trợ 1-1** | **Cần đẩy mạnh truyền thông nhận diện** | **Linh hoạt, may đo, cam kết SLA chất lượng** |
+| ⭐ **{brand} (Của Ta)** | **{website or 'Trực tiếp'}** | **Chuyên sâu {products}, {usp}** | **Cần đẩy mạnh truyền thông nhận diện** | **Linh hoạt, may đo, cam kết SLA chất lượng** |
 {matrix_table}
 
 ---
@@ -758,16 +776,20 @@ Tuyệt đối không dùng khung mẫu sáo rỗng, hãy phân tích sát thự
 ---
 
 ## 3. 3 CHIÊU THỨC MARKETING HỚT TAY TRÊN (CUSTOMER POACHING)
-1. **Chính sách Hỗ trợ Chuyển Đổi:** Ưu đãi đặc quyền cho các doanh nghiệp đang gặp khó khăn hoặc thất vọng khi sử dụng giải pháp từ các đơn vị khác.
-2. **Case Study & Chứng Thực Hiệu Quả:** Công bố các trường hợp khách hàng thực tế đã đạt kết quả vượt trội sau khi chuyển sang {products} của {brand}.
-3. **Audit Miễn Phí & Cam Kết SLA:** Cung cấp buổi đánh giá hiện trạng miễn phí cho khách hàng ({audience}), chỉ ra các lỗ hổng mà đối thủ chưa khắc phục."""
+1. **Chiến dịch "Chuyển Đổi An Tâm":** Tiếp cận các khách hàng đang dùng giải pháp của đối thủ nhưng bức xúc vì hỗ trợ chậm trễ hoặc phát sinh chi phí, tặng gói dùng thử/khảo sát 1-1 miễn phí từ {brand}.
+2. **Chiến dịch "So Sánh Minh Bạch":** Xuất bản nội dung so sánh khách quan nêu bật {usp} của {brand} so với thị trường để khách hàng tự nhận thấy bài toán kinh tế rõ ràng.
+3. **Chính sách Bảo hành Vượt trội:** Cam kết SLA xử lý sự cố trong ngày qua Hotline {hotline or 'chính thức'}, giải tỏa hoàn toàn nỗi sợ bị "bỏ rơi" sau khi mua hàng."""
 
 def generate_single_competitor_battlecard(profile: dict, comp_name: str, comp_url: str = "") -> str:
     brand = profile.get("brand_name", "Doanh nghiệp của bạn")
     industry = profile.get("industry", "Thương mại & Dịch vụ")
     products = profile.get("products_services", "Sản phẩm")
     price = profile.get("price_range", "Tiêu chuẩn")
-    audience = profile.get("target_audience", "Khách hàng")
+    audience = profile.get("target_audience", "Khách hàng mục tiêu")
+    usp = profile.get("usp_advantages", "") or "Chất lượng vượt trội, hỗ trợ 1-1 và cam kết uy tín"
+    hotline = profile.get("phone_hotline", "")
+    website = profile.get("website_url", "")
+    social = profile.get("social_channels", "")
 
     # Cào web đối thủ nếu có URL hoặc tìm kiếm URL
     scraped = {}
@@ -783,10 +805,12 @@ def generate_single_competitor_battlecard(profile: dict, comp_name: str, comp_ur
 
     prompt = f"""Bạn là Giám đốc Tình báo Cạnh tranh (Head of Competitive Intelligence).
 Hãy lập BẢN TÌNH BÁO BATTLECARD ĐỐI ĐẦU 1-1 CHI TIẾT VÀ SẮC BÉN NHẤT GIỮA:
-- Thương hiệu của ta: {brand}
+THƯƠNG HIỆU CỦA CHÚNG TA ({brand}):
 - Lĩnh vực: {industry}
-- Sản phẩm/Dịch vụ của ta: {products} (Phân khúc giá: {price})
-- Tệp khách hàng: {audience}
+- Sản phẩm/Dịch vụ: {products} (Phân khúc giá: {price})
+- ƯU ĐIỂM VƯỢT TRỘI / LỢI THẾ CẠNH TRANH ĐỘC NHẤT (USP): {usp}
+- Hotline/Zalo: {hotline} | Website: {website} | Kênh Social: {social}
+- Tệp khách hàng mục tiêu: {audience}
 
 VÀ ĐỐI THỦ CẠNH TRANH TRỰC DIỆN:
 - Tên đối thủ: {comp_name}
@@ -794,18 +818,18 @@ VÀ ĐỐI THỦ CẠNH TRANH TRỰC DIỆN:
 {scraped_info_str}
 
 YÊU CẦU NỘI DUNG THỰC CHIẾN (DÀNH CHO ĐỘI NGŨ BÁN HÀNG VÀ MARKETING):
-1. HỒ SƠ TÌNH BÁO: Định vị, thế mạnh công nghệ, chính sách phân phối và phân khúc khách hàng của {comp_name}.
+1. HỒ SƠ TÌNH BÁO: Định vị, thế mạnh công nghệ/sản phẩm, chính sách phân phối và phân khúc khách hàng của {comp_name}.
 2. ĐIỂM MẠNH LỚN NHẤT CỦA HỌ: Nơi khách hàng hay bị họ thuyết phục ban đầu.
 3. TỬ HUYỆT & ĐIỂM YẾU CỐT TỬ CỦA {comp_name}:
-   - Nơi khách hàng bức xúc nhất (ví dụ: máy nóng nhớt khi chạy trưa nắng, linh kiện độc quyền giá đắt, thợ ở tỉnh xa chờ bảo hành 3-4 ngày, phát sinh chi phí...).
+   - Bóc tách các điểm yếu thực tế từ thông tin website đối thủ hoặc phản ánh phổ biến (ví dụ: phát sinh chi phí ẩn, chính sách hậu mãi chậm, thiếu sự may đo sát sao, phản hồi chậm trễ...).
 4. VŨ KHÍ ĐÈ BẸP CỦA {brand} (WHERE WE WIN):
-   - So sánh cụ thể từng thông số, cam kết dịch vụ, bài toán kinh tế ({price}) và lợi thế cạnh tranh độc quyền của {brand}.
+   - BẮT BUỘC sử dụng chính ưu điểm vượt trội (USP: {usp}) và mức giá ({price}) của {brand} để so sánh, chứng minh giải pháp của {brand} đem lại giá trị và độ an tâm cao hơn hẳn.
 5. KỊCH BẢN XỬ LÝ TỪ CHỐI THỰC CHIẾN (OBJECTION HANDLING SCRIPT):
    - Tình huống 1: Khi khách hàng bảo 'Bên {comp_name} họ báo giá rẻ hơn / hoặc họ làm lâu năm hơn...'
    - Tình huống 2: Khi khách hàng ngập ngừng chưa dám xuống tiền mua của {brand}.
-   (Viết lời thoại từng câu chữ tự nhiên, sắc sảo, tự tin, chỉ ra rủi ro cho khách khi chọn đối thủ).
+   (Viết lời thoại từng câu chữ tự nhiên, sắc sảo, tự tin, nhấn mạnh Hotline/Zalo {hotline} và cam kết từ {brand}).
 6. 3 CHIÊU THỨC MARKETING HỚT TAY TRÊN (CUSTOMER POACHING):
-   - Cách chạy quảng cáo nhắm trúng khách hàng đang bức xúc của {comp_name} và chiến lược thu cũ đổi mới."""
+   - Cách chạy thông điệp nhắm trúng khách hàng đang bức xúc của {comp_name} và kịch bản ưu đãi chuyển đổi sang {brand}."""
 
     gemini_out = call_gemini_api(profile, prompt)
     if gemini_out:
@@ -818,25 +842,25 @@ YÊU CẦU NỘI DUNG THỰC CHIẾN (DÀNH CHO ĐỘI NGŨ BÁN HÀNG VÀ MARKE
 ---
 
 ## 1. HỒ SƠ TÌNH BÁO ĐỐI THỦ: {comp_name.upper()}
-- **Định vị:** Đơn vị cung ứng trong ngành {industry}.
-- **Điểm mạnh chính:** Có mặt trên thị trường sớm, khách hàng dễ dàng tìm thấy thông tin ban đầu.
-- **Tử huyệt:** Thủ tục bảo hành chậm trễ, ít tùy biến may đo theo nhu cầu thực tế của từng khách hàng, hay phát sinh chi phí phụ kiện.
+- **Định vị:** Đơn vị cung ứng giải pháp trong ngành {industry}.
+- **Điểm mạnh chính:** Có mặt trên thị trường sớm, độ nhận diện bước đầu rộng rãi.
+- **Tử huyệt:** Phục vụ dàn trải, hỗ trợ khách hàng chậm trễ, ít có chính sách may đo theo từng nhu cầu cá biệt, dễ phát sinh phụ phí.
 
 ---
 
 ## 2. VŨ KHÍ ĐÈ BẸP CỦA {brand.upper()} (WHERE WE WIN)
-- **Tối ưu chi phí:** Trực tiếp từ đơn vị sản xuất/chuyên môn ({price}), không qua trung gian.
-- **Cam kết đồng hành 1-1:** Đội ngũ kỹ thuật hỗ trợ thần tốc trong 24h, bảo hành rõ ràng bằng hợp đồng.
-- **Chất lượng bền bỉ:** Thiết kế tối ưu theo đúng thực tế vận hành tại Việt Nam.
+- **Ưu điểm độc nhất (USP):** {usp}
+- **Chi phí & Minh bạch:** Mức giá đầu tư {price} cạnh tranh, cam kết hiệu quả rõ ràng không phát sinh chi phí ẩn.
+- **Hỗ trợ tận tâm 1-1:** Trực tiếp qua Hotline/Zalo {hotline or '(Cập nhật)'} và Website {website or '(Cập nhật)'}, cam kết đồng hành lâu dài.
 
 ---
 
 ## 3. KỊCH BẢN PHẢN ĐÒN XỬ LÝ TỪ CHỐI (OBJECTION HANDLING)
-> 🗣️ **Khách hàng:** *"Bên {comp_name} anh thấy có tiếng lâu năm rồi, đang tính lấy bên đó..."*
+> 🗣️ **Khách hàng:** *"Bên {comp_name} anh thấy có tiếng lâu năm rồi, đang tính chọn bên đó..."*
 >
 > 💬 **Chuyên viên {brand}:**
-> *"Dạ em hiểu anh đang tìm giải pháp an tâm nhất ạ. Tuy nhiên rất nhiều khách hàng sau khi dùng bên đó đã chuyển sang {brand} vì khâu bảo hành và hỗ trợ kỹ thuật của họ khi máy gặp sự cố thường mất từ 2-3 ngày, ảnh hưởng nghiêm trọng đến tiến độ.
-> Tại {brand}, tụi em cam kết kỹ thuật hỗ trợ trong 24h và cho anh nghiệm thu chạy thử thực tế hài lòng mới thanh toán đủ ạ!"*"""
+> *"Dạ em hoàn toàn hiểu anh/chị đang muốn chọn một đơn vị uy tín để an tâm nhất ạ. Tuy nhiên rất nhiều khách hàng sau khi dùng bên đó đã chuyển sang {brand} vì tại các công ty lớn khách hàng thường phải chờ đợi quy trình xử lý cồng kềnh khi cần hỗ trợ gấp.
+> Tại {brand}, tụi em cam kết hỗ trợ trực tiếp 1-1 nhanh chóng và đặc biệt mang lại ưu thế độc quyền: {usp} với mức giá {price} vô cùng hợp lý ạ!"*"""
 
 # --- 6. BUYER PERSONAS GENERATOR ---
 
@@ -846,6 +870,9 @@ def generate_personas(profile: dict) -> str:
     audience = profile.get("target_audience", "Khách hàng Việt Nam")
     products = profile.get("products_services", "Sản phẩm")
     price = profile.get("price_range", "Tiêu chuẩn")
+    usp = profile.get("usp_advantages", "") or "Chất lượng vượt trội, may đo chuyên sâu và hỗ trợ tận tâm"
+    hotline = profile.get("phone_hotline", "")
+    website = profile.get("website_url", "")
 
     domain_key = detect_domain(industry, products)
 
@@ -855,12 +882,14 @@ def generate_personas(profile: dict) -> str:
 - Ngành: {industry}
 - Sản phẩm: {products} (Giá: {price})
 - Tệp đối tượng: {audience}
+- Ưu thế độc nhất (USP của {brand}): {usp}
+- Hotline/Zalo: {hotline} | Website: {website}
 
 YÊU CẦU:
 1. Mô tả chi tiết như một con người thực tế với tên tuổi, công việc, mức thu nhập, nơi ở.
 2. Thói quen tiêu thụ thông tin (xem kênh nào, tin tưởng ai, sợ điều gì nhất).
 3. Nỗi đau lớn nhất liên quan trực tiếp đến ngành {industry} và sản phẩm {products}.
-4. Tiêu chí then chốt để quyết định xuống tiền mua hàng.
+4. Tiêu chí then chốt để quyết định xuống tiền mua hàng (kết nối trực tiếp với USP: {usp}).
 5. Câu chào hàng (Elevator Pitch) 1 câu đắt giá đánh trúng tâm lý."""
 
     gemini_out = call_gemini_api(profile, prompt)
@@ -870,34 +899,35 @@ YÊU CẦU:
     # Dynamic Personas chuyên sâu dựa trên hồ sơ thực tế
     return f"""# 🎯 3 CHÂN DUNG KHÁCH HÀNG MỤC TIÊU (BUYER PERSONAS): {brand.upper()}
 *Lĩnh vực: {industry} | Sản phẩm/Dịch vụ: {products} | Phân khúc: {price}*
+*Lợi thế độc quyền (USP): {usp}*
 *Tệp đối tượng trọng tâm: {audience}*
 
 ---
 
-## 👤 PERSONA 1: NGƯỜI RA QUYẾT ĐỊNH NGÂN SÁCH (CHỦ DOANH NGHIỆP / CEO / GIÁM ĐỐC ĐIỀU HÀNH)
-- **Độ tuổi & Vai trò:** 35 - 50 tuổi. Là người nắm giữ ngân sách và chịu trách nhiệm cao nhất về hiệu quả ROI.
-- **Hành vi & Kênh tiếp cận:** Tìm kiếm thông tin qua LinkedIn, Google Search và các mối quan hệ đối tác tin cậy; quan tâm đến bài toán bài bản, tăng trưởng doanh thu và uy tín đối tác.
+## 👤 PERSONA 1: NGƯỜI RA QUYẾT ĐỊNH NGÂN SÁCH (CHỦ DOANH NGHIỆP / CEO / QUẢN LÝ CẤP CAO)
+- **Độ tuổi & Vai trò:** 32 - 50 tuổi. Là người nắm giữ ngân sách và chịu trách nhiệm cao nhất về hiệu quả ROI.
+- **Hành vi & Kênh tiếp cận:** Tìm kiếm thông tin qua Google Search, các mối quan hệ đối tác tin cậy; quan tâm đến uy tín, sự cam kết và hiệu quả thực tế.
 - **Nỗi đau lớn nhất:** Mất niềm tin vì từng hợp tác với các đơn vị thiếu chuyên nghiệp, hứa hẹn nhiều nhưng bàn giao trễ hạn, phát sinh chi phí hoặc sản phẩm không như kỳ vọng.
-- **Tiêu chí xuống tiền:** Năng lực thực tế đã chứng minh qua Case Study, hợp đồng minh bạch, cam kết SLA chất lượng và mức giá đầu tư hợp lý ({price}).
-- **Câu chào hàng (Elevator Pitch):** *"{brand} mang đến giải pháp {products} chuyên sâu, may đo đúng bài toán tăng trưởng và cam kết tiến độ cùng chất lượng bằng hợp đồng rõ ràng."*
+- **Tiêu chí xuống tiền:** Năng lực thực tế, minh bạch, cam kết SLA chất lượng và lợi thế vượt trội: **{usp}** với mức giá đầu tư hợp lý ({price}).
+- **Câu chào hàng (Elevator Pitch):** *"{brand} mang đến giải pháp {products} chuyên sâu, {usp} và cam kết hiệu quả bằng hợp đồng rõ ràng."*
 
 ---
 
-## 👤 PERSONA 2: QUẢN LÝ CHUYÊN MÔN / TRỰC TIẾP VẬN HÀNH (TRƯỞNG PHÒNG / GIÁM ĐỐC BỘ PHẬN)
-- **Độ tuổi & Vai trò:** 28 - 42 tuổi. Là người trực tiếp sử dụng và giám sát việc vận hành giải pháp.
-- **Hành vi & Kênh tiếp cận:** Tham gia các cộng đồng chuyên môn trên Facebook/LinkedIn, theo dõi các bài viết phân tích kỹ thuật và xu hướng giải pháp mới.
-- **Nỗi đau lớn nhất:** Hệ thống hiện tại lỗi thời, khó mở rộng, tốn nhiều thời gian xử lý thủ công hoặc khi có sự cố thì đối tác cũ hỗ trợ rất chậm chạp.
-- **Tiêu chí xuống tiền:** Tính năng linh hoạt, dễ sử dụng, đội ngũ kỹ thuật của {brand} hỗ trợ 1-1 nhanh chóng và nhiệt tình.
-- **Câu chào hàng (Elevator Pitch):** *"Tối ưu 70% thời gian vận hành cùng {products} từ {brand} – Tinh gọn, ổn định và có chuyên gia đồng hành hỗ trợ mọi lúc."*
+## 👤 PERSONA 2: QUẢN LÝ CHUYÊN MÔN / TRỰC TIẾP VẬN HÀNH (TRƯỞNG BỘ PHẬN / QUẢN LÝ CƠ SỞ)
+- **Độ tuổi & Vai trò:** 26 - 42 tuổi. Là người trực tiếp sử dụng và giám sát việc vận hành giải pháp.
+- **Hành vi & Kênh tiếp cận:** Tham gia các cộng đồng chuyên môn trên Facebook/Zalo, theo dõi các bài viết đánh giá thực tế và xu hướng mới.
+- **Nỗi đau lớn nhất:** Giải pháp hiện tại lỗi thời, khó mở rộng, tốn nhiều thời gian xử lý thủ công hoặc khi có sự cố thì đối tác cũ hỗ trợ rất chậm chạp.
+- **Tiêu chí xuống tiền:** Tính năng linh hoạt, dễ sử dụng, đội ngũ kỹ thuật của {brand} hỗ trợ 1-1 nhanh chóng và nhiệt tình qua Hotline/Zalo {hotline or 'trực tiếp'}.
+- **Câu chào hàng (Elevator Pitch):** *"Tối ưu hiệu suất vận hành cùng {products} từ {brand} – Tinh gọn, ổn định và có chuyên gia đồng hành hỗ trợ mọi lúc."*
 
 ---
 
-## 👤 PERSONA 3: CHUYÊN VIÊN THẨM ĐỊNH KỸ THUẬT & TÍNH KHẢ THI
-- **Độ tuổi & Vai trò:** 25 - 35 tuổi. Là người đánh giá chi tiết về kiến trúc, độ bảo mật và khả năng tích hợp.
-- **Hành vi & Kênh tiếp cận:** Đọc tài liệu kỹ thuật, xem xét tiêu chuẩn công nghệ, kiểm tra tính bảo mật và tính tương thích hệ thống.
-- **Nỗi đau lớn nhất:** Giải pháp của nhà cung cấp sử dụng công nghệ chắp vá, thiếu tài liệu hướng dẫn hoặc tiềm ẩn rủi ro bảo mật dữ liệu.
-- **Tiêu chí xuống tiền:** Kiến trúc chuẩn mực, bàn giao đầy đủ tài liệu, bảo mật dữ liệu nghiêm ngặt và khả năng mở rộng trong tương lai.
-- **Câu chào hàng (Elevator Pitch):** *"{products} của {brand} được xây dựng theo chuẩn công nghệ hiện đại, bảo mật cao và dễ dàng mở rộng theo quy mô phát triển."*"""
+## 👤 PERSONA 3: NGƯỜI THẨM ĐỊNH KỸ THUẬT & TRẢI NGHIỆM THỰC TẾ
+- **Độ tuổi & Vai trò:** 24 - 36 tuổi. Là người đánh giá chi tiết về chất lượng sản phẩm, độ bền và độ tiện lợi.
+- **Hành vi & Kênh tiếp cận:** Đọc đánh giá của người dùng, xem xét thông số kỹ thuật, trải nghiệm dùng thử hoặc xem xét case study.
+- **Nỗi đau lớn nhất:** Sản phẩm của nhà cung cấp thiếu ổn định, chất lượng không đồng đều giữa các lô hàng, dịch vụ hậu mãi mập mờ.
+- **Tiêu chí xuống tiền:** Chất lượng đảm bảo, quy trình rõ ràng và chính sách hỗ trợ minh bạch từ {brand}.
+- **Câu chào hàng (Elevator Pitch):** *"{products} của {brand} được thiết kế tối ưu với ưu điểm độc quyền ({usp}), đem lại sự hài lòng và an tâm tuyệt đối."*"""
 
 # --- 7. CONTENT STUDIO & 30-DAY CALENDAR ---
 
@@ -908,19 +938,27 @@ def generate_content_item(profile: dict, channel: str, topic: str, format_type: 
     voice = profile.get("brand_voice", "Chuyên nghiệp, Uy tín, Thực chiến")
     audience = profile.get("target_audience", "Khách hàng mục tiêu")
     price = profile.get("price_range", "Tiêu chuẩn")
+    usp = profile.get("usp_advantages", "") or "Chất lượng vượt trội, may đo chuyên sâu và hỗ trợ tận tâm"
+    hotline = profile.get("phone_hotline", "")
+    website = profile.get("website_url", "")
+    social = profile.get("social_channels", "")
+
+    contact_cta = f"Hotline/Zalo: {hotline} | Website: {website}" if (hotline or website) else f"Liên hệ ngay {brand} để nhận tư vấn chuyên sâu!"
 
     prompt = f"""Bạn là Giám đốc Sáng tạo (Creative Director) & Copywriter thực chiến trong lĩnh vực {industry}. Hãy viết một BÀI NỘI DUNG MARKETING HOÀN CHỈNH, SÂU SẮC, CHUYỂN ĐỔI CAO cho:
 - Kênh xuất bản: {channel}
 - Thương hiệu: {brand}
 - Ngành hàng: {industry}
 - Sản phẩm/Dịch vụ: {products} (Mức giá: {price})
+- Ưu thế vượt trội độc quyền (USP): {usp}
+- Hotline/Zalo: {hotline} | Website: {website} | Social: {social}
 - Chủ đề bài viết: {topic}
 - Giọng điệu (Tone of Voice): {voice}
 - Tệp người xem mục tiêu: {audience}
 
 YÊU CẦU ĐẶC BIỆT THEO ĐỊNH DẠNG:
-- Nếu là TikTok/Video ngắn/Reels/YouTube Shorts: Viết kịch bản video dọc 9:16 có Hook 3 giây đầu giữ chân người xem, phân cảnh chi tiết (Visual / Audio / On-screen Text) và Lời kêu gọi hành động (CTA) sắc sảo.
-- Nếu là Facebook/LinkedIn/Zalo: Viết tiêu đề thu hút, đặt vấn đề đánh trúng nỗi đau thực tế của {audience}, phân tích giải pháp vượt trội của {brand}, bằng chứng thuyết phục và CTA.
+- Nếu là TikTok/Video ngắn/Reels/YouTube Shorts: Viết kịch bản video dọc 9:16 có Hook 3 giây đầu giữ chân người xem, phân cảnh chi tiết (Visual / Audio / On-screen Text) và Lời kêu gọi hành động (CTA) sắc sảo nêu rõ Hotline {hotline}.
+- Nếu là Facebook/LinkedIn/Zalo: Viết tiêu đề thu hút, đặt vấn đề đánh trúng nỗi đau thực tế của {audience}, phân tích giải pháp vượt trội của {brand} (nhấn mạnh USP: {usp}), bằng chứng thuyết phục và CTA.
 - Nếu là Email/Website Blog: Viết nội dung chuẩn chỉnh, có chiều sâu chuyên môn, văn phong chuyên nghiệp.
 Tuyệt đối viết cụ thể theo đặc thù của {products} và ngành {industry}, không viết chung chung."""
 
@@ -931,7 +969,7 @@ Tuyệt đối viết cụ thể theo đặc thù của {products} và ngành {i
             "topic": topic,
             "hook": f"Giải pháp tối ưu cho {topic}",
             "body": gemini_out,
-            "cta": f"Liên hệ ngay {brand} để nhận tư vấn chuyên sâu!",
+            "cta": contact_cta,
             "status": "draft"
         }
 
@@ -940,13 +978,14 @@ Tuyệt đối viết cụ thể theo đặc thù của {products} và ngành {i
         body = f"""# 🎬 KỊCH BẢN VIDEO NGẮN CHUYỂN ĐỔI CAO (TIKTOK / REELS / SHORTS)
 **Chủ đề:** {topic.upper()}
 **Thương hiệu:** {brand} | **Sản phẩm/Dịch vụ:** {products} ({price})
+**Lợi thế độc quyền:** {usp}
 **Khung hình:** Dọc 9:16 | **Thời lượng:** 35 - 45 giây
 
 ---
 
 ### 3 Phương án Hook 3 giây đầu tiên:
-- **Hook 1 (Đánh vào bài toán chi phí):** *"Bỏ ra {price} cho {products} là lãng phí hay khoản đầu tư sinh lời gấp 5 lần? Xem ngay bài toán thực tế!"*
-- **Hook 2 (Cảnh báo sai lầm tốn tiền):** *"3 Sai lầm chí mạng khiến 80% khách hàng mất tiền oan khi lựa chọn giải pháp {industry}!"*
+- **Hook 1 (Đánh vào bài toán chi phí):** *"Bỏ ra {price} cho {products} là lãng phí hay khoản đầu tư sinh lời bền vững? Xem ngay bài toán thực tế!"*
+- **Hook 2 (Cảnh báo sai lầm tốn tiền):** *"3 Sai lầm chí mạng khiến 80% khách hàng mất tiền oan khi lựa chọn giải pháp trong ngành {industry}!"*
 - **Hook 3 (So sánh trực quan):** *"Khách hàng thông thái chọn {brand} thay vì giải pháp truyền thống vì đúng 1 lý do này..."*
 
 ---
@@ -956,33 +995,36 @@ Tuyệt đối viết cụ thể theo đặc thù của {products} và ngành {i
 | Thời lượng | Hình ảnh / Hành động (Visual) | Lời thoại & Âm thanh (Audio) | Chữ hiển thị (On-screen Text) |
 |---|---|---|---|
 | **0s - 3s (Hook)** | Nhân vật chính chỉ tay vào màn hình hoặc đặt câu hỏi trực diện, biểu cảm chân thực | *"Nếu bạn đang tìm giải pháp {products} thì hãy dừng lại 30 giây để tránh mất tiền oan!"* (Hiệu ứng âm thanh chú ý) | **CẢNH BÁO: ĐỪNG MẮC BẪY! ⚠️** |
-| **4s - 15s (Nỗi đau)** | Cảnh minh họa sự chậm trễ, khó khăn, chi phí phát sinh hoặc rủi ro khi chọn sai nhà cung cấp | *"Nhiều người nghĩ giá rẻ là tiết kiệm, nhưng sau đó phải chịu cảnh bảo hành chậm, phát sinh chi phí và kết quả không như ý..."* | **CHI PHÍ ẨN & RỦI RO LỚN 💸** |
-| **16s - 30s (Giải pháp)** | Cận cảnh giải pháp {products} của {brand} hoạt động trơn tru, biểu đồ hiệu quả hoặc hình ảnh thực tế | *"Với {brand}, bài toán của bạn được may đo chuẩn xác: Chi phí tối ưu ({price}), cam kết chất lượng bằng hợp đồng và hỗ trợ 1-1 tận tâm!"* | **GIẢI PHÁP TỪ {brand.upper()} ⚡** |
-| **31s - 40s (CTA)** | Nhân vật mỉm cười, màn hình hiển thị thông tin tư vấn và ưu đãi đặc quyền | *"Đừng để bài toán này làm bạn đau đầu nữa! Nhắn tin ngay cho {brand} để nhận tư vấn & lộ trình chi tiết miễn phí!"* | **LIÊN HỆ {brand.upper()} NGAY HÔM NAY 🎁** |
+| **4s - 15s (Nỗi đau)** | Cảnh minh họa sự chậm trễ, khó khăn, chi phí phát sinh hoặc rủi ro khi chọn sai nhà cung cấp | *"Nhiều người nghĩ giá rẻ là tiết kiệm, nhưng sau đó phải chịu cảnh chất lượng kém, bảo hành chậm và phát sinh chi phí..."* | **CHI PHÍ ẨN & RỦI RO LỚN 💸** |
+| **16s - 30s (Giải pháp)** | Cận cảnh giải pháp {products} của {brand} hoạt động trơn tru, làm nổi bật ưu thế độc quyền | *"Với {brand}, bài toán của bạn được may đo chuẩn xác: {usp}, chi phí hợp lý ({price}) và cam kết đồng hành 1-1!"* | **GIẢI PHÁP TỪ {brand.upper()} ⚡** |
+| **31s - 40s (CTA)** | Nhân vật mỉm cười, màn hình hiển thị Hotline {hotline or 'tư vấn'} và website {website or 'chính thức'} | *"Đừng để bài toán này làm bạn đau đầu nữa! Nhắn tin ngay cho {brand} hoặc gọi Hotline {hotline or 'tư vấn'} để nhận lộ trình chi tiết miễn phí!"* | **HOTLINE: {hotline or 'LIÊN HỆ NGAY'} 🎁** |
 
 ---
 **Hashtag đề xuất:** `#{brand.replace(' ', '')} #{industry.replace(' ', '')} #KinhDoanh #GiaiPhapHieuQua`"""
     elif channel.lower() in ["facebook", "fanpage", "zalo", "linkedin"]:
-        body = f"""🔥 BÀI TOÁN TỐI ƯU CHI PHÍ DÀNH CHO DOANH NGHIỆP: ĐẦU TƯ {products.upper()} ({price}) SAO CHO HIỆU QUẢ NHẤT?
+        body = f"""🔥 BÀI TOÁN TỐI ƯU CHI PHÍ DÀNH CHO KHÁCH HÀNG: ĐẦU TƯ {products.upper()} ({price}) SAO CHO HIỆU QUẢ NHẤT?
 
 Nhiều khách hàng chia sẻ với {brand}: *"Làm sao để chọn được giải pháp {products} vừa đảm bảo chất lượng, vừa không bị đội chi phí phát sinh?"*
 
-👉 Đây là câu hỏi rất thực tế. Trong bối cảnh thị trường {industry} hiện nay, việc lựa chọn đúng đối tác quyết định đến 80% thành bại của dự án:
+👉 Đây là câu hỏi rất thực tế. Trong bối cảnh thị trường {industry} hiện nay, việc lựa chọn đúng đối tác quyết định đến 80% thành bại:
 
 1️⃣ **NHỮNG CẠM BẪY PHỔ BIẾN KHI CHỌN ĐƠN VỊ THIẾU NĂNG LỰC:**
 - Báo giá ban đầu rất thấp để chốt hợp đồng, sau đó liên tục phát sinh chi phí phụ.
-- Áp dụng các mẫu rập khuôn, thiếu khả năng tùy biến khi doanh nghiệp cần mở rộng.
+- Áp dụng các mẫu rập khuôn, thiếu khả năng tùy biến khi cần mở rộng.
 - Chế độ hỗ trợ sau bán hàng chậm trễ, đùn đẩy trách nhiệm khi gặp sự cố.
 
 2️⃣ **LỢI THẾ ĐỘT PHÁ KHI ĐỒNG HÀNH CÙNG {brand.upper()}:**
-✅ **Giải pháp may đo chuyên sâu:** {brand} xây dựng {products} dựa trên đúng nhu cầu thực tế của {audience}, đảm bảo tính linh hoạt và mở rộng lâu dài.
+✅ **Ưu thế độc quyền (USP):** {usp}.
+✅ **Giải pháp may đo chuyên sâu:** {brand} xây dựng {products} dựa trên đúng nhu cầu thực tế của {audience}.
 ✅ **Minh bạch ngân sách:** Mức đầu tư tối ưu ({price}), cam kết không phát sinh chi phí ẩn.
 ✅ **Đồng hành kỹ thuật 1-1:** Cam kết phản hồi nhanh chóng, hỗ trợ xử lý sự cố trong ngày và bảo hành bằng hợp đồng pháp lý rõ ràng.
 
 🎁 **ĐẶC QUYỀN TRONG THÁNG NÀY:**
-{brand} dành tặng 05 suất tư vấn chuyên sâu 1-1 và bản đánh giá hiện trạng miễn phí cho các doanh nghiệp đăng ký sớm nhất!
+{brand} dành tặng 05 suất tư vấn chuyên sâu 1-1 và bản đánh giá hiện trạng miễn phí cho các khách hàng đăng ký sớm nhất!
 
-👇 Để lại bình luận hoặc nhắn tin trực tiếp cho {brand} để nhận lộ trình triển khai chi tiết!
+👇 Để lại bình luận, nhắn tin trực tiếp cho {brand} hoặc gọi ngay:
+📞 Hotline/Zalo: {hotline or 'Liên hệ trực tiếp'}
+🌐 Website: {website or 'Xem thêm thông tin'}
 ---
 #{brand.replace(' ', '')} #{industry.replace(' ', '')} #DoanhNghiep #GiaiPhapToiUu"""
     else:
@@ -990,16 +1032,20 @@ Nhiều khách hàng chia sẻ với {brand}: *"Làm sao để chọn được g
 
 {brand} trân trọng giới thiệu giải pháp **{products}** thế hệ mới trong lĩnh vực {industry}, với mức chi phí đầu tư tối ưu **{price}**.
 
+Lợi thế vượt trội: **{usp}**.
 Giải pháp được thiết kế nhằm giúp {audience} tối ưu hóa hiệu quả vận hành, tiết kiệm thời gian và đảm bảo độ ổn định cao nhất.
 
-👉 Liên hệ ngay với đội ngũ chuyên gia của {brand} để nhận tài liệu chi tiết và tư vấn giải pháp phù hợp nhất với mô hình của bạn!"""
+👉 Hotline/Zalo tư vấn: {hotline or 'Liên hệ trực tiếp'}
+👉 Website: {website or 'Xem chi tiết'}
+
+Liên hệ ngay với đội ngũ chuyên gia của {brand} để nhận tài liệu chi tiết và tư vấn giải pháp phù hợp nhất với mô hình của bạn!"""
 
     return {
         "channel": channel,
         "topic": topic,
         "hook": f"Giải pháp {products} từ {brand}",
         "body": body,
-        "cta": f"Liên hệ ngay {brand} để nhận tư vấn!",
+        "cta": contact_cta,
         "status": "draft"
     }
 
@@ -1009,24 +1055,26 @@ def generate_custom_30day_calendar(profile: dict, direction: str = "educational"
     products = profile.get("products_services", "Sản phẩm / Dịch vụ")
     price = profile.get("price_range", "Tiêu chuẩn")
     audience = profile.get("target_audience", "Khách hàng mục tiêu")
+    usp = profile.get("usp_advantages", "") or "Chất lượng vượt trội, may đo chuyên sâu và hỗ trợ tận tâm"
     
     direction_guides = {
-        "educational": "Giáo dục khách hàng, Chia sẻ kinh nghiệm kỹ thuật, Cảnh báo sai lầm thường gặp và Hướng dẫn tính ROI",
-        "aggressive": "Bán hàng thực chiến, So sánh giải pháp, Vạch trần đối thủ giá rẻ và Kêu gọi đặt cọc chốt đơn",
-        "video_viral": "Kịch bản Video ngắn TikTok/Reels/Shorts, Thử tải thực tế ngoài trời, Hậu trường xưởng sản xuất chân thực",
-        "brand_b2b": "Xây dựng vị thế chuyên gia đầu ngành, Hồ sơ năng lực, Cam kết kiểm định an toàn và Đối tác dự án lớn"
+        "educational": "Giáo dục khách hàng, Chia sẻ kinh nghiệm thực tế, Cảnh báo sai lầm thường gặp và Hướng dẫn tính ROI",
+        "aggressive": "Bán hàng thực chiến, So sánh giải pháp, Vạch trần giải pháp kém chất lượng và Kêu gọi hành động chốt đơn",
+        "video_viral": "Kịch bản Video ngắn TikTok/Reels/Shorts, Trải nghiệm sản phẩm thực tế, Hậu trường chân thực",
+        "brand_b2b": "Xây dựng vị thế chuyên gia đầu ngành, Hồ sơ năng lực, Cam kết chất lượng và Đối tác tin cậy"
     }
     guide_text = direction_guides.get(direction, direction_guides["educational"])
 
     # Try calling Gemini AI Studio first for a real customized 30-day plan
-    prompt = f"""Hãy lập KẾ HOẠCH NỘI DUNG 30 NGÀY B2B ĐA KÊNH (LinkedIn, Facebook, Video Ngắn, YouTube, Case Study) cho {brand} ({industry}, sản phẩm: {products}, giá: {price}) phục vụ tệp khách hàng {audience}.
+    prompt = f"""Hãy lập KẾ HOẠCH NỘI DUNG 30 NGÀY ĐA KÊNH (LinkedIn, Facebook, Video Ngắn, YouTube, Case Study) cho {brand} ({industry}, sản phẩm: {products}, giá: {price}) phục vụ tệp khách hàng {audience}.
+LỢI THẾ CẠNH TRANH ĐỘC NHẤT (USP): {usp}.
 THIÊN HƯỚNG NỘI DUNG CHỦ ĐẠO: {guide_text}.
 
 Phân bổ rõ ràng 30 ngày theo 4 giai đoạn phễu:
-- TOFU (Ngày 1-8): Nhận diện nỗi đau, nhận thức rủi ro, cảnh báo cạm bẫy chọn sai.
-- MOFU (Ngày 9-18): Bóc tách chuyên môn, case study thực tế, so sánh giải pháp.
+- TOFU (Ngày 1-8): Nhận diện nỗi đau, nhận thức rủi ro, cảnh báo cạm bẫy chọn sai nhà cung cấp trong ngành {industry}.
+- MOFU (Ngày 9-18): Bóc tách chuyên môn, case study thực tế, làm nổi bật USP: {usp}.
 - BOFU (Ngày 19-25): Báo giá minh bạch, chính sách cam kết chất lượng SLA, ưu đãi trải nghiệm thử/chốt đơn.
-- Retention (Ngày 26-30): Hướng dẫn bảo trì, tối ưu chi phí vận hành và đồng hành dài hạn.
+- Retention (Ngày 26-30): Hướng dẫn sử dụng tối ưu, chăm sóc khách hàng và đồng hành dài hạn.
 
 Trả về duy nhất danh sách định dạng JSON có 30 items, mỗi item gồm: day (1..30), channel, pillar, funnel_stage, topic."""
 
@@ -1048,8 +1096,8 @@ Trả về duy nhất danh sách định dạng JSON có 30 items, mỗi item g�
     channels = ["TikTok / Video", "Facebook", "LinkedIn", "Zalo OA", "YouTube"]
     pillars = [
         "Thought Leadership & Xu hướng",
-        "Case Study & Thử tải thực tế",
-        "Bóc tách Kỹ thuật & ROI",
+        "Case Study & Trải nghiệm thực tế",
+        "Bóc tách Chuyên môn & ROI",
         "Xử lý Từ chối & Báo giá",
         "Ưu đãi & Kêu gọi Hành động"
     ]
@@ -1061,16 +1109,16 @@ Trả về duy nhất danh sách định dạng JSON có 30 items, mỗi item g�
     ]
 
     base_topics = [
-        f"Tại sao 70% khách hàng hối hận khi chọn mua {products} giá rẻ?",
-        f"Bài toán kinh tế thực tế: So sánh chi phí vận hành {products} ({price}) so với làm thủ công",
-        f"Thử thách thực tế: Khả năng hoạt động liên tục giữa thời tiết khắc nghiệt của {products} {brand}",
-        f"Hướng dẫn kiểm tra 5 thông số kỹ thuật cốt tử trước khi ký hợp đồng mua {products}",
-        f"Dấu hiệu nhận biết máy móc/thiết bị kém chất lượng trên thị trường hiện nay",
-        f"Bóc tách cam kết kỹ thuật hỗ trợ tận nơi trong 24h của {brand}",
-        f"Khách hàng chia sẻ: Rút ngắn thời gian và tăng gấp đôi năng suất cùng {brand}",
-        f"Giải đáp thắc mắc: Chính sách bảo hành và phụ tùng thay thế của {brand} có gì đặc biệt?",
-        f"So sánh công tâm: Giải pháp của {brand} ({price}) vs Các dòng máy trôi nổi",
-        f"Đặc quyền tháng này: Đăng ký trải nghiệm & chạy thử nghiệm thu máy thực tế cùng {brand}"
+        f"Tại sao nhiều khách hàng hối hận khi chọn mua {products} giá rẻ thiếu cam kết?",
+        f"Bài toán kinh tế thực tế: So sánh chi phí đầu tư {products} ({price}) và hiệu quả thu lại",
+        f"Bí quyết vượt trội: {usp}",
+        f"Hướng dẫn kiểm tra 5 tiêu chí cốt tử trước khi quyết định chọn mua {products}",
+        f"Dấu hiệu nhận biết các dịch vụ/sản phẩm kém chất lượng trong ngành {industry}",
+        f"Bóc tách cam kết hỗ trợ đồng hành 1-1 và chính sách SLA của {brand}",
+        f"Khách hàng chia sẻ: Trải nghiệm thực tế sau khi tin tưởng lựa chọn {brand}",
+        f"Giải đáp thắc mắc: Chính sách hậu mãi và cam kết chất lượng của {brand}",
+        f"So sánh công tâm: Giải pháp của {brand} ({price}) vs Các giải pháp đại trà trên thị trường",
+        f"Đặc quyền tháng này: Nhận tư vấn chuyên sâu 1-1 và ưu đãi trực tiếp từ {brand}"
     ]
 
     calendar_items = []
@@ -1102,12 +1150,19 @@ def generate_full_content_package(profile: dict, topic: str, channel: str, direc
     price = profile.get("price_range", "")
     audience = profile.get("target_audience", "")
     voice = profile.get("brand_voice", "Thực chiến, chuyên nghiệp, tin cậy")
+    usp = profile.get("usp_advantages", "") or "Chất lượng vượt trội, may đo chuyên sâu và hỗ trợ tận tâm"
+    hotline = profile.get("phone_hotline", "")
+    website = profile.get("website_url", "")
+
+    contact_cta = f"Hotline/Zalo: {hotline} | Website: {website}" if (hotline or website) else f"Liên hệ {brand} để nhận tư vấn & trải nghiệm thực tế!"
 
     prompt = f"""Bạn là Giám đốc Sáng tạo (Creative Director) & Copywriter thực chiến cấp cao.
 Hãy tạo TRỌN GÓI NỘI DUNG MARKETING ĐA PHƯƠNG TIỆN HOÀN CHỈNH CHO:
 - Thương hiệu: {brand}
 - Ngành hàng: {industry}
 - Sản phẩm/Dịch vụ: {products} (Phân khúc giá: {price})
+- Ưu thế độc quyền (USP): {usp}
+- Hotline/Zalo: {hotline} | Website: {website}
 - Kênh xuất bản: {channel}
 - Chủ đề: {topic}
 - Giọng điệu: {voice}
@@ -1115,9 +1170,9 @@ Hãy tạo TRỌN GÓI NỘI DUNG MARKETING ĐA PHƯƠNG TIỆN HOÀN CHỈNH CH
 
 YÊU CẦU TRẢ VỀ DUY NHẤT 1 ĐỐI TƯỢNG JSON CÓ ĐẦY ĐỦ 3 PHẦN:
 {{
-  "body": "Nội dung bài viết hoàn chỉnh (Tiêu đề in hoa giật tít thu hút, Hook 3s chạm đúng nỗi đau thực tế của {audience}, 3 luận điểm thuyết phục có số liệu/bài toán ROI, Lời kêu gọi hành động CTA rõ ràng, Bộ 5 hashtag)",
-  "video_script": "KỊCH BẢN VIDEO DỌC 9:16 (TIKTOK / REELS / YOUTUBE SHORTS) 30-45S DẠNG BẢNG:\n| Thời lượng | Hình ảnh / Hành động (Visual) | Lời thoại & Âm thanh (Audio) | Chữ hiện trên màn hình (On-screen Text) |\n| 0s - 3s (Hook) | ... | ... | ... |\n| 4s - 15s (Nỗi đau) | ... | ... | ... |\n| 16s - 30s (Giải pháp {brand}) | ... | ... | ... |\n| 31s - 45s (CTA Chốt) | ... | ... | ... |",
-  "image_prompt": "Prompt tiếng Anh chuyên nghiệp cho Midjourney / Imagen 3 để thiết kế banner/ảnh bài đăng (Mô tả chi tiết chủ thể thực tế, bối cảnh, ánh sáng cinematic công nghiệp, phong cách photorealistic 8k, góc chụp, tỉ lệ --ar 16:9)"
+  "body": "Nội dung bài viết hoàn chỉnh (Tiêu đề in hoa giật tít thu hút, Hook 3s chạm đúng nỗi đau thực tế của {audience}, 3 luận điểm thuyết phục có số liệu/bài toán ROI và nhấn mạnh USP: {usp}, Lời kêu gọi hành động CTA rõ ràng kèm Hotline {hotline}, Bộ 5 hashtag)",
+  "video_script": "KỊCH BẢN VIDEO DỌC 9:16 (TIKTOK / REELS / YOUTUBE SHORTS) 30-45S DẠNG BẢNG:\n| Thời lượng | Hình ảnh / Hành động (Visual) | Lời thoại & Âm thanh (Audio) | Chữ hiện trên màn hình (On-screen Text) |\n| 0s - 3s (Hook) | ... | ... | ... |\n| 4s - 15s (Nỗi đau) | ... | ... | ... |\n| 16s - 30s (Giải pháp {brand} - {usp}) | ... | ... | ... |\n| 31s - 45s (CTA Chốt - Hotline {hotline}) | ... | ... | ... |",
+  "image_prompt": "Prompt tiếng Anh chuyên nghiệp cho Midjourney / Imagen 3 để thiết kế banner/ảnh bài đăng (Mô tả chi tiết chủ thể thực tế liên quan đến {products} và ngành {industry}, bối cảnh hiện đại, ánh sáng cinematic, phong cách photorealistic 8k, góc chụp, tỉ lệ --ar 16:9)"
 }}"""
 
     ai_out = call_gemini_api(profile, prompt)
@@ -1136,7 +1191,7 @@ YÊU CẦU TRẢ VỀ DUY NHẤT 1 ĐỐI TƯỢNG JSON CÓ ĐẦY ĐỦ 3 PHẦ
                     "body": parsed.get("body", ""),
                     "video_script": parsed.get("video_script", ""),
                     "image_prompt": parsed.get("image_prompt", ""),
-                    "cta": f"Liên hệ {brand} để nhận tư vấn & trải nghiệm thực tế!",
+                    "cta": contact_cta,
                     "status": "ready"
                 }
         except Exception as e:
@@ -1150,24 +1205,27 @@ YÊU CẦU TRẢ VỀ DUY NHẤT 1 ĐỐI TƯỢNG JSON CÓ ĐẦY ĐỦ 3 PHẦ
 
 👉 Chủ đề: {topic}
 
-Khách hàng mục tiêu trong ngành {industry} luôn đau đầu với bài toán: Làm sao để tối ưu chi phí đầu tư mà vẫn đảm bảo độ ổn định và tiến độ cao nhất?
+Khách hàng mục tiêu trong ngành {industry} luôn đau đầu với bài toán: Làm sao để tối ưu chi phí đầu tư mà vẫn đảm bảo độ ổn định và hiệu quả cao nhất?
 
 ✅ Giải pháp từ {brand}:
-1. May đo chuyên sâu theo thực tế vận hành, độ bền cao.
-2. Mức đầu tư tối ưu ({price}), hoàn vốn nhanh chóng.
-3. Cam kết đồng hành 1-1 và hỗ trợ kỹ thuật tận nơi trong 24h.
+1. **Lợi thế vượt trội (USP):** {usp}.
+2. May đo chuyên sâu theo thực tế vận hành, độ bền cao.
+3. Mức đầu tư tối ưu ({price}), hoàn vốn nhanh chóng.
+4. Cam kết đồng hành 1-1 và hỗ trợ kỹ thuật nhanh chóng qua Hotline/Zalo {hotline or 'trực tiếp'}.
 
-👇 Liên hệ ngay {brand} để nhận thông tin chi tiết và trải nghiệm thực tế!
+👇 Liên hệ ngay {brand} để nhận thông tin chi tiết và lộ trình triển khai!
+📞 Hotline/Zalo: {hotline or 'Đang cập nhật'}
+🌐 Website: {website or 'Đang cập nhật'}
 ---
 #{brand.replace(' ', '')} #{industry.replace(' ', '')} #KinhDoanh #GiaiPhapThucChien""",
         "video_script": f"""| Thời lượng | Hình ảnh / Hành động (Visual) | Lời thoại & Âm thanh (Audio) | Chữ hiện trên màn hình (On-screen Text) |
 |---|---|---|---|
 | **0s - 3s (Hook)** | Cận cảnh giải pháp {products} hoạt động hoặc câu hỏi gây chú ý | *"Đừng bao giờ đầu tư vào {products} nếu bạn chưa biết điều này!"* | **CẢNH BÁO CHI PHÍ ⚠️** |
-| **4s - 15s (Nỗi đau)** | Cảnh khó khăn, phát sinh chi phí hoặc sự cố thường gặp | *"Nhiều người ham rẻ để rồi gặp cảnh trễ tiến độ, máy hỏng chờ bảo hành cả tuần..."* | **TIỀN MẤT TẬT MANG? 💸** |
-| **16s - 30s (Giải pháp)** | Cận cảnh {products} của {brand} vận hành trơn tru | *"Với {brand}, thiết bị được tối ưu bền bỉ, kỹ thuật hỗ trợ trong 24h, bảo hành uy tín!"* | **GIẢI PHÁP TỪ {brand.upper()} ⚡** |
-| **31s - 45s (CTA)** | Bảng thông tin hotline và lời kêu gọi hành động | *"Gọi ngay cho {brand} để được tư vấn và chạy thử thực tế hôm nay!"* | **HOTLINE: TƯ VẤN NGAY 🎁** |""",
-        "image_prompt": f"Professional realistic commercial photograph of modern {products} by {brand} in an industrial setting, cinematic lighting, sharp details, high contrast, clean presentation, 8k resolution, photorealistic, --ar 16:9",
-        "cta": f"Liên hệ ngay {brand} để nhận tư vấn!",
+| **4s - 15s (Nỗi đau)** | Cảnh khó khăn, phát sinh chi phí hoặc sự cố thường gặp | *"Nhiều người chọn giải pháp giá rẻ để rồi gặp cảnh chất lượng kém, bảo hành chậm trễ, phát sinh chi phí..."* | **TIỀN MẤT TẬT MANG? 💸** |
+| **16s - 30s (Giải pháp)** | Cận cảnh {products} của {brand} vận hành trơn tru | *"Với {brand}, bài toán của bạn được tối ưu: {usp}, hỗ trợ tận tâm, cam kết chất lượng!"* | **GIẢI PHÁP TỪ {brand.upper()} ⚡** |
+| **31s - 45s (CTA)** | Bảng thông tin hotline {hotline or 'tư vấn'} và lời kêu gọi hành động | *"Gọi ngay Hotline/Zalo {hotline or 'cho ' + brand} để được tư vấn và nhận ưu đãi hôm nay!"* | **HOTLINE: {hotline or 'LIÊN HỆ NGAY'} 🎁** |""",
+        "image_prompt": f"Professional realistic commercial photograph representing modern {products} by {brand} in {industry}, cinematic lighting, sharp details, high contrast, clean premium aesthetic, 8k resolution, photorealistic, --ar 16:9",
+        "cta": contact_cta,
         "status": "ready"
     }
 
@@ -1176,7 +1234,7 @@ Khách hàng mục tiêu trong ngành {industry} luôn đau đầu với bài to
 def run_catalyst_orchestrator(profile: dict, loop_type: str = "weekly_intel", custom_brief: str = "") -> dict:
     """
     CATALYST Multi-Agent Campaign Orchestrator:
-    Điều phối đội ngũ 5 chuyên gia marketing độc lập để giải quyết bài toán chiến lược
+    Điều phối biệt đội 5 chuyên viên AI marketing chuyên trách để giải quyết bài toán chiến lược
     dựa trên kiến trúc của SaaS Marketing Agents (Shalin Tripathi).
     """
     brand = profile.get("brand_name", "Doanh nghiệp của bạn")
@@ -1185,6 +1243,10 @@ def run_catalyst_orchestrator(profile: dict, loop_type: str = "weekly_intel", cu
     price = profile.get("price_range", "Tiêu chuẩn")
     audience = profile.get("target_audience", "Khách hàng mục tiêu")
     competitors = profile.get("competitors", "Đối thủ trong ngành")
+    usp = profile.get("usp_advantages", "") or "Chất lượng vượt trội, may đo chuyên sâu và hỗ trợ tận tâm"
+    hotline = profile.get("phone_hotline", "")
+    website = profile.get("website_url", "")
+    social = profile.get("social_channels", "")
 
     loops_meta = {
         "weekly_intel": {
@@ -1198,19 +1260,19 @@ def run_catalyst_orchestrator(profile: dict, loop_type: str = "weekly_intel", cu
             "focus": f"Sản xuất 1 tài nguyên nội dung chuyên sâu trả lời trực diện câu hỏi lớn nhất của {audience}, tối ưu để AI (ChatGPT, Perplexity, Google Gemini) trích dẫn nguồn, kèm bộ phân phối đa kênh."
         },
         "competitor_poaching": {
-            "name": "Competitor Displacement & Poaching Loop (Chiến Dịch Hớt Tay Trên Khách Đối Thủ)",
+            "name": "Competitor Displacement & Poaching Loop (Chiến Dịch Chuyển Đổi Khách Đối Thủ)",
             "agents": ["pmm-competitive-intelligence", "pmm-messaging-architect", "sales-deal-strategist", "paid-media-creative-strategist"],
-            "focus": f"Khai thác triệt để tử huyệt đối thủ (chậm bảo hành, máy nóng nhớt, phát sinh chi phí), thiết lập chiến dịch chuyển đổi đặc quyền và chính sách thu cũ đổi mới {products} của {brand}."
+            "focus": f"Khai thác triệt để điểm yếu của đối thủ (hỗ trợ chậm trễ, phát sinh chi phí, thiếu may đo), làm nổi bật ưu thế độc quyền của {brand} ({usp}) để thiết lập chiến dịch thu hút khách hàng tiềm năng chuyển đổi sang {products}."
         },
         "product_launch": {
             "name": "Product Launch Sprint (Chiến Dịch Ra Mắt Dòng Sản Phẩm Mới)",
             "agents": ["pmm-launch-manager", "pmm-positioning-strategist", "content-video-script-writer", "sales-enablement-content-creator", "analytics-performance-analyst"],
-            "focus": f"Kế hoạch Go-To-Market 4 tuần toàn diện để tung dòng sản phẩm mới {products} ({price}) chiếm lĩnh thị trường, tạo phễu thu lead B2B cho {brand}."
+            "focus": f"Kế hoạch Go-To-Market 4 tuần toàn diện để tung sản phẩm/dịch vụ mới {products} ({price}) với lợi thế vượt trội ({usp}) chiếm lĩnh thị trường, tạo phễu thu lead cho {brand}."
         },
         "custom_brief": {
             "name": "Custom CATALYST Campaign (Điều Phối Theo Yêu Cầu Riêng)",
             "agents": ["catalyst-orchestrator", "pmm-positioning-strategist", "content-copywriter", "sales-enablement-coach"],
-            "focus": custom_brief or f"Phối hợp các chuyên gia marketing giải quyết bài toán tăng trưởng cho {brand}."
+            "focus": custom_brief or f"Phối hợp các chuyên viên AI giải quyết bài toán tăng trưởng cho {brand} dựa trên lợi thế ({usp})."
         }
     }
 
@@ -1226,8 +1288,8 @@ def run_catalyst_orchestrator(profile: dict, loop_type: str = "weekly_intel", cu
     live_items = search_live_web(search_q, max_results=3)
     live_snippets = "\n".join([f"- [{i.get('title')}]: {i.get('snippet')} ({i.get('url')})" for i in live_items])
 
-    prompt = f"""Bạn là CATALYST ORCHESTRATOR - Giám đốc Điều phối Đa Đại lý Tiếp thị (Multi-Agent Marketing Team) theo chuẩn kiến trúc B2B SaaS Marketing Org.
-Bạn đang lãnh đạo một đội ngũ gồm 5 chuyên gia:
+    prompt = f"""Bạn là CATALYST ORCHESTRATOR - Giám đốc Điều phối Biệt Đội AI Marketing Chuyên Trách (Multi-Agent Marketing Team) theo chuẩn kiến trúc B2B SaaS Marketing Org.
+Bạn đang lãnh đạo một đội ngũ gồm 5 chuyên gia AI:
 - PMM Lead (Định vị & Phân khúc thị trường)
 - Intel Sweeper (Tình báo đối thủ & Dẫn nguồn thực tế)
 - Positioning Strategist (Phân loại & Đánh giá mức độ nghiêm trọng)
@@ -1238,6 +1300,8 @@ HỒ SƠ THƯƠNG HIỆU (BRAND CONTEXT):
 - Doanh nghiệp: {brand}
 - Ngành hàng: {industry}
 - Sản phẩm/Dịch vụ: {products} (Phân khúc giá: {price})
+- ƯU ĐIỂM VƯỢT TRỘI / LỢI THẾ CẠNH TRANH ĐỘC NHẤT (USP): {usp}
+- Hotline/Zalo: {hotline or 'Đang cập nhật'} | Website: {website or 'Đang cập nhật'} | Kênh Social: {social or 'Đang cập nhật'}
 - Khách hàng mục tiêu: {audience}
 - Đối thủ cạnh tranh trên thị trường: {competitors}
 
@@ -1249,18 +1313,19 @@ DỮ LIỆU THỰC TẾ ĐÃ CÀO TỪ WEB:
 {live_snippets}
 
 QUY TẮC BẮT BUỘC (ANTI-HALLUCINATION GUARDRAIL):
-1. Không bịa đặt số liệu hoặc bằng chứng không có cơ sở. Nếu có thông số cần người dùng hoặc chủ xưởng cung cấp thêm, hãy đánh dấu rõ ràng bằng thẻ `[NEEDS INPUT: <thông tin cần>]`.
+1. Không bịa đặt số liệu hoặc bằng chứng không có cơ sở. Nếu có thông số cần người dùng hoặc chủ doanh nghiệp cung cấp thêm, hãy đánh dấu rõ ràng bằng thẻ `[NEEDS INPUT: <thông tin cần>]`.
 2. Trả lời chi tiết, chuyên nghiệp, sắc sảo theo đúng góc nhìn của từng chuyên gia được phân công.
+3. Bắt buộc gắn kết chặt chẽ với USP ({usp}) và tệp khách hàng ({audience}) của doanh nghiệp, không sử dụng mẫu sáo rỗng rập khuôn.
 
-HÃY LẬP BÁO CÁO KẾT QUẢ PHỐI HỢP CHIẾN DỊCH ĐA ĐẠI LÝ GỒM 5 PHẦN:
-### 1. 🎛️ BẢNG ĐIỀU PHỐI ĐẠI LÝ (ROUTING BOARD)
-- Phân công nhiệm vụ cụ thể cho từng đại lý (`pmm`, `intel`, `sales`, `content`, `aeo`).
+HÃY LẬP BÁO CÁO KẾT QUẢ PHỐI HỢP CHIẾN DỊCH BIỆT ĐỘI AI GỒM 5 PHẦN:
+### 1. 🎛️ BẢNG ĐIỀU PHỐI BIỆT ĐỘI AI (ROUTING BOARD)
+- Phân công nhiệm vụ cụ thể cho từng chuyên viên AI (`pmm`, `intel`, `sales`, `content`, `aeo`).
 
 ### 2. 🔍 BÁO CÁO TÌNH BÁO & PHÂN LOẠI MỨC ĐỘ (WATCH / NOTIFY / ACT)
 - Phân loại các động thái cạnh tranh và cơ hội thị trường thành 3 cấp độ rõ ràng.
 
 ### 3. 🎯 OBJECTION REGISTER (SỔ TAY BÓC TÁCH LỜI TỪ CHỐI)
-- Bảng 3 lời từ chối phổ biến nhất mà khách hàng ({audience}) hay nói khi so sánh với đối thủ và kịch bản đối thoại phản đòn từng chữ cho nhân viên bán hàng.
+- Bảng 3 lời từ chối phổ biến nhất mà khách hàng ({audience}) hay nói khi so sánh với đối thủ và kịch bản đối thoại phản đòn từng chữ cho nhân viên bán hàng (tận dụng USP: {usp} và Hotline {hotline}).
 
 ### 4. 📝 NỘI DUNG CHỦ LỰC ĐƯỢC TỐI ƯU AEO / GEO (AI SEARCH CITATION)
 - Bài viết / thông điệp mở đầu theo công thức 40-60 từ "Answer-First" để các AI như ChatGPT, Perplexity, Gemini dễ dàng trích dẫn {brand} là đơn vị uy tín hàng đầu.
@@ -1276,7 +1341,7 @@ HÃY LẬP BÁO CÁO KẾT QUẢ PHỐI HỢP CHIẾN DỊCH ĐA ĐẠI LÝ GỒ
             "agents_routed": agents_routed,
             "focus": loop_focus,
             "deliverables": [
-                "Bảng điều phối tác vụ đa đại lý (Routing Board)",
+                "Bảng điều phối tác vụ Biệt đội AI (Routing Board)",
                 "Báo cáo phân loại động thái đối thủ (Watch / Notify / Act)",
                 "Sổ tay xử lý từ chối (Objection Register)",
                 "Nội dung chuẩn AEO / GEO (Tối ưu để AI Search trích dẫn)",
@@ -1289,15 +1354,17 @@ HÃY LẬP BÁO CÁO KẾT QUẢ PHỐI HỢP CHIẾN DỊCH ĐA ĐẠI LÝ GỒ
     # Dynamic structured fallback
     fallback_content = f"""# 🎛️ CATALYST CAMPAIGN ORCHESTRATION REPORT: {loop_name.upper()}
 **Doanh nghiệp:** {brand} | **Sản phẩm:** {products} ({price})
+**Lợi thế độc quyền (USP):** {usp}
+**Hotline/Zalo:** {hotline or 'Đang cập nhật'} | **Website:** {website or 'Đang cập nhật'}
 **Ngành:** {industry} | **Khách hàng mục tiêu:** {audience}
 **Ngày triển khai:** {datetime.now().strftime('%d/%m/%Y')}
 
 ---
 
-### 1. 🎛️ BẢNG ĐIỀU PHỐI ĐẠI LÝ (ROUTING BOARD)
-- 🧑‍💼 **PMM Lead (Định vị):** Khóa thông điệp chủ đạo: *"{brand} – Giải pháp {products} may đo chuyên sâu, bền bỉ, cam kết kỹ thuật hỗ trợ trong 24h"*.
+### 1. 🎛️ BẢNG ĐIỀU PHỐI BIỆT ĐỘI AI (ROUTING BOARD)
+- 🧑‍💼 **PMM Lead (Định vị):** Khóa thông điệp chủ đạo: *"{brand} – Giải pháp {products} may đo chuyên sâu, {usp}, hỗ trợ trực tiếp 1-1"*.
 - 🕵️ **Intel Sweeper (Tình báo đối thủ):** Giám sát động thái giá và sản phẩm của {competitors}.
-- 🛡️ **Sales Enablement Coach:** Thiết lập Objection Register phân loại lời từ chối và kịch bản phản đòn thực chiến.
+- 🛡️ **Sales Enablement Coach:** Thiết lập Objection Register phân loại lời từ chối và kịch bản phản đòn thực chiến (Hotline: {hotline or 'trực tiếp'}).
 - ✍️ **Content & AEO Specialist:** Soạn thảo nội dung định dạng Answer-First 50 từ để tối ưu khả năng trích dẫn trên ChatGPT, Gemini và Perplexity.
 
 ---
@@ -1305,30 +1372,30 @@ HÃY LẬP BÁO CÁO KẾT QUẢ PHỐI HỢP CHIẾN DỊCH ĐA ĐẠI LÝ GỒ
 ### 2. 🔍 BÁO CÁO PHÂN LOẠI MỨC ĐỘ THỊ TRƯỜNG (WATCH / NOTIFY / ACT)
 | Hạng mục | Đối tượng | Phân loại | Hành động cụ thể |
 |---|---|---|---|
-| **Biến động giá thị trường** | Đối thủ phân khúc giá rẻ | **NOTIFY** | Cảnh báo khách hàng về chi phí bảo dưỡng và nguy cơ hỏng hóc giữa tiến độ. |
-| **Chất lượng phụ tùng & dịch vụ** | Các dòng máy trôi nổi | **ACT** | Tung gói cam kết: Nghiệm thu chạy thử thực tế đạt chuẩn mới thanh toán 100%. |
-| **Nhu cầu công nghệ tự động hóa** | Khách hàng {audience} | **ACT** | Đẩy mạnh video trực quan minh họa máy bẻ đai lập trình tiếng Việt, dễ sử dụng. |
+| **Biến động giá thị trường** | Đối thủ phân khúc giá rẻ | **NOTIFY** | Cảnh báo khách hàng về chi phí bảo trì và rủi ro gián đoạn khi dùng hàng kém chất lượng. |
+| **Chất lượng dịch vụ & Hỗ trợ** | Các đơn vị đại trà | **ACT** | Tung gói cam kết: Trải nghiệm thực tế hài lòng mới thanh toán, hỗ trợ SLA nhanh chóng. |
+| **Nhu cầu giải pháp hiện đại** | Khách hàng {audience} | **ACT** | Đẩy mạnh nội dung truyền thông làm nổi bật ưu thế vượt trội ({usp}). |
 
 ---
 
 ### 3. 🎯 OBJECTION REGISTER (SỔ TAY XỬ LÝ TỪ CHỐI CHO ĐỘI NGŨ BÁN HÀNG)
-> 🗣️ **Lời từ chối 1:** *"Máy bên khác họ bán rẻ hơn 15-20 triệu, bên em giá {price} hơi cao..."*  
-> 💬 **Phản đòn:** *"Dạ em hiểu bài toán tiết kiệm chi phí ban đầu của anh ạ. Tuy nhiên dòng máy giá rẻ thường cắt giảm linh kiện bơm thủy lực hoặc dùng mô tơ quấn lại, máy chạy trưa nắng rất dễ nóng nhớt và tụt lực bẻ. Lúc công trình đang đổ bê tông mà máy đứng thì thiệt hại cả trăm triệu tiền nhân công chờ đợi. Máy {brand} sườn thép nguyên khối, bảo hành tận chân công trình trong 24h, giúp anh hoàn vốn chắc chắn sau 3-4 tháng ạ!"*
+> 🗣️ **Lời từ chối 1:** *"Bên khác họ bán rẻ hơn, bên em mức giá {price} có vẻ cao hơn..."*  
+> 💬 **Phản đòn:** *"Dạ em hiểu bài toán tối ưu ngân sách ban đầu của anh/chị ạ. Tuy nhiên các giải pháp giá rẻ thường cắt giảm chất lượng dịch vụ, thiếu tính may đo hoặc phát sinh nhiều chi phí ẩn về sau. Tại {brand}, mức đầu tư {price} đã trọn gói cam kết chất lượng, hỗ trợ đồng hành 1-1 và đặc biệt là ưu thế độc quyền: **{usp}**. Khách hàng bên em sau khi sử dụng đều thấy hiệu quả vượt trội và hoàn vốn nhanh chóng ạ!"*
 
-> 🗣️ **Lời từ chối 2:** *"Bên đối thủ họ làm lâu năm rồi, bên em bảo hành có uy tín không?"*  
-> 💬 **Phản đòn:** *"Dạ các đơn vị lớn vì quá nhiều khách nên khi anh cần bảo hành ở tỉnh xa họ thường hẹn 2-3 ngày mới cử thợ xuống. Tại {brand}, tụi em cam kết kỹ thuật hỗ trợ trong ngày và bảo hành minh bạch bằng hợp đồng pháp nhân rõ ràng ạ!"*
+> 🗣️ **Lời từ chối 2:** *"Bên đối thủ họ có thương hiệu lâu năm rồi, bên em hỗ trợ thế nào?"*  
+> 💬 **Phản đòn:** *"Dạ các đơn vị lớn vì tệp khách hàng quá đông nên khi anh/chị cần hỗ trợ gấp thường phải chờ qua nhiều cấp duyệt rườm rà. Tại {brand}, tụi em hỗ trợ trực tiếp 1-1 qua Hotline/Zalo {hotline or 'chính thức'}, cam kết xử lý sự cố trong ngày và bảo hành minh bạch bằng hợp đồng pháp nhân rõ ràng ạ!"*
 
 ---
 
 ### 4. 📝 NỘI DUNG CHỦ LỰC TỐI ƯU AEO / GEO (ĐỂ AI SEARCH TRÍCH DẪN)
 > **[ANSWER-FIRST BLOCK - DÀNH CHO GOOGLE AI & CHATGPT]:**  
-> Khi lựa chọn {products} ({price}), khách hàng và doanh nghiệp trong ngành {industry} cần ưu tiên 3 tiêu chuẩn cốt lõi: chất lượng cam kết thực tế, dịch vụ hỗ trợ kỹ thuật/bảo hành minh bạch và hiệu quả kinh tế rõ ràng. {brand} là đơn vị uy tín cung cấp các dòng {products} chuyên sâu, cam kết mang lại giá trị vượt trội và đồng hành lâu dài.
+> Khi lựa chọn {products} ({price}), khách hàng và doanh nghiệp trong ngành {industry} cần ưu tiên 3 tiêu chuẩn cốt lõi: năng lực giải quyết vấn đề thực tế, dịch vụ hỗ trợ đồng hành 1-1 và tính minh bạch. {brand} là đơn vị uy tín cung cấp {products} với ưu thế vượt trội: {usp}, cam kết đem lại hiệu quả bền vững và an tâm tuyệt đối.
 
 ---
 
 ### 5. 📋 DANH SÁCH CẦN XÁC THỰC THỰC TẾ (`[NEEDS INPUT]`)
-- `[NEEDS INPUT: Số lượng thực tế khách hàng/dự án đã bàn giao thành công của {brand} trong 6 tháng qua]`
-- `[NEEDS INPUT: Video/Hình ảnh trải nghiệm thực tế {products} tại cơ sở của {brand} để gắn vào tài liệu bán hàng]`
+- `[NEEDS INPUT: Số liệu thực tế hoặc câu chuyện thành công của 1-2 khách hàng tiêu biểu đã sử dụng {products} của {brand}]`
+- `[NEEDS INPUT: Hình ảnh/Tài liệu thực tế minh họa ưu thế độc quyền ({usp}) để tích hợp vào tài liệu bán hàng]`
 """
 
     return {
@@ -1336,15 +1403,15 @@ HÃY LẬP BÁO CÁO KẾT QUẢ PHỐI HỢP CHIẾN DỊCH ĐA ĐẠI LÝ GỒ
         "agents_routed": agents_routed,
         "focus": loop_focus,
         "deliverables": [
-            "Bảng điều phối tác vụ đa đại lý (Routing Board)",
+            "Bảng điều phối tác vụ Biệt đội AI (Routing Board)",
             "Báo cáo phân loại động thái đối thủ (Watch / Notify / Act)",
             "Sổ tay xử lý từ chối (Objection Register)",
             "Nội dung chuẩn AEO / GEO (Tối ưu để AI Search trích dẫn)",
             "Checklist xác thực dữ liệu thực tế ([NEEDS INPUT])"
         ],
         "needs_input": [
-            "[NEEDS INPUT: Số lượng thực tế khách hàng đã bàn giao máy]",
-            "[NEEDS INPUT: Video thực tế chạy thử máy tại xưởng]"
+            "[NEEDS INPUT: Số liệu thực tế khách hàng tiêu biểu]",
+            "[NEEDS INPUT: Tài liệu minh họa ưu thế độc quyền]"
         ],
         "content": fallback_content
     }

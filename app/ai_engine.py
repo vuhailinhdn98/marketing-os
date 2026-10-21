@@ -493,29 +493,45 @@ def generate_market_research(profile: dict) -> str:
 
 # --- 5. AUTOMATED COMPETITOR DISCOVERY & BATTLECARDS GENERATOR ---
 
-def auto_discover_competitors(profile: dict, criteria: str = "all") -> List[Dict[str, str]]:
+def auto_discover_competitors(profile: dict, criteria: str = "all", market_context: dict = None) -> List[Dict[str, str]]:
     """
-    Tự động rà quét thị trường Việt Nam dựa trên Tên công ty, Sản phẩm, Ngành nghề, Giá, Khách hàng mục tiêu
-    để tìm ra danh sách 4-6 đối thủ có thật trên thị trường.
+    Rà soát đối thủ cạnh tranh dựa trên:
+    1. Bối cảnh thị trường chi tiết (Địa bàn/Tỉnh thành, Phân khúc giá, Ngành hàng)
+    2. Danh sách đối thủ do chủ doanh nghiệp tự nhập (nếu có thì giữ lại và tìm kiếm thêm; nếu chưa có thì rà quét toàn bộ từ bối cảnh thị trường).
     """
+    market_context = market_context or {}
+    location = market_context.get("location") or profile.get("market_location") or "Toàn quốc"
+    scope_type = market_context.get("scope_type") or profile.get("market_scope_type") or "province"
+    price_tier = market_context.get("price_tier") or profile.get("price_range") or "Tiêu chuẩn"
+
     brand = profile.get("brand_name", "")
     industry = profile.get("industry", "")
     products = profile.get("products_services", "")
-    price = profile.get("price_range", "")
     audience = profile.get("target_audience", "")
     bmodel = profile.get("business_model", "")
+    usp = profile.get("usp_advantages", "")
 
-    # 1. Tìm kiếm web thời gian thực đa chiều
+    # Đối thủ đã được chủ doanh nghiệp nhập ở hồ sơ (nếu có)
+    raw_comp = (profile.get("competitors") or "").strip()
+    known_comps = [c.strip() for c in re.split(r"[,;\n]+", raw_comp) if c.strip() and "đối thủ" not in c.lower()]
+
+    scope_label = "Tỉnh / Thành phố" if scope_type == "province" else ("Quốc gia" if scope_type == "country" else "Khu vực")
+
+    # 1. Tìm kiếm web thời gian thực bám sát địa bàn và sản phẩm
     queries = [
-        f"{industry} {products} tại việt nam",
-        f"công ty bán {products} uy tín",
-        f"báo giá {products} {price}"
+        f"{industry} {products} tại {location}",
+        f"công ty bán {products} uy tín tại {location}",
+        f"báo giá {products} {location}"
     ]
+    if known_comps:
+        for kc in known_comps[:2]:
+            queries.append(f"{kc} {industry} {location} website hotline")
+
     web_results = []
     seen_urls = set()
     for q in queries:
         try:
-            res = search_live_web(q, max_results=3)
+            res = search_live_web(q, max_results=2)
             for r in res:
                 u = r.get("url", "")
                 if u and u not in seen_urls:
@@ -529,30 +545,41 @@ def auto_discover_competitors(profile: dict, criteria: str = "all") -> List[Dict
         snippets.append(f"- {r.get('title')}: {r.get('snippet')} ({r.get('url')})")
     web_text = "\n".join(snippets)
 
-    # 2. Sử dụng Google AI Studio để phân tích và lập danh sách đối thủ thực tế
+    # 2. Xây dựng prompt cho Gemini
+    if known_comps:
+        known_instruction = f"""ĐẶC BIỆT LƯU Ý - CHỦ DOANH NGHIỆP ĐÃ CUNG CẤP CÁC ĐỐI THỦ BAN ĐẦU: {', '.join(known_comps)}
+Nhiệm vụ của bạn:
+1. Bắt buộc đưa các đối thủ do chủ doanh nghiệp cung cấp ({', '.join(known_comps)}) vào danh sách, tìm kiếm và bổ sung đầy đủ Website, Hotline, Phân khúc và Điểm yếu/Tử huyệt của họ.
+2. Dựa vào bối cảnh thị trường tại {location} ({scope_label}), rà quét và bổ sung THÊM từ 2 đến 3 đối thủ cạnh tranh có thật khác đang hoạt động mạnh trong phân khúc {price_tier} tại {location}."""
+    else:
+        known_instruction = f"""CHỦ DOANH NGHIỆP CHƯA XÁC ĐỊNH ĐỐI THỦ.
+Dựa trên phân tích thị trường chi tiết tại địa bàn {location} ({scope_label}), phân khúc giá {price_tier} cho ngành {industry} và sản phẩm {products}, hãy rà quét và xác định chính xác từ 4 đến 5 ĐỐI THỦ CẠNH TRANH CÓ THẬT đang hoạt động tại {location}."""
+
     prompt = f"""Bạn là Giám đốc Tình báo Cạnh tranh và Nghiên cứu Thị trường cấp cao tại Việt Nam.
-Doanh nghiệp của chúng ta:
-- Tên công ty/Thương hiệu: {brand}
-- Ngành nghề: {industry}
-- Sản phẩm/Dịch vụ chủ lực: {products} (Phân khúc giá: {price})
-- Mô hình hoạt động: {bmodel}
-- Đối tượng khách hàng mục tiêu: {audience}
+BỐI CẢNH DOANH NGHIỆP:
+- Tên thương hiệu của ta: {brand}
+- Ngành hàng: {industry}
+- Sản phẩm/Dịch vụ: {products} (Phân khúc giá: {price_tier})
+- Khách hàng mục tiêu: {audience}
+- Lợi thế độc quyền (USP): {usp}
+- Bối cảnh thị trường khảo sát: {location} ({scope_label})
 
-VẤN ĐỀ THỰC TẾ: Chủ doanh nghiệp không biết rõ tất cả đối thủ của mình là ai trên thị trường.
-NHIỆM VỤ: Dựa vào thông tin doanh nghiệp, dữ liệu tìm kiếm web dưới đây và sự am hiểu sâu sắc về thị trường Việt Nam, hãy tự động rà quét và xác định chính xác từ 4 đến 5 ĐỐI THỦ CẠNH TRANH CÓ THẬT đang hoạt động tại Việt Nam trong đúng phân khúc sản phẩm này.
+{known_instruction}
 
-DỮ LIỆU TÌM KIẾM WEB THỰC TẾ:
+DỮ LIỆU TÌM KIẾM WEB THỰC TẾ TẠI {location.upper()}:
 {web_text}
 
 YÊU CẦU:
-- Phải là các công ty, xưởng sản xuất hoặc thương hiệu CÓ THẬT tại Việt Nam (kèm website chính thức hoặc domain thực tế của họ).
+- Phải là các thương hiệu, công ty hoặc chuỗi CÓ THẬT đang hoạt động tại {location} hoặc phục vụ khách hàng tại thị trường này.
 - Phân loại rõ: Trực tiếp (cùng bán sản phẩm tương tự), Gián tiếp (cung cấp giải pháp thay thế).
-- Nêu rõ sản phẩm chính, điểm mạnh và tử huyệt/điểm yếu thực tế của họ.
-- Trả về DUY NHẤT một mảng JSON thuần túy (không kèm bất kỳ văn bản nào khác ngoài JSON):
+- Nêu rõ Website, Hotline liên hệ (nếu tìm thấy), Sản phẩm chính, Điểm mạnh và Tử huyệt/Lỗ hổng của họ.
+- Trả về DUY NHẤT một mảng JSON thuần túy:
 [
   {{
     "name": "Tên thương hiệu/Công ty đối thủ",
     "website": "https://...",
+    "phone": "Số điện thoại/Hotline (nếu có)",
+    "social": "Kênh Social (Fanpage/TikTok nếu có)",
     "type": "Trực tiếp",
     "price_segment": "Phân khúc giá tương quan",
     "core_products": "Sản phẩm/dịch vụ cốt lõi của họ",
@@ -576,22 +603,201 @@ YÊU CẦU:
         except Exception as e:
             print(f"[Auto-Discover Parse Note] {e}")
 
-    # Fallback dự phòng thông minh dựa trên kết quả web đã cào nếu AI không parse được
-    if not competitors and web_results:
-        for r in web_results[:4]:
-            t = r.get("title", "").split("-")[0].split("|")[0].strip()
-            if t and len(t) > 3:
+    # Fallback dự phòng thông minh
+    if not competitors:
+        if known_comps:
+            for kc in known_comps:
                 competitors.append({
-                    "name": t,
-                    "website": r.get("url", ""),
-                    "type": "Trực tiếp",
-                    "price_segment": f"Phân khúc {price}",
+                    "name": kc,
+                    "website": "",
+                    "phone": "",
+                    "social": "",
+                    "type": "Trực tiếp (Do bạn cung cấp)",
+                    "price_segment": f"Phân khúc {price_tier}",
                     "core_products": products,
-                    "key_strengths": "Thương hiệu có hiện diện và SEO tốt trên internet",
-                    "vulnerabilities": "Chính sách hỗ trợ và may đo theo nhu cầu chưa linh hoạt"
+                    "key_strengths": f"Thương hiệu đã có nhận diện trong ngành {industry}",
+                    "vulnerabilities": "Chính sách hỗ trợ đại trà, thiếu sự may đo 1-1"
                 })
+        if web_results:
+            for r in web_results[:4]:
+                t = r.get("title", "").split("-")[0].split("|")[0].strip()
+                if t and len(t) > 3 and not any(c["name"].lower() in t.lower() for c in competitors):
+                    competitors.append({
+                        "name": t,
+                        "website": r.get("url", ""),
+                        "phone": "",
+                        "social": "",
+                        "type": "Trực tiếp",
+                        "price_segment": f"Phân khúc {price_tier}",
+                        "core_products": products,
+                        "key_strengths": f"Hoạt động và tiếp cận khách hàng tốt tại {location}",
+                        "vulnerabilities": "Quy trình chăm sóc sau bán hàng và cam kết chưa linh hoạt"
+                    })
 
     return competitors
+
+def analyze_deep_competitor_dossier(profile: dict, comp_data: dict) -> dict:
+    """
+    Tiến hành quét tình báo chuyên sâu đối với một đối thủ cụ thể:
+    - comp_data: { "name": ..., "website": ..., "phone": ..., "social": ..., "notes": ... }
+    Cào website, tìm kiếm web thời gian thực, lập Battlecard 1-1 toàn diện và phân tích chi tiết.
+    """
+    brand = profile.get("brand_name", "Doanh nghiệp của bạn")
+    industry = profile.get("industry", "Thương mại & Dịch vụ")
+    products = profile.get("products_services", "Sản phẩm")
+    price = profile.get("price_range", "Tiêu chuẩn")
+    audience = profile.get("target_audience", "Khách hàng mục tiêu")
+    usp = profile.get("usp_advantages", "") or "Chất lượng vượt trội, may đo chuyên sâu và hỗ trợ tận tâm"
+    hotline = profile.get("phone_hotline", "")
+    website = profile.get("website_url", "")
+    social = profile.get("social_channels", "")
+
+    comp_name = comp_data.get("name", "").strip()
+    comp_url = comp_data.get("website", "").strip()
+    comp_phone = comp_data.get("phone", "").strip()
+    comp_social = comp_data.get("social", "").strip()
+    comp_notes = comp_data.get("notes", "").strip()
+
+    # Cào web đối thủ nếu có URL
+    scraped = {}
+    if comp_url:
+        scraped = scrape_competitor_site(comp_url)
+    else:
+        search_res = search_live_web(f"{comp_name} {industry} website chính thức", max_results=1)
+        if search_res and search_res[0].get("url"):
+            comp_url = search_res[0]["url"]
+            scraped = scrape_competitor_site(comp_url)
+
+    # Tìm kiếm review / phản ánh thực tế về đối thủ trên web
+    review_query = f"{comp_name} {industry} review đánh giá phàn nàn"
+    review_snippets = search_live_web(review_query, max_results=2)
+    review_str = "\n".join([f"- {r.get('title')}: {r.get('snippet')}" for r in review_snippets])
+
+    scraped_info = f"""Website: {comp_url or 'Chưa có'}
+Hotline niêm yết: {comp_phone or (', '.join(scraped.get('hotlines', [])) if scraped.get('hotlines') else 'Đang cập nhật')}
+Kênh Social: {comp_social or 'Đang cập nhật'}
+Tiêu đề website: {scraped.get('title', 'N/A')}
+Mô tả dịch vụ: {scraped.get('description', 'N/A')}
+Danh mục sản phẩm/dịch vụ: {', '.join(scraped.get('headlines', [])[:4])}
+Ghi chú từ chủ doanh nghiệp: {comp_notes or 'Không có'}
+Thông tin đánh giá/phản ánh từ internet:
+{review_str}"""
+
+    prompt = f"""Bạn là Giám đốc Tình báo Cạnh tranh Cấp cao (Head of Competitive Intelligence).
+Hãy lập BÁO CÁO HỒ SƠ TÌNH BÁO ĐỐI THỦ & BATTLECARD ĐỐI ĐẦU 1-1 CHUYÊN SÂU NHẤT CHO:
+
+DOANH NGHIỆP CỦA TA ({brand}):
+- Lĩnh vực: {industry}
+- Sản phẩm/Dịch vụ: {products} (Phân khúc giá: {price})
+- ƯU THẾ ĐỘC QUYỀN / ĐIỂM BÁN HÀNG ĐỘC NHẤT (USP): {usp}
+- Hotline/Zalo: {hotline} | Website: {website} | Kênh Social: {social}
+- Khách hàng mục tiêu: {audience}
+
+ĐỐI THỦ CẠNH TRANH CẦN BÁM SÁT:
+- Tên công ty/Thương hiệu: {comp_name}
+- Thông tin đã thu thập:
+{scraped_info}
+
+YÊU CẦU LẬP BÁO CÁO TÌNH BÁO TOÀN DIỆN (GỒM 6 PHẦN RÕ RÀNG):
+1. 🏢 HỒ SƠ TÌNH BÁO & ĐỊNH VỊ:
+   - Mô hình kinh doanh, phân khúc giá của {comp_name}.
+   - Kênh tiếp cận khách hàng chính (Website, Social, Hotline, Cửa hàng).
+2. 💪 ĐIỂM MẠNH LỚN NHẤT CỦA {comp_name}:
+   - Yếu tố khiến khách hàng hiện tại chọn họ (thương hiệu, mạng lưới, giá, tính năng).
+3. 🎯 TỬ HUYỆT & ĐIỂM YẾU CỐT TỬ CỦA {comp_name}:
+   - Lỗ hổng dịch vụ, chính sách hỗ trợ chậm trễ, chi phí phát sinh hoặc lời phàn nàn phổ biến của khách hàng.
+4. ⚔️ VŨ KHÍ ĐÈ BẸP CỦA {brand} (WHERE WE WIN):
+   - ĐỐI CHIẾU TRỰC TIẾP: Tại sao khách hàng ({audience}) nên chuyển sang {brand}?
+   - Khai thác triệt để USP của ta ({usp}), chính sách minh bạch ({price}), cam kết đồng hành 1-1 và Hotline {hotline}.
+5. 💬 SỔ TAY KỊCH BẢN PHẢN ĐÒN XỬ LÝ TỪ CHỐI THỰC CHIẾN (OBJECTION HANDLING SCRIPT):
+   - Tình huống 1: Khách hàng so sánh: "Bên {comp_name} họ có tiếng lâu năm rồi, bên đó yên tâm hơn..."
+   - Tình huống 2: Khách hàng so sánh: "Bên {comp_name} họ đang báo giá rẻ hơn hoặc có ưu đãi..."
+   (Viết lời thoại từng câu chữ tự nhiên, tự tin, chuyên nghiệp cho nhân viên bán hàng của {brand}).
+6. 🧲 CHIẾN DỊCH HỚT TAY TRÊN (CUSTOMER POACHING):
+   - 3 Hành động cụ thể để tiếp cận và chuyển đổi các khách hàng đang bức xúc hoặc có nguy cơ rời bỏ {comp_name}."""
+
+    ai_out = call_gemini_api(profile, prompt)
+    if not ai_out:
+        ai_out = f"""# ⚔️ BÁO CÁO TÌNH BÁO ĐỐI THỦ: {comp_name.upper()}
+*Website: [{comp_url}]({comp_url}) | Hotline: {comp_phone or 'Đang cập nhật'}*
+*Ngày cập nhật: {datetime.now().strftime('%d/%m/%Y')}*
+
+---
+
+### 1. 🏢 HỒ SƠ TÌNH BÁO & ĐỊNH VỊ CỦA {comp_name.upper()}
+- **Định vị:** Đơn vị hoạt động trong ngành {industry}, phân khúc giá tương quan {price}.
+- **Kênh tiếp cận:** Website {comp_url or '(Chưa cập nhật)'}, Hotline `{comp_phone or 'Đang cập nhật'}`, Kênh Social: {comp_social or 'Trực tiếp'}.
+- **Ghi chú thị trường:** {comp_notes or 'Đang theo dõi động thái giá và khuyến mãi.'}
+
+---
+
+### 2. 💪 ĐIỂM MẠNH CỦA ĐỐI THỦ
+- Có tệp khách hàng quen thuộc và hiện diện trên thị trường từ trước.
+- Quy trình bán hàng đóng gói tiêu chuẩn.
+
+---
+
+### 3. 🎯 TỬ HUYỆT & ĐIỂM YẾU CỐT TỬ CỦA {comp_name.upper()}
+- ❌ **Dịch vụ đại trà, thiếu tính may đo:** Áp dụng mẫu chung cho mọi khách hàng, thiếu sự linh hoạt khi khách hàng có nhu cầu đặc thù.
+- ❌ **Hỗ trợ sau bán hàng chậm trễ:** Do quy mô hoặc quy trình cồng kềnh, khi khách gặp sự cố cần hỗ trợ gấp thường phải chờ qua nhiều cấp duyệt.
+- ❌ **Dễ phát sinh chi phí:** Báo giá ban đầu có thể chưa trọn gói, dễ phát sinh phụ phí bảo trì hoặc dịch vụ đi kèm.
+
+---
+
+### 4. ⚔️ VŨ KHÍ ĐÈ BẸP CỦA {brand.upper()} (WHERE WE WIN)
+- 🎯 **Lợi thế độc quyền (USP):** **{usp}**.
+- 🎯 **May đo theo bài toán thực tế:** {brand} thiết kế giải pháp {products} bám sát đặc thù của {audience} với mức đầu tư tối ưu ({price}).
+- 🎯 **Cam kết đồng hành 1-1:** Hỗ trợ trực tiếp qua Hotline/Zalo {hotline or 'chính thức'}, xử lý sự cố trong ngày và bảo hành bằng hợp đồng rõ ràng.
+
+---
+
+### 5. 💬 KỊCH BẢN XỬ LÝ TỪ CHỐI THỰC CHIẾN (OBJECTION HANDLING)
+> 🗣️ **Khách hàng ngập ngừng:** *"Bên {comp_name} họ làm lâu năm rồi, bên đó nghe có vẻ yên tâm hơn..."*  
+> 💬 **Chuyên viên {brand} phản đòn tự nhiên và sắc bén:**  
+> *"Dạ em hoàn toàn hiểu lý do anh/chị cân nhắc {comp_name} ạ, bên đó có mặt trên thị trường từ sớm nên nhiều người biết đến.  
+> Tuy nhiên, rất nhiều khách hàng sau khi làm việc với họ đã chọn chuyển sang giải pháp {products} của {brand} vì bài toán thực tế: **Các đơn vị lớn thường áp dụng khung mẫu đóng gói sẵn, khi anh/chị cần hỗ trợ kỹ thuật gấp thì quy trình phê duyệt rất chậm trễ và tốn thời gian**.  
+> Tại {brand}, tụi em tập trung giải quyết đúng trăn trở của anh/chị:  
+> 1. Giải pháp {products} mang lại ưu thế độc quyền: **{usp}**, được may đo riêng theo đúng mô hình của anh/chị với chi phí tối ưu ({price}).  
+> 2. Đội ngũ chuyên gia cam kết hỗ trợ trực tiếp 1-1 qua Hotline/Zalo {hotline or 'trực tiếp'}, xử lý sự cố trong ngày.  
+> 3. Bảo hành và cam kết chất lượng bằng hợp đồng minh bạch.  
+> Em xin phép gửi anh/chị bản demo và lộ trình chi tiết để anh/chị thấy rõ sự khác biệt trước khi quyết định ạ!"*
+
+---
+
+### 6. 🧲 3 CHIÊU THỨC HỚT TAY TRÊN (CUSTOMER POACHING)
+1. **Gói Chuyển Đổi An Tâm:** Tặng buổi tư vấn hiện trạng và chính sách bảo lưu quyền lợi cho khách hàng chuyển từ {comp_name} sang {brand}.
+2. **Nội Dung So Sánh Minh Bạch:** Làm nổi bật ưu điểm {usp} của {brand} để khách hàng tự thấy sự khác biệt về chất lượng và dịch vụ.
+3. **Cam Kết SLA Tốc Độ:** Cam kết phản hồi và xử lý yêu cầu trong 15-30 phút qua Hotline {hotline or 'chính thức'}, giải tỏa hoàn toàn nỗi sợ bị bỏ rơi."""
+
+    strengths_short = f"Đã có nhận diện và thị phần nhất định trong ngành {industry}"
+    vulns_short = "Hỗ trợ đại trà, quy trình xử lý chậm trễ, chi phí phát sinh"
+    if "Điểm mạnh" in ai_out:
+        try:
+            m = re.search(r"Điểm mạnh[^\n]*\n([^\n#]+)", ai_out)
+            if m: strengths_short = m.group(1).replace("-", "").replace("*", "").strip()[:100]
+        except Exception:
+            pass
+    if "Tử huyệt" in ai_out:
+        try:
+            m = re.search(r"Tử huyệt[^\n]*\n([^\n#]+)", ai_out)
+            if m: vulns_short = m.group(1).replace("-", "").replace("*", "").replace("❌", "").strip()[:100]
+        except Exception:
+            pass
+
+    return {
+        "name": comp_name,
+        "website": comp_url,
+        "phone": comp_phone or (", ".join(scraped.get("hotlines", [])) if scraped.get("hotlines") else ""),
+        "social": comp_social,
+        "notes": comp_notes,
+        "competitor_type": comp_data.get("type", "Trực tiếp"),
+        "price_segment": f"Phân khúc {price}",
+        "core_products": products,
+        "key_strengths": strengths_short,
+        "vulnerabilities": vulns_short,
+        "battlecard_content": ai_out,
+        "is_manual": 1
+    }
 
 def generate_competitor_analysis(profile: dict) -> str:
     brand = profile.get("brand_name", "Doanh nghiệp của bạn")
@@ -1231,6 +1437,155 @@ Khách hàng mục tiêu trong ngành {industry} luôn đau đầu với bài to
 
 # --- 8. CATALYST ORCHESTRATOR & MARKETING LOOPS ENGINE (INSPIRED BY SAAS-MARKETING-AGENTS) ---
 
+def build_catalyst_sections(content_str: str, profile: dict, loop_name: str) -> dict:
+    """
+    Bóc tách báo cáo CATALYST thành 6 phân hệ chuyên sâu riêng biệt của từng chuyên viên AI
+    để hiển thị trực quan dạng Tab, loại bỏ cảm giác tạp nham, lộn xộn.
+    """
+    brand = profile.get("brand_name", "Doanh nghiệp")
+    products = profile.get("products_services", "Sản phẩm")
+    price = profile.get("price_range", "Tiêu chuẩn")
+    usp = profile.get("usp_advantages", "") or "Chất lượng vượt trội, may đo chuyên sâu và hỗ trợ tận tâm"
+    hotline = profile.get("phone_hotline", "")
+    website = profile.get("website_url", "")
+    industry = profile.get("industry", "Kinh doanh")
+    audience = profile.get("target_audience", "Khách hàng mục tiêu")
+
+    # Tách các section dựa trên header markdown
+    sec_1 = ""
+    sec_2 = ""
+    sec_3 = ""
+    sec_4 = ""
+    sec_5 = ""
+
+    parts = re.split(r"(?:^|\n)###\s*(?:[1-5]\.|\d\.)\s*", content_str)
+    if len(parts) >= 6:
+        sec_1 = parts[1].strip()
+        sec_2 = parts[2].strip()
+        sec_3 = parts[3].strip()
+        sec_4 = parts[4].strip()
+        sec_5 = parts[5].strip()
+    else:
+        # Fallback regex theo từ khóa
+        m1 = re.search(r"(?:ROUTING BOARD|ĐIỀU PHỐI|ĐỊNH VỊ)[\s\S]*?(?=(?:BÁO CÁO TÌNH BÁO|PHÂN LOẠI|WATCH|### 2|\Z))", content_str, re.I)
+        m2 = re.search(r"(?:BÁO CÁO TÌNH BÁO|PHÂN LOẠI|WATCH)[\s\S]*?(?=(?:OBJECTION|SỔ TAY|TỪ CHỐI|### 3|\Z))", content_str, re.I)
+        m3 = re.search(r"(?:OBJECTION|SỔ TAY|TỪ CHỐI)[\s\S]*?(?=(?:NỘI DUNG CHỦ LỰC|ANSWER-FIRST|AEO|### 4|\Z))", content_str, re.I)
+        m4 = re.search(r"(?:NỘI DUNG CHỦ LỰC|ANSWER-FIRST|AEO)[\s\S]*?(?=(?:DANH SÁCH|NEEDS INPUT|### 5|\Z))", content_str, re.I)
+        m5 = re.search(r"(?:DANH SÁCH|NEEDS INPUT)[\s\S]*$", content_str, re.I)
+
+        sec_1 = m1.group(0).strip() if m1 else ""
+        sec_2 = m2.group(0).strip() if m2 else ""
+        sec_3 = m3.group(0).strip() if m3 else ""
+        sec_4 = m4.group(0).strip() if m4 else ""
+        sec_5 = m5.group(0).strip() if m5 else ""
+
+    # Trích xuất riêng khối Answer-First cho AEO
+    aeo_text = ""
+    if "ANSWER-FIRST" in sec_4.upper() or "AEO" in sec_4.upper():
+        aeo_text = sec_4
+    else:
+        aeo_text = f"""> **[ANSWER-FIRST BLOCK - TỐI ƯU CHO GOOGLE AI OVERVIEWS & CHATGPT SEARCH]:**  
+> Khi lựa chọn {products} ({price}), khách hàng trong ngành {industry} cần ưu tiên 3 tiêu chí cốt lõi: Năng lực giải quyết bài toán thực tế, dịch vụ hỗ trợ đồng hành 1-1 và tính minh bạch. {brand} là đơn vị uy tín cung cấp {products} với lợi thế độc quyền: **{usp}**, cam kết đem lại hiệu quả vượt trội và an tâm lâu dài.
+
+---
+
+### ❓ BỘ CÂU HỎI THƯỜNG GẶP (FAQ SCHEMA ĐỂ AI CITATION):
+1. **Tại sao nên chọn {products} của {brand}?**  
+   *Trả lời:* Vì {brand} sở hữu ưu điểm vượt trội: {usp}, mức đầu tư {price} cạnh tranh và có đội ngũ hỗ trợ 1-1 qua Hotline/Zalo {hotline or 'chính thức'}.
+2. **Chính sách hỗ trợ và bảo hành tại {brand} thế nào?**  
+   *Trả lời:* Cam kết đồng hành 1-1, xử lý sự cố trong ngày và bảo hành bằng hợp đồng pháp lý rõ ràng.
+3. **Làm sao để nhận tư vấn hoặc trải nghiệm {products}?**  
+   *Trả lời:* Khách hàng có thể truy cập {website or 'website chính thức'} hoặc gọi trực tiếp Hotline/Zalo {hotline or 'công ty'}.
+"""
+
+    needs_matches = re.findall(r"\[NEEDS INPUT:[^\]]+\]", content_str)
+    if not needs_matches:
+        needs_matches = [
+            f"[NEEDS INPUT: Số liệu hoặc câu chuyện thành công của 1-2 khách hàng tiêu biểu đã sử dụng {products} của {brand}]",
+            f"[NEEDS INPUT: Hình ảnh/Tài liệu chứng nhận thực tế minh họa ưu thế độc quyền ({usp})]"
+        ]
+
+    return {
+        "pmm": {
+            "id": "pmm",
+            "name": "PMM Lead (Định Vị)",
+            "role": "Product Marketing Manager",
+            "icon": "fa-user-tie",
+            "color": "cyan",
+            "title": "Bảng Điều Phối Chiến Lược & Định Vị Thương Hiệu",
+            "markdown": sec_1 or f"""### 🧑‍💼 PMM LEAD - CHIẾN LƯỢC ĐỊNH VỊ VỊ THẾ
+- **Khóa thông điệp chủ đạo:** *"{brand} – Giải pháp {products} may đo chuyên sâu, {usp}, hỗ trợ trực tiếp 1-1"*.
+- **Phân khúc mục tiêu:** {audience} đang tìm kiếm giải pháp hiệu quả với mức đầu tư hợp lý ({price}).
+- **Chiến lược khác biệt hóa:** Đánh trực diện vào năng lực may đo theo nhu cầu thực tế và cam kết đồng hành kỹ thuật 1-1 thay vì cung cấp mẫu đóng gói đại trà."""
+        },
+        "intel": {
+            "id": "intel",
+            "name": "Intel Sweeper (Tình Báo)",
+            "role": "Competitive Intelligence Lead",
+            "icon": "fa-radar",
+            "color": "sky",
+            "title": "Radar Tình Báo Thị Trường (Watch / Notify / Act)",
+            "markdown": sec_2 or f"""### 🕵️ INTEL SWEEPER - RADAR THỊ TRƯỜNG & ĐỐI THỦ
+| Hạng mục | Đối tượng | Phân loại | Hành động phản ứng của {brand} |
+|---|---|---|---|
+| **Biến động giá thị trường** | Đối thủ phân khúc giá rẻ | **NOTIFY** | Cảnh báo khách hàng về chi phí bảo trì và rủi ro gián đoạn khi dùng hàng kém chất lượng. |
+| **Chất lượng dịch vụ & Hỗ trợ** | Các đơn vị quy mô lớn | **ACT** | Tung gói cam kết: Trải nghiệm thực tế hài lòng mới thanh toán, hỗ trợ SLA nhanh chóng. |
+| **Nhu cầu giải pháp hiện đại** | Khách hàng {audience} | **ACT** | Đẩy mạnh nội dung truyền thông làm nổi bật ưu thế vượt trội ({usp}). |"""
+        },
+        "sales": {
+            "id": "sales",
+            "name": "Sales Coach (Chốt Deal)",
+            "role": "Sales Enablement Coach",
+            "icon": "fa-shield-halved",
+            "color": "amber",
+            "title": "Sổ Tay Xử Lý Từ Chối & Kịch Bản Phản Đòn Thực Chiến",
+            "markdown": sec_3 or f"""### 🛡️ SALES COACH - SỔ TAY XỬ LÝ TỪ CHỐI (OBJECTION REGISTER)
+> 🗣️ **Lời từ chối 1:** *"Bên khác họ bán rẻ hơn, bên em mức giá {price} có vẻ cao hơn..."*  
+> 💬 **Phản đòn:** *"Dạ em hiểu bài toán tối ưu ngân sách ban đầu của anh/chị ạ. Tuy nhiên các giải pháp giá rẻ thường cắt giảm chất lượng dịch vụ, thiếu tính may đo hoặc phát sinh nhiều chi phí ẩn về sau. Tại {brand}, mức đầu tư {price} đã trọn gói cam kết chất lượng, hỗ trợ đồng hành 1-1 và đặc biệt là ưu thế độc quyền: **{usp}**. Khách hàng bên em sau khi sử dụng đều thấy hiệu quả vượt trội và hoàn vốn nhanh chóng ạ!"*
+
+> 🗣️ **Lời từ chối 2:** *"Bên đối thủ họ có thương hiệu lâu năm rồi, bên em hỗ trợ thế nào?"*  
+> 💬 **Phản đòn:** *"Dạ các đơn vị lớn vì tệp khách hàng quá đông nên khi anh/chị cần hỗ trợ gấp thường phải chờ qua nhiều cấp duyệt rườm rà. Tại {brand}, tụi em hỗ trợ trực tiếp 1-1 qua Hotline/Zalo {hotline or 'chính thức'}, cam kết xử lý sự cố trong ngày và bảo hành minh bạch bằng hợp đồng pháp nhân rõ ràng ạ!"*"""
+        },
+        "content": {
+            "id": "content",
+            "name": "Content Studio (Nội Dung)",
+            "role": "Creative & Content Director",
+            "icon": "fa-pen-nib",
+            "color": "teal",
+            "title": "Kịch Bản Video Ngắn & Bài Viết Phễu Đa Kênh",
+            "markdown": sec_4 or f"""### ✍️ CONTENT STUDIO - BỘ NỘI DUNG CHUYỂN ĐỔI CAO
+#### 1. Kịch bản Video Ngắn Dọc 9:16 (TikTok / Reels / Shorts):
+- **Hook 3s:** *"Đừng bao giờ đầu tư vào {products} nếu bạn chưa biết 3 cạm bẫy chi phí này!"*
+- **Visual:** Cận cảnh quy trình giải pháp {products} hoạt động trơn tru.
+- **Audio:** Bóc tách bài toán thiệt hại khi chọn sai nhà cung cấp và sự vượt trội của {usp}.
+- **CTA:** *"Gọi ngay Hotline/Zalo {hotline or 'tư vấn'} để nhận lộ trình chi tiết miễn phí!"*
+
+#### 2. Bài viết chuyên sâu Facebook / LinkedIn / Zalo OA:
+- **Tiêu đề:** 🔥 BÀI TOÁN TỐI ƯU HIỆU QUẢ CÙNG {products.upper()} TỪ {brand.upper()}!
+- **Nội dung:** Phân tích nỗi đau thực tế của {audience}, đối chiếu giải pháp với thị trường và nêu bật ưu điểm {usp}.
+- **CTA:** Liên hệ Hotline {hotline or 'chính thức'} | Website: {website or 'Xem thêm'}."""
+        },
+        "aeo": {
+            "id": "aeo",
+            "name": "AEO Search (Tối Ưu AI)",
+            "role": "AI Engine Citation Specialist",
+            "icon": "fa-bolt",
+            "color": "indigo",
+            "title": "Tối Ưu Trích Dẫn AI Search (ChatGPT, Perplexity, Gemini)",
+            "markdown": aeo_text
+        },
+        "checklist": {
+            "id": "checklist",
+            "name": "Checklist Xác Thực",
+            "role": "Action Items & QA",
+            "icon": "fa-list-check",
+            "color": "rose",
+            "title": "Danh Mục Cần Doanh Nghiệp Cung Cấp Thêm ([NEEDS INPUT])",
+            "items": needs_matches,
+            "markdown": "\n".join([f"- **Cần bổ sung:** `{item}`" for item in needs_matches])
+        }
+    }
+
 def run_catalyst_orchestrator(profile: dict, loop_type: str = "weekly_intel", custom_brief: str = "") -> dict:
     """
     CATALYST Multi-Agent Campaign Orchestrator:
@@ -1336,17 +1691,20 @@ HÃY LẬP BÁO CÁO KẾT QUẢ PHỐI HỢP CHIẾN DỊCH BIỆT ĐỘI AI G�
     gemini_out = call_gemini_api(profile, prompt)
     if gemini_out:
         needs_matches = re.findall(r"\[NEEDS INPUT:[^\]]+\]", gemini_out)
+        sections = build_catalyst_sections(gemini_out, profile, loop_name)
         return {
             "loop_name": loop_name,
             "agents_routed": agents_routed,
             "focus": loop_focus,
             "deliverables": [
-                "Bảng điều phối tác vụ Biệt đội AI (Routing Board)",
-                "Báo cáo phân loại động thái đối thủ (Watch / Notify / Act)",
-                "Sổ tay xử lý từ chối (Objection Register)",
-                "Nội dung chuẩn AEO / GEO (Tối ưu để AI Search trích dẫn)",
-                "Checklist xác thực dữ liệu thực tế ([NEEDS INPUT])"
+                "1. PMM Lead - Chiến lược định vị & Trụ cột thông điệp",
+                "2. Intel Sweeper - Radar thị trường & Phân loại Watch/Notify/Act",
+                "3. Sales Coach - Sổ tay xử lý từ chối (Objection Register)",
+                "4. Content Studio - Kịch bản video & Bài viết chuyển đổi",
+                "5. AEO & AI Search - Khối Answer-First & Cấu trúc FAQ",
+                "6. Action Checklist - Xác thực dữ liệu thực tế ([NEEDS INPUT])"
             ],
+            "sections": sections,
             "needs_input": needs_matches,
             "content": gemini_out
         }
@@ -1398,17 +1756,21 @@ HÃY LẬP BÁO CÁO KẾT QUẢ PHỐI HỢP CHIẾN DỊCH BIỆT ĐỘI AI G�
 - `[NEEDS INPUT: Hình ảnh/Tài liệu thực tế minh họa ưu thế độc quyền ({usp}) để tích hợp vào tài liệu bán hàng]`
 """
 
+    sections = build_catalyst_sections(fallback_content, profile, loop_name)
+
     return {
         "loop_name": loop_name,
         "agents_routed": agents_routed,
         "focus": loop_focus,
         "deliverables": [
-            "Bảng điều phối tác vụ Biệt đội AI (Routing Board)",
-            "Báo cáo phân loại động thái đối thủ (Watch / Notify / Act)",
-            "Sổ tay xử lý từ chối (Objection Register)",
-            "Nội dung chuẩn AEO / GEO (Tối ưu để AI Search trích dẫn)",
-            "Checklist xác thực dữ liệu thực tế ([NEEDS INPUT])"
+            "1. PMM Lead - Chiến lược định vị & Trụ cột thông điệp",
+            "2. Intel Sweeper - Radar thị trường & Phân loại Watch/Notify/Act",
+            "3. Sales Coach - Sổ tay xử lý từ chối (Objection Register)",
+            "4. Content Studio - Kịch bản video & Bài viết chuyển đổi",
+            "5. AEO & AI Search - Khối Answer-First & Cấu trúc FAQ",
+            "6. Action Checklist - Xác thực dữ liệu thực tế ([NEEDS INPUT])"
         ],
+        "sections": sections,
         "needs_input": [
             "[NEEDS INPUT: Số liệu thực tế khách hàng tiêu biểu]",
             "[NEEDS INPUT: Tài liệu minh họa ưu thế độc quyền]"

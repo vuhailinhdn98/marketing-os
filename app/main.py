@@ -24,6 +24,8 @@ from app.database import (
     log_automation, get_automation_logs,
     save_calendar_items, get_calendar_items,
     save_discovered_competitors, get_discovered_competitors,
+    add_or_update_competitor, delete_competitor,
+    save_competitor_battlecard, get_competitor_by_id,
     save_content_package,
     create_or_update_user, create_session, verify_session, delete_session,
     reset_database_clean
@@ -35,6 +37,8 @@ from app.ai_engine import (
     generate_30day_calendar, generate_custom_30day_calendar,
     generate_full_content_package,
     auto_discover_competitors,
+    analyze_deep_competitor_dossier,
+    build_catalyst_sections,
     run_catalyst_orchestrator
 )
 
@@ -88,6 +92,25 @@ class CustomMarketRequest(BaseModel):
 
 class CompetitorDiscoverRequest(BaseModel):
     criteria: Optional[str] = "all"
+    market_context: Optional[dict] = None
+
+class ManualCompetitorRequest(BaseModel):
+    id: Optional[int] = None
+    name: str
+    website: Optional[str] = ""
+    phone: Optional[str] = ""
+    social: Optional[str] = ""
+    notes: Optional[str] = ""
+    competitor_type: Optional[str] = "Trực tiếp"
+    price_segment: Optional[str] = ""
+    core_products: Optional[str] = ""
+    key_strengths: Optional[str] = ""
+    vulnerabilities: Optional[str] = ""
+    is_manual: Optional[int] = 1
+    scan_deep: Optional[bool] = True
+
+class CompetitorDossierScanRequest(BaseModel):
+    competitor_id: int
 
 class SingleBattlecardRequest(BaseModel):
     name: str
@@ -346,17 +369,60 @@ def api_run_custom_market_research(req: CustomMarketRequest):
 def api_discover_competitors(req: CompetitorDiscoverRequest = None):
     profile = get_profile()
     criteria = req.criteria if req else "all"
-    discovered = auto_discover_competitors(profile, criteria=criteria)
+    market_context = req.market_context if req and req.market_context else {
+        "location": profile.get("market_location") or "Toàn quốc",
+        "scope_type": profile.get("market_scope_type") or "province",
+        "price_tier": profile.get("price_range") or "Tiêu chuẩn"
+    }
+    discovered = auto_discover_competitors(profile, criteria=criteria, market_context=market_context)
     if discovered:
-        comp_str = ", ".join([f"{c['name']} ({c.get('website', '')})" if c.get('website') else c['name'] for c in discovered])
-        profile["competitors"] = comp_str
-        update_profile(profile)
-        save_discovered_competitors(discovered)
-        log_automation("A02_DISCOVERY", "Rà quét đối thủ AI", "SUCCESS", f"Đã rà quét và phát hiện {len(discovered)} đối thủ cạnh tranh trên thị trường")
-    return {"status": "success", "competitors": discovered, "profile": profile}
+        m_loc = market_context.get("location", "Toàn quốc")
+        save_discovered_competitors(discovered, market_context=m_loc)
+        log_automation("A02_DISCOVERY", f"Rà quét đối thủ ({m_loc})", "SUCCESS", f"Đã rà quét và đồng bộ {len(discovered)} đối thủ cạnh tranh trên thị trường {m_loc}")
+    items = get_discovered_competitors()
+    return {"status": "success", "competitors": items, "profile": get_profile()}
 
 @app.get("/api/competitors/discovered")
 def api_get_discovered_competitors():
+    items = get_discovered_competitors()
+    return {"status": "success", "competitors": items}
+
+@app.post("/api/competitors/add-manual")
+def api_add_manual_competitor(req: ManualCompetitorRequest):
+    profile = get_profile()
+    comp_dict = req.dict()
+    comp_id = add_or_update_competitor(comp_dict)
+    
+    if req.scan_deep:
+        try:
+            dossier_res = analyze_deep_competitor_dossier(profile, comp_dict)
+            battlecard_md = dossier_res.get("battlecard_markdown", "")
+            if battlecard_md:
+                save_competitor_battlecard(comp_id, battlecard_md)
+            log_automation("A02_INTEL", f"Tình báo chuyên sâu: {req.name}", "SUCCESS", f"Đã quét website/hotline và thiết lập hồ sơ tác chiến 1-1 với {req.name}")
+        except Exception as e:
+            print(f"[ERROR] Dossier scan error: {e}")
+            
+    comp_data = get_competitor_by_id(comp_id)
+    items = get_discovered_competitors()
+    return {"status": "success", "competitor": comp_data, "competitors": items}
+
+@app.post("/api/competitors/dossier/scan")
+def api_scan_competitor_dossier(req: CompetitorDossierScanRequest):
+    profile = get_profile()
+    comp = get_competitor_by_id(req.competitor_id)
+    if not comp:
+        raise HTTPException(status_code=404, detail="Không tìm thấy đối thủ trong cơ sở dữ liệu")
+    dossier_res = analyze_deep_competitor_dossier(profile, comp)
+    battlecard_md = dossier_res.get("battlecard_markdown", "")
+    save_competitor_battlecard(req.competitor_id, battlecard_md)
+    log_automation("A02_INTEL", f"Tình báo đối thủ: {comp['name']}", "SUCCESS", f"Đã hoàn thành hồ sơ tình báo chuyên sâu & Battlecard cho {comp['name']}")
+    return {"status": "success", "battlecard": battlecard_md, "competitor": get_competitor_by_id(req.competitor_id)}
+
+@app.delete("/api/competitors/dossier/{comp_id}")
+def api_delete_competitor_endpoint(comp_id: int):
+    delete_competitor(comp_id)
+    log_automation("A02_INTEL", "Xóa đối thủ", "SUCCESS", f"Đã xóa đối thủ ID {comp_id} khỏi hồ sơ")
     items = get_discovered_competitors()
     return {"status": "success", "competitors": items}
 
@@ -478,7 +544,10 @@ def api_get_latest_catalyst():
     row = cur.fetchone()
     conn.close()
     if row:
-        return {"status": "success", "item": dict(row)}
+        row_dict = dict(row)
+        profile = get_profile()
+        sections = build_catalyst_sections(row_dict.get("content", ""), profile, row_dict.get("title", ""))
+        return {"status": "success", "item": row_dict, "sections": sections}
     return {"status": "empty"}
 
 # --- API: Analytics & Performance ---

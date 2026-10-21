@@ -151,17 +151,24 @@ def init_app_db():
     );
     """)
 
-    # 9. Bảng lưu trữ Đối thủ cạnh tranh được AI rà quét (Discovered Competitors)
+    # 9. Bảng lưu trữ Đối thủ cạnh tranh được AI rà quét & Quản lý Tình báo (Competitors Dossier)
     cur.execute("""
     CREATE TABLE IF NOT EXISTS discovered_competitors (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        website TEXT,
+        website TEXT DEFAULT '',
+        phone TEXT DEFAULT '',
+        social TEXT DEFAULT '',
+        notes TEXT DEFAULT '',
         competitor_type TEXT DEFAULT 'Trực tiếp',
-        price_segment TEXT,
-        core_products TEXT,
-        key_strengths TEXT,
-        vulnerabilities TEXT,
+        price_segment TEXT DEFAULT '',
+        core_products TEXT DEFAULT '',
+        key_strengths TEXT DEFAULT '',
+        vulnerabilities TEXT DEFAULT '',
+        battlecard_content TEXT DEFAULT '',
+        is_manual INTEGER DEFAULT 0,
+        market_context TEXT DEFAULT '',
+        scanned_at TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """)
@@ -178,6 +185,13 @@ def init_app_db():
         ("business_profile", "usp_advantages", "TEXT DEFAULT ''"),
         ("content_items", "video_script", "TEXT"),
         ("content_items", "image_prompt", "TEXT"),
+        ("discovered_competitors", "phone", "TEXT DEFAULT ''"),
+        ("discovered_competitors", "social", "TEXT DEFAULT ''"),
+        ("discovered_competitors", "notes", "TEXT DEFAULT ''"),
+        ("discovered_competitors", "battlecard_content", "TEXT DEFAULT ''"),
+        ("discovered_competitors", "is_manual", "INTEGER DEFAULT 0"),
+        ("discovered_competitors", "market_context", "TEXT DEFAULT ''"),
+        ("discovered_competitors", "scanned_at", "TIMESTAMP"),
     ]
     for table, col, def_val in cols:
         try:
@@ -450,24 +464,141 @@ def get_calendar_items():
     conn.close()
     return rows
 
-def save_discovered_competitors(items: list):
+def add_or_update_competitor(comp: dict) -> int:
     init_app_db()
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("DELETE FROM discovered_competitors")
+    comp_id = comp.get("id")
+    name = comp.get("name", "").strip()
+    website = comp.get("website", "").strip()
+    phone = comp.get("phone", "").strip()
+    social = comp.get("social", "").strip()
+    notes = comp.get("notes", "").strip()
+    comp_type = comp.get("type") or comp.get("competitor_type", "Trực tiếp")
+    price_seg = comp.get("price_segment", "")
+    core_prod = comp.get("core_products", "")
+    strengths = comp.get("key_strengths", "")
+    vulns = comp.get("vulnerabilities", "")
+    battlecard = comp.get("battlecard_content", "")
+    is_manual = comp.get("is_manual", 1)
+    market_ctx = comp.get("market_context", "")
+
+    if comp_id:
+        cur.execute("""
+        UPDATE discovered_competitors SET
+            name = ?, website = ?, phone = ?, social = ?, notes = ?,
+            competitor_type = ?, price_segment = ?, core_products = ?,
+            key_strengths = ?, vulnerabilities = ?,
+            battlecard_content = CASE WHEN ? != '' THEN ? ELSE battlecard_content END,
+            is_manual = ?, market_context = ?
+        WHERE id = ?
+        """, (name, website, phone, social, notes, comp_type, price_seg, core_prod, strengths, vulns, battlecard, battlecard, is_manual, market_ctx, comp_id))
+    else:
+        cur.execute("SELECT id FROM discovered_competitors WHERE LOWER(name) = LOWER(?)", (name,))
+        row = cur.fetchone()
+        if row:
+            comp_id = row[0]
+            cur.execute("""
+            UPDATE discovered_competitors SET
+                website = CASE WHEN ? != '' THEN ? ELSE website END,
+                phone = CASE WHEN ? != '' THEN ? ELSE phone END,
+                social = CASE WHEN ? != '' THEN ? ELSE social END,
+                notes = CASE WHEN ? != '' THEN ? ELSE notes END,
+                competitor_type = ?,
+                price_segment = CASE WHEN ? != '' THEN ? ELSE price_segment END,
+                core_products = CASE WHEN ? != '' THEN ? ELSE core_products END,
+                key_strengths = CASE WHEN ? != '' THEN ? ELSE key_strengths END,
+                vulnerabilities = CASE WHEN ? != '' THEN ? ELSE vulnerabilities END,
+                battlecard_content = CASE WHEN ? != '' THEN ? ELSE battlecard_content END,
+                is_manual = ?,
+                market_context = CASE WHEN ? != '' THEN ? ELSE market_context END
+            WHERE id = ?
+            """, (website, website, phone, phone, social, social, notes, notes, comp_type, price_seg, price_seg, core_prod, core_prod, strengths, strengths, vulns, vulns, battlecard, battlecard, is_manual, market_ctx, market_ctx, comp_id))
+        else:
+            cur.execute("""
+            INSERT INTO discovered_competitors (
+                name, website, phone, social, notes, competitor_type,
+                price_segment, core_products, key_strengths, vulnerabilities,
+                battlecard_content, is_manual, market_context
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (name, website, phone, social, notes, comp_type, price_seg, core_prod, strengths, vulns, battlecard, is_manual, market_ctx))
+            comp_id = cur.lastrowid
+
+    # Auto sync profile competitors list
+    cur.execute("SELECT name FROM discovered_competitors ORDER BY id ASC")
+    all_names = [r[0] for r in cur.fetchall() if r[0]]
+    if all_names:
+        cur.execute("UPDATE business_profile SET competitors = ? WHERE id = 1", (", ".join(all_names),))
+
+    conn.commit()
+    conn.close()
+    return comp_id
+
+def delete_competitor(comp_id: int):
+    init_app_db()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM discovered_competitors WHERE id = ?", (comp_id,))
+    cur.execute("SELECT name FROM discovered_competitors ORDER BY id ASC")
+    all_names = [r[0] for r in cur.fetchall() if r[0]]
+    cur.execute("UPDATE business_profile SET competitors = ? WHERE id = 1", (", ".join(all_names),))
+    conn.commit()
+    conn.close()
+
+def save_competitor_battlecard(comp_id: int, battlecard_text: str):
+    init_app_db()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+    UPDATE discovered_competitors 
+    SET battlecard_content = ?, scanned_at = CURRENT_TIMESTAMP
+    WHERE id = ?
+    """, (battlecard_text, comp_id))
+    conn.commit()
+    conn.close()
+
+def get_competitor_by_id(comp_id: int):
+    init_app_db()
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM discovered_competitors WHERE id = ?", (comp_id,))
+    row = cur.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+def save_discovered_competitors(items: list, market_context: str = ""):
+    init_app_db()
+    conn = get_connection()
+    cur = conn.cursor()
+    # Chỉ xóa những đối thủ auto-discovered cũ, GIỮ NGUYÊN các đối thủ người dùng tự nhập (is_manual = 1)
+    cur.execute("DELETE FROM discovered_competitors WHERE is_manual = 0")
     for it in items:
         cur.execute("""
-        INSERT INTO discovered_competitors (name, website, competitor_type, price_segment, core_products, key_strengths, vulnerabilities)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO discovered_competitors (
+            name, website, phone, social, notes, competitor_type,
+            price_segment, core_products, key_strengths, vulnerabilities,
+            is_manual, market_context
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
         """, (
             it.get("name", ""),
             it.get("website", ""),
+            it.get("phone", ""),
+            it.get("social", ""),
+            it.get("notes", ""),
             it.get("type") or it.get("competitor_type", "Trực tiếp"),
             it.get("price_segment", ""),
             it.get("core_products", ""),
             it.get("key_strengths", ""),
-            it.get("vulnerabilities", "")
+            it.get("vulnerabilities", ""),
+            market_context
         ))
+
+    # Auto sync profile competitors list with all competitors
+    cur.execute("SELECT name FROM discovered_competitors ORDER BY id ASC")
+    all_names = [r[0] for r in cur.fetchall() if r[0]]
+    if all_names:
+        cur.execute("UPDATE business_profile SET competitors = ? WHERE id = 1", (", ".join(all_names),))
+
     conn.commit()
     conn.close()
 
@@ -475,7 +606,7 @@ def get_discovered_competitors() -> list:
     init_app_db()
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM discovered_competitors ORDER BY id ASC")
+    cur.execute("SELECT * FROM discovered_competitors ORDER BY is_manual DESC, id ASC")
     rows = [dict(r) for r in cur.fetchall()]
     conn.close()
     return rows

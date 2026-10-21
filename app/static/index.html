@@ -511,6 +511,27 @@
           </div>
           <div id="research-content" class="hidden markdown-body text-slate-300 text-sm space-y-4"></div>
         </div>
+
+        <!-- Next Step Action Banner: Rà Soát Đối Thủ Theo Thị Trường Vừa Khảo Sát -->
+        <div id="research-next-step-banner" class="hidden bg-gradient-to-r from-indigo-950/70 via-purple-950/50 to-slate-900 border border-indigo-500/40 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl shrink-0 border border-indigo-500/30">
+              <i class="fa-solid fa-crosshairs"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Bước tiếp theo</span>
+                <span id="research-next-location-tag" class="text-xs bg-indigo-500/20 text-indigo-300 px-2.5 py-0.5 rounded-full border border-indigo-500/30 font-semibold">Toàn quốc</span>
+              </div>
+              <h4 class="text-sm font-bold text-white mt-0.5">Rà soát đối thủ cạnh tranh theo thị trường này</h4>
+              <p class="text-xs text-slate-400 mt-0.5">Hệ thống sẽ lấy các đối thủ do bạn cung cấp (nếu có) và rà quét thêm các đối thủ đang hoạt động mạnh tại địa bàn này.</p>
+            </div>
+          </div>
+          <button onclick="proceedToCompetitorsFromMarket()" class="bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-lg shadow-rose-500/25 transition flex items-center gap-2 shrink-0">
+            <span>Rà Soát Đối Thủ Ngay</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
       </section>
 
       <!-- TAB 3: COMPETITORS -->
@@ -519,39 +540,109 @@
           <div>
             <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
               <i class="fa-solid fa-crosshairs text-rose-400"></i>
-              Tình báo Đối thủ & Battlecards
+              Tình Báo Đối Thủ & Battlecards 1-1
             </h2>
-            <p class="text-sm text-slate-400 mt-1">Hệ thống AI tự động rà quét thị trường theo ngành nghề & sản phẩm để phát hiện đối thủ có thật, sau đó bóc tách điểm yếu và tạo kịch bản phản đòn.</p>
+            <p class="text-sm text-slate-400 mt-1">
+              Phân tích thị trường trước, sau đó rà soát đối thủ. Kết hợp dữ liệu do chủ doanh nghiệp tự nhập và AI rà quét theo địa bàn.
+            </p>
           </div>
-          <div class="flex items-center gap-3">
-            <button onclick="autoDiscoverCompetitorsUI()" id="btn-tab-discover-comp" class="bg-indigo-600/80 hover:bg-indigo-600 text-sky-200 border border-indigo-500/40 font-semibold text-sm px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <button onclick="triggerMarketCompetitorScan()" id="btn-tab-discover-comp" class="bg-indigo-600/80 hover:bg-indigo-600 text-sky-200 border border-indigo-500/40 font-semibold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg">
               <i class="fa-solid fa-radar text-amber-300"></i>
-              <span>AI Tự Rà Quét Đối Thủ</span>
+              <span id="label-btn-discover">Rà Quét Đối Thủ Theo Thị Trường</span>
             </button>
-            <button onclick="runCompetitorAnalysis()" id="btn-run-competitors" class="bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-rose-500/25 transition flex items-center gap-2">
+            <button onclick="runCompetitorAnalysis()" id="btn-run-competitors" class="bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-semibold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-rose-500/25 transition flex items-center gap-2">
               <i class="fa-solid fa-shield-halved"></i>
-              <span>Lập Battlecards Đối Đầu</span>
+              <span>Lập Ma Trận & Battlecards</span>
             </button>
           </div>
         </div>
 
-        <!-- Discovered Competitors Quick Bar -->
-        <div id="discovered-cards-container" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3"></div>
+        <!-- Bối cảnh thị trường hiện hành bar -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2 text-slate-300">
+            <i class="fa-solid fa-map-pin text-rose-400"></i>
+            <span>Bối cảnh thị trường đang rà soát:</span>
+            <span id="comp-market-context-display" class="font-bold text-sky-400 bg-sky-500/10 px-2.5 py-0.5 rounded border border-sky-500/30">Toàn quốc (Tiêu chuẩn)</span>
+          </div>
+          <button onclick="switchTab('tab-research')" class="text-indigo-400 hover:text-indigo-300 text-xs font-semibold flex items-center gap-1">
+            <span>Đổi địa bàn / Phân tích thị trường lại</span>
+            <i class="fa-solid fa-angles-right text-[10px]"></i>
+          </button>
+        </div>
 
+        <!-- Form: Tự nhập thông tin đối thủ (Chủ doanh nghiệp cung cấp) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-md">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-user-pen text-amber-400"></i>
+              <span>Nhập Đối Thủ Cụ Thể Để AI Quét Tình Báo & Lập Battlecard 1-1</span>
+            </h3>
+            <span class="text-[11px] text-slate-400">Hệ thống sẽ cào website, tìm kiếm review và so sánh trực diện với USP của bạn</span>
+          </div>
+
+          <form id="form-add-competitor" onsubmit="handleManualCompetitorSubmit(event)" class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-300 mb-1">Tên đối thủ / Thương hiệu <span class="text-rose-400">*</span></label>
+                <input type="text" id="man-comp-name" required placeholder="VD: Công ty TNHH Cạnh Tranh X..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-300 mb-1">Website đối thủ</label>
+                <input type="text" id="man-comp-website" placeholder="VD: https://doithu.com" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-300 mb-1">Hotline / Số điện thoại</label>
+                <input type="text" id="man-comp-phone" placeholder="VD: 0903.xxx.xxx" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-300 mb-1">Social (Fanpage, TikTok, Zalo...)</label>
+                <input type="text" id="man-comp-social" placeholder="VD: fb.com/doithu..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="sm:col-span-2">
+                <label class="block text-[11px] font-semibold text-slate-300 mb-1">Ghi chú / Điểm mạnh / Mức giá / Tử huyệt (nếu biết)</label>
+                <input type="text" id="man-comp-notes" placeholder="VD: Giá rẻ hơn 15%, chạy quảng cáo FB rất mạnh nhưng CSKH chậm, bảo hành bị phàn nàn..." class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500">
+              </div>
+              <div class="flex items-end">
+                <button type="submit" id="btn-submit-man-comp" class="w-full bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-semibold text-xs py-2 px-3 rounded-lg shadow-md transition flex items-center justify-center gap-1.5">
+                  <i class="fa-solid fa-magnifying-glass-chart"></i>
+                  <span>Lưu & Quét Tình Báo Ngay</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Discovered Competitors List Cards -->
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-sky-400"></i>
+              <span>Danh Sách Đối Thủ Trong Tầm Ngắm (<span id="comp-count-label">0</span>)</span>
+            </h3>
+            <span class="text-xs text-slate-400">Bao gồm đối thủ do bạn nhập và đối thủ AI phát hiện trên thị trường</span>
+          </div>
+          <div id="discovered-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- Main Display Box: Dossier & Battlecards -->
         <div id="competitor-result-box" class="bg-slate-900 border border-slate-800 rounded-2xl p-8 min-h-[400px]">
           <div id="competitor-placeholder" class="text-center py-16 space-y-4">
             <div class="w-16 h-16 mx-auto rounded-2xl bg-rose-500/10 flex items-center justify-center text-rose-400 text-2xl">
               <i class="fa-solid fa-swords"></i>
             </div>
-            <h3 class="text-lg font-semibold text-slate-200">Chưa có hồ sơ đối thủ</h3>
+            <h3 class="text-lg font-semibold text-slate-200">Chưa có kịch bản đối đầu hoặc báo cáo tình báo</h3>
             <p class="text-sm text-slate-400 max-w-lg mx-auto">
-              Chủ doanh nghiệp chưa biết đối thủ là ai? Nhấp vào nút <strong class="text-sky-400">"AI Tự Rà Quét Đối Thủ"</strong> ở trên — hệ thống sẽ tự động quét web thời gian thực dựa trên Tên công ty, Sản phẩm và Ngành nghề để tìm ra các đối thủ cạnh tranh có thật tại Việt Nam!
+              Nhập đối thủ vào form ở trên hoặc bấm <strong class="text-sky-400">"Rà Quét Đối Thủ Theo Thị Trường"</strong> để hệ thống tự động bóc tách tử huyệt và lập Battlecard 1-1!
             </p>
           </div>
           <div id="competitor-loading" class="hidden text-center py-20 space-y-4">
             <i class="fa-solid fa-circle-notch fa-spin text-4xl text-rose-400"></i>
-            <p class="text-sm text-slate-300 font-medium animate-pulse">Đang tự động rà quét thị trường & cào dữ liệu website từng đối thủ thực tế...</p>
-            <p class="text-xs text-slate-500">Đang lập Ma trận năng lực cạnh tranh, phân tích tử huyệt và Kịch bản xử lý từ chối (Objection Handling)</p>
+            <p class="text-sm text-slate-300 font-medium animate-pulse" id="comp-loading-text">Đang rà quét đối thủ và cào dữ liệu thực tế...</p>
+            <p class="text-xs text-slate-500">Đang phân tích điểm yếu, lập Ma trận năng lực cạnh tranh và Kịch bản xử lý từ chối (L-A-E-R)</p>
           </div>
           <div id="competitor-content" class="hidden markdown-body text-slate-300 text-sm space-y-4"></div>
         </div>
@@ -1011,45 +1102,98 @@
         <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
           <span class="text-slate-400 font-semibold flex items-center gap-2">
             <i class="fa-solid fa-users-gear text-cyan-400"></i>
-            5 Chuyên Viên AI Sẵn Sàng Phối Hợp:
+            6 Chuyên Viên AI Chuyên Trách Sẵn Sàng Phối Hợp:
           </span>
           <div class="flex flex-wrap gap-2 text-[11px]">
-            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-cyan-300 border border-cyan-500/30 font-medium">🧑‍💼 PMM Lead (Định vị)</span>
-            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-sky-300 border border-sky-500/30 font-medium">🕵️ Intel Sweeper (Tình báo web)</span>
-            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-amber-300 border border-amber-500/30 font-medium">🛡️ Sales Coach (Objection)</span>
-            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-teal-300 border border-teal-500/30 font-medium">✍️ Content Studio (Bài viết/Video)</span>
-            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-indigo-300 border border-indigo-500/30 font-medium">⚡ AEO/GEO (AI Search Citation)</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-indigo-300 border border-indigo-500/30 font-medium">🎯 PMM Lead (Định vị & GTM)</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-sky-300 border border-sky-500/30 font-medium">🕵️ Intel Sweeper (Radar đối thủ)</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-amber-300 border border-amber-500/30 font-medium">🛡️ Sales Coach (Kịch bản L-A-E-R)</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-teal-300 border border-teal-500/30 font-medium">🎬 Content Studio (Video 9:16 & Copy)</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-cyan-300 border border-cyan-500/30 font-medium">⚡ AEO/GEO (AI Search Citation)</span>
+            <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-rose-300 border border-rose-500/30 font-medium">✅ Checklist & QA ([NEEDS INPUT])</span>
           </div>
         </div>
 
         <!-- Output Box -->
-        <div id="catalyst-result-box" class="bg-slate-900 border border-slate-800 rounded-2xl p-8 min-h-[400px]">
+        <div id="catalyst-result-box" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 min-h-[400px]">
           <div id="catalyst-placeholder" class="text-center py-16 space-y-4">
             <div class="w-16 h-16 mx-auto rounded-2xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 text-2xl">
               <i class="fa-solid fa-network-wired"></i>
             </div>
             <h3 class="text-lg font-semibold text-slate-200">Chưa có phiên điều phối chiến dịch</h3>
             <p class="text-sm text-slate-400 max-w-md mx-auto">
-              Nhấp vào một trong 4 Vòng lặp chiến lược (Loops) ở trên để kích hoạt hệ thống điều phối 5 chuyên viên AI chuyên trách phối hợp giải quyết bài toán marketing thực tế.
+              Nhấp vào một trong 4 Vòng lặp chiến lược (Loops) ở trên hoặc nhập yêu cầu tùy biến để kích hoạt 6 chuyên viên AI chuyên trách phối hợp thực thi.
             </p>
           </div>
           
           <div id="catalyst-loading" class="hidden text-center py-20 space-y-4">
             <i class="fa-solid fa-circle-notch fa-spin text-4xl text-cyan-400"></i>
-            <p class="text-sm text-slate-300 font-medium animate-pulse">CATALYST đang phân công nhiệm vụ và điều phối 5 chuyên viên AI chuyên trách...</p>
-            <p class="text-xs text-slate-500">Đang quét dữ liệu thị trường thực tế và thiết lập Objection Register + Nội dung AEO</p>
+            <p class="text-sm text-slate-300 font-medium animate-pulse">CATALYST đang phân công nhiệm vụ và điều phối 6 chuyên viên AI chuyên trách...</p>
+            <p class="text-xs text-slate-500">Đang quét dữ liệu thị trường thực tế và phân bổ deliverables cho PMM, Intel, Sales, Content, AEO</p>
           </div>
 
           <div id="catalyst-content" class="hidden space-y-6">
-            <div class="flex justify-between items-center pb-3 border-b border-slate-800">
-              <span id="catalyst-loop-badge" class="text-xs font-bold px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">Vòng lặp CATALYST</span>
-              <button onclick="copyCatalystPlan()" class="text-xs text-sky-400 hover:text-sky-300 font-medium flex items-center gap-1.5 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 transition">
-                <i class="fa-solid fa-copy"></i>
-                <span>Sao Chép Toàn Bộ Kế Hoạch</span>
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-800">
+              <span id="catalyst-loop-badge" class="text-xs font-bold px-3.5 py-1.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">Vòng lặp CATALYST</span>
+              <div class="flex items-center gap-2">
+                <button onclick="copyCatalystPlan()" class="text-xs text-sky-400 hover:text-sky-300 font-medium flex items-center gap-1.5 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 transition">
+                  <i class="fa-solid fa-copy"></i>
+                  <span>Sao Chép Toàn Bộ Kế Hoạch</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Specialist Sub-Tabs Navigation Bar -->
+            <div class="flex flex-wrap gap-2 p-1.5 bg-slate-950/80 border border-slate-800 rounded-xl" id="catalyst-specialist-tabs">
+              <button onclick="switchCatalystTab('pmm')" id="btn-subtab-pmm" class="cat-subtab-btn active px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 bg-indigo-600 text-white shadow transition">
+                <i class="fa-solid fa-bullseye text-indigo-200"></i>
+                <span>1. Giám Đốc PMM</span>
+              </button>
+              <button onclick="switchCatalystTab('intel')" id="btn-subtab-intel" class="cat-subtab-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition">
+                <i class="fa-solid fa-radar text-sky-400"></i>
+                <span>2. Đặc Nhiệm Tình Báo</span>
+              </button>
+              <button onclick="switchCatalystTab('sales')" id="btn-subtab-sales" class="cat-subtab-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition">
+                <i class="fa-solid fa-shield-halved text-amber-400"></i>
+                <span>3. Huấn Luyện Viên Sales</span>
+              </button>
+              <button onclick="switchCatalystTab('content')" id="btn-subtab-content" class="cat-subtab-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition">
+                <i class="fa-solid fa-video text-teal-400"></i>
+                <span>4. Sáng Tạo & Video 9:16</span>
+              </button>
+              <button onclick="switchCatalystTab('aeo')" id="btn-subtab-aeo" class="cat-subtab-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition">
+                <i class="fa-solid fa-bolt text-cyan-400"></i>
+                <span>5. Chuyên Gia AI Search</span>
+              </button>
+              <button onclick="switchCatalystTab('checklist')" id="btn-subtab-checklist" class="cat-subtab-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition">
+                <i class="fa-solid fa-list-check text-rose-400"></i>
+                <span>6. Checklist Xác Thực</span>
+              </button>
+              <button onclick="switchCatalystTab('full')" id="btn-subtab-full" class="cat-subtab-btn px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition">
+                <i class="fa-solid fa-file-lines text-slate-400"></i>
+                <span>Xem Toàn Bộ</span>
               </button>
             </div>
-            
-            <div id="catalyst-markdown-body" class="markdown-body text-slate-300 text-sm leading-relaxed space-y-4"></div>
+
+            <!-- Specialist Content Panes -->
+            <div id="catalyst-specialist-panes" class="space-y-4">
+              <!-- Pane 1: PMM Lead -->
+              <div id="pane-cat-pmm" class="cat-pane space-y-4"></div>
+              <!-- Pane 2: Intel Sweeper -->
+              <div id="pane-cat-intel" class="cat-pane hidden space-y-4"></div>
+              <!-- Pane 3: Sales Coach -->
+              <div id="pane-cat-sales" class="cat-pane hidden space-y-4"></div>
+              <!-- Pane 4: Content Studio -->
+              <div id="pane-cat-content" class="cat-pane hidden space-y-4"></div>
+              <!-- Pane 5: AEO Search -->
+              <div id="pane-cat-aeo" class="cat-pane hidden space-y-4"></div>
+              <!-- Pane 6: Checklist -->
+              <div id="pane-cat-checklist" class="cat-pane hidden space-y-4"></div>
+              <!-- Pane 7: Full Report -->
+              <div id="pane-cat-full" class="cat-pane hidden space-y-4">
+                <div id="catalyst-markdown-body" class="markdown-body text-slate-300 text-sm leading-relaxed space-y-4"></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1586,22 +1730,38 @@
       }
     }
 
+    // Global Market Context state
+    let activeMarketContext = {
+      scope_type: 'province',
+      location: 'Toàn quốc',
+      price_tier: 'Mặc định theo giá hồ sơ',
+      objective: 'Đánh chiếm thị phần từ đối thủ lớn'
+    };
+
+    let allLoadedCompetitors = [];
+
     // Run Custom Market Research by Selected Criteria (Tỉnh Thành / Quốc Gia / Khu Vực)
     async function runCustomMarketResearch() {
       const scope_type = document.getElementById('sel-market-scope-type') ? document.getElementById('sel-market-scope-type').value : 'province';
       const locDetail = document.getElementById('input-market-location-detail') ? document.getElementById('input-market-location-detail').value.trim() : '';
       const locSelect = document.getElementById('sel-market-location-select') ? document.getElementById('sel-market-location-select').value : 'Toàn quốc';
       const location = locDetail || locSelect || 'Toàn quốc';
-      const price_tier = document.getElementById('sel-market-price').value;
-      const objective = document.getElementById('sel-market-objective').value;
+      const price_tier = document.getElementById('sel-market-price') ? document.getElementById('sel-market-price').value : 'Mặc định theo giá hồ sơ';
+      const objective = document.getElementById('sel-market-objective') ? document.getElementById('sel-market-objective').value : 'Đánh chiếm thị phần từ đối thủ lớn';
+
+      activeMarketContext = { scope_type, location, price_tier, objective };
 
       const pBox = document.getElementById('research-placeholder');
       const lBox = document.getElementById('research-loading');
       const cBox = document.getElementById('research-content');
+      const nextBanner = document.getElementById('research-next-step-banner');
+      const locTag = document.getElementById('research-next-location-tag');
+      const ctxDisplay = document.getElementById('comp-market-context-display');
 
       if (pBox) pBox.classList.add('hidden');
       if (lBox) lBox.classList.remove('hidden');
       if (cBox) cBox.classList.add('hidden');
+      if (nextBanner) nextBanner.classList.add('hidden');
 
       showToast(`🔍 AI đang phân tích sâu thị trường: ${location} (${price_tier})...`);
 
@@ -1625,7 +1785,17 @@
           ` + marked.parse(data.result);
           cBox.classList.remove('hidden');
         }
-        showToast(`✅ Đã phân tích thị trường: ${location}!`);
+
+        // Show Next Step Banner to guide user to Competitors
+        if (nextBanner) {
+          if (locTag) locTag.innerText = location;
+          nextBanner.classList.remove('hidden');
+        }
+        if (ctxDisplay) {
+          ctxDisplay.innerText = `${location} (${price_tier})`;
+        }
+
+        showToast(`✅ Đã phân tích thị trường: ${location}! Hãy tiếp tục rà soát đối thủ.`);
         loadAutoPilotStatus();
       } catch (err) {
         if (lBox) lBox.classList.add('hidden');
@@ -1638,77 +1808,321 @@
       return runCustomMarketResearch();
     }
 
-    // Auto Discover Competitors via AI
-    async function autoDiscoverCompetitorsUI() {
-      const btn = document.getElementById('btn-discover-comp');
-      const btnTab = document.getElementById('btn-tab-discover-comp');
-      const origHtml1 = btn ? btn.innerHTML : '';
-      const origHtml2 = btnTab ? btnTab.innerHTML : '';
+    function proceedToCompetitorsFromMarket() {
+      switchTab('tab-competitors');
+      triggerMarketCompetitorScan();
+    }
 
-      if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-300"></i> <span>Đang rà quét web...</span>';
-      if (btnTab) btnTab.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-300"></i> <span>Đang rà quét web...</span>';
+    // Trigger AI Scan for competitors based on current market context
+    async function triggerMarketCompetitorScan() {
+      const btn = document.getElementById('btn-tab-discover-comp');
+      const label = document.getElementById('label-btn-discover');
+      const origText = label ? label.innerText : 'Rà Quét Đối Thủ Theo Thị Trường';
+      if (btn) btn.disabled = true;
+      if (label) label.innerText = 'Đang rà quét đối thủ...';
 
-      showToast('🔍 AI đang tìm kiếm và rà quét các đối thủ thực tế trên thị trường Việt Nam...');
+      const pBox = document.getElementById('competitor-placeholder');
+      const lBox = document.getElementById('competitor-loading');
+      const cBox = document.getElementById('competitor-content');
+      const loadText = document.getElementById('comp-loading-text');
+
+      if (pBox) pBox.classList.add('hidden');
+      if (lBox) lBox.classList.remove('hidden');
+      if (cBox) cBox.classList.add('hidden');
+      if (loadText) loadText.innerText = `Đang rà quét đối thủ theo bối cảnh thị trường ${activeMarketContext.location}...`;
+
+      showToast(`🎯 AI đang rà soát đối thủ tại ${activeMarketContext.location} (${activeMarketContext.price_tier})...`);
 
       try {
-        const res = await fetch('/api/competitors/discover', { method: 'POST' });
+        const res = await fetch('/api/competitors/discover', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            criteria: 'all',
+            market_context: activeMarketContext
+          })
+        });
         const data = await res.json();
-        if (data.status === 'success' && data.competitors && data.competitors.length > 0) {
-          const compNames = data.competitors.map(c => c.website ? `${c.name} (${c.website})` : c.name).join(', ');
-          const inp = document.getElementById('inp-competitors');
-          if (inp) inp.value = compNames;
-          
-          showToast(`✅ Đã tìm thấy ${data.competitors.length} đối thủ thực tế!`);
+        if (lBox) lBox.classList.add('hidden');
+        if (data.status === 'success' && data.competitors) {
+          allLoadedCompetitors = data.competitors;
           renderDiscoveredCards(data.competitors);
+          showToast(`✅ Đã rà soát và đồng bộ ${data.competitors.length} đối thủ theo địa bàn ${activeMarketContext.location}!`);
+          loadAutoPilotStatus();
         } else {
-          showToast('Không tìm thấy đối thủ mới hoặc lỗi kết nối', false);
+          showToast('Không có đối thủ mới hoặc lỗi kết nối', false);
         }
       } catch (err) {
+        if (lBox) lBox.classList.add('hidden');
         showToast('Lỗi khi rà quét đối thủ', false);
       } finally {
-        if (btn) btn.innerHTML = origHtml1;
-        if (btnTab) btnTab.innerHTML = origHtml2;
+        if (btn) btn.disabled = false;
+        if (label) label.innerText = origText;
       }
     }
 
+    // Legacy auto discover wrapper
+    async function autoDiscoverCompetitorsUI() {
+      return triggerMarketCompetitorScan();
+    }
+
+    // Handle Manual Competitor Entry (Chủ doanh nghiệp cung cấp đối thủ)
+    async function handleManualCompetitorSubmit(e) {
+      if (e) e.preventDefault();
+      const nameInput = document.getElementById('man-comp-name');
+      const name = nameInput ? nameInput.value.trim() : '';
+      if (!name) {
+        showToast('Vui lòng nhập tên công ty hoặc thương hiệu đối thủ!', false);
+        return;
+      }
+
+      const website = document.getElementById('man-comp-website') ? document.getElementById('man-comp-website').value.trim() : '';
+      const phone = document.getElementById('man-comp-phone') ? document.getElementById('man-comp-phone').value.trim() : '';
+      const social = document.getElementById('man-comp-social') ? document.getElementById('man-comp-social').value.trim() : '';
+      const notes = document.getElementById('man-comp-notes') ? document.getElementById('man-comp-notes').value.trim() : '';
+
+      const submitBtn = document.getElementById('btn-submit-man-comp');
+      const origBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Đang cào dữ liệu & Quét sâu...</span>';
+      }
+
+      showToast(`🕵️ Đang quét website, hotline và phân tích tình báo sâu cho: ${name}...`);
+
+      try {
+        const res = await fetch('/api/competitors/add-manual', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name, website, phone, social, notes,
+            competitor_type: 'Trực tiếp',
+            is_manual: 1,
+            scan_deep: true
+          })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          // Clear form
+          if (nameInput) nameInput.value = '';
+          if (document.getElementById('man-comp-website')) document.getElementById('man-comp-website').value = '';
+          if (document.getElementById('man-comp-phone')) document.getElementById('man-comp-phone').value = '';
+          if (document.getElementById('man-comp-social')) document.getElementById('man-comp-social').value = '';
+          if (document.getElementById('man-comp-notes')) document.getElementById('man-comp-notes').value = '';
+
+          allLoadedCompetitors = data.competitors || [];
+          renderDiscoveredCards(allLoadedCompetitors);
+
+          // If battlecard was generated, display it immediately
+          if (data.competitor && data.competitor.battlecard_content) {
+            displayCompetitorBattlecardUI(data.competitor);
+          }
+
+          showToast(`✅ Đã thêm và lập hồ sơ tình báo sâu cho ${name}!`);
+          loadAutoPilotStatus();
+        } else {
+          showToast('Lỗi khi thêm đối thủ', false);
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối máy chủ', false);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = origBtnHtml;
+        }
+      }
+    }
+
+    // Render competitor cards with badges and actions
     function renderDiscoveredCards(cards) {
       const container = document.getElementById('discovered-cards-container');
-      if (!container || !cards || cards.length === 0) return;
+      const countLabel = document.getElementById('comp-count-label');
+      if (!container) return;
 
-      container.innerHTML = cards.map(c => `
-        <div class="bg-slate-900/90 border border-indigo-500/30 rounded-xl p-3.5 space-y-2 hover:border-indigo-400 transition shadow-md flex flex-col justify-between">
-          <div class="space-y-1.5">
-            <div class="flex items-start justify-between gap-2">
-              <h4 class="text-xs font-bold text-white truncate flex items-center gap-1.5">
-                <i class="fa-solid fa-crosshairs text-rose-400"></i>
-                ${c.name}
-              </h4>
-              <span class="text-[10px] font-semibold bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded shrink-0">${c.competitor_type || c.type || 'Trực tiếp'}</span>
-            </div>
-            ${c.website ? `<a href="${c.website}" target="_blank" class="text-[11px] text-sky-400 hover:underline block truncate"><i class="fa-solid fa-link text-[10px] mr-1"></i>${c.website.replace('https://', '').replace('http://', '').replace(/\/$/, '')}</a>` : ''}
-            <p class="text-[11px] text-slate-300 line-clamp-2">${c.core_products || c.key_strengths || ''}</p>
-            ${c.vulnerabilities ? `
-              <div class="pt-1.5 border-t border-slate-800 text-[10px] text-rose-300 flex items-start gap-1">
-                <i class="fa-solid fa-triangle-exclamation text-rose-400 shrink-0 mt-0.5"></i>
-                <span class="line-clamp-2">Tử huyệt: ${c.vulnerabilities}</span>
+      if (!cards || cards.length === 0) {
+        container.innerHTML = '<div class="col-span-full text-center py-6 text-xs text-slate-500 italic">Chưa có đối thủ nào trong danh mục. Nhập thủ công ở trên hoặc chạy rà quét theo thị trường.</div>';
+        if (countLabel) countLabel.innerText = '0';
+        return;
+      }
+
+      allLoadedCompetitors = cards;
+      if (countLabel) countLabel.innerText = cards.length;
+
+      container.innerHTML = cards.map(c => {
+        const isMan = c.is_manual === 1;
+        const badgeHtml = isMan
+          ? `<span class="text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded flex items-center gap-1 shrink-0"><i class="fa-solid fa-user-check text-[9px]"></i> Tự nhập</span>`
+          : `<span class="text-[10px] font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30 px-2 py-0.5 rounded flex items-center gap-1 shrink-0"><i class="fa-solid fa-robot text-[9px]"></i> AI Quét</span>`;
+
+        return `
+          <div class="bg-slate-900 border ${isMan ? 'border-amber-500/30 hover:border-amber-400' : 'border-indigo-500/30 hover:border-indigo-400'} rounded-2xl p-4 space-y-3 transition shadow-md flex flex-col justify-between">
+            <div class="space-y-2">
+              <div class="flex items-start justify-between gap-2">
+                <h4 class="text-xs font-bold text-white truncate flex items-center gap-1.5" title="${c.name}">
+                  <i class="fa-solid fa-crosshairs text-rose-400"></i>
+                  <span>${c.name}</span>
+                </h4>
+                ${badgeHtml}
               </div>
-            ` : ''}
-          </div>
-          <button onclick="runSingleBattlecard('${c.name.replace(/'/g, "\\'")}', '${(c.website || '').replace(/'/g, "\\'")}')" class="w-full mt-2 bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white text-[11px] font-semibold py-1.5 px-2.5 rounded-lg transition flex items-center justify-center gap-1.5 shadow">
-            <i class="fa-solid fa-swords"></i>
-            <span>Lập Battlecard 1-1</span>
-          </button>
-        </div>
-      `).join('');
 
-      container.classList.remove('hidden');
+              <!-- Contact & Links Bar -->
+              <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-slate-400">
+                ${c.website ? `
+                  <a href="${c.website.startsWith('http') ? c.website : 'https://' + c.website}" target="_blank" class="text-sky-400 hover:underline flex items-center gap-1 truncate max-w-[140px]" title="${c.website}">
+                    <i class="fa-solid fa-globe text-[10px]"></i>
+                    <span>${c.website.replace('https://', '').replace('http://', '').replace(/\/$/, '')}</span>
+                  </a>
+                ` : ''}
+                ${c.phone ? `
+                  <a href="tel:${c.phone}" class="text-emerald-400 hover:underline flex items-center gap-1" title="Hotline">
+                    <i class="fa-solid fa-phone text-[10px]"></i>
+                    <span>${c.phone}</span>
+                  </a>
+                ` : ''}
+                ${c.social ? `
+                  <a href="${c.social.startsWith('http') ? c.social : 'https://' + c.social}" target="_blank" class="text-purple-400 hover:underline flex items-center gap-1 truncate max-w-[120px]" title="Social">
+                    <i class="fa-solid fa-share-nodes text-[10px]"></i>
+                    <span>Mạng XH</span>
+                  </a>
+                ` : ''}
+              </div>
+
+              <!-- Highlights / Products -->
+              ${(c.core_products || c.key_strengths || c.notes) ? `
+                <p class="text-[11px] text-slate-300 line-clamp-2 leading-relaxed bg-slate-800/40 p-2 rounded-lg border border-slate-800">
+                  ${c.key_strengths || c.core_products || c.notes}
+                </p>
+              ` : ''}
+
+              <!-- Vulnerability / Deathpoint -->
+              ${c.vulnerabilities ? `
+                <div class="p-2 bg-rose-950/30 border border-rose-500/20 rounded-lg text-[10px] text-rose-300 flex items-start gap-1.5">
+                  <i class="fa-solid fa-skull-crossbones text-rose-400 shrink-0 mt-0.5"></i>
+                  <span class="line-clamp-2"><strong>Tử huyệt:</strong> ${c.vulnerabilities}</span>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- Action buttons -->
+            <div class="pt-2 border-t border-slate-800/80 flex items-center gap-2">
+              <button onclick="viewOrScanCompetitorDossier(${c.id})" class="flex-1 bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white text-[11px] font-semibold py-1.5 px-2 rounded-lg transition flex items-center justify-center gap-1.5 shadow">
+                <i class="fa-solid fa-swords"></i>
+                <span>Xem Battlecard 1-1</span>
+              </button>
+              <button onclick="deleteCompetitorUI(${c.id}, '${c.name.replace(/'/g, "\\'")}')" class="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg border border-slate-800 transition" title="Xóa đối thủ này">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Display Battlecard UI
+    function displayCompetitorBattlecardUI(comp) {
+      const pBox = document.getElementById('competitor-placeholder');
+      const lBox = document.getElementById('competitor-loading');
+      const cBox = document.getElementById('competitor-content');
+
+      if (pBox) pBox.classList.add('hidden');
+      if (lBox) lBox.classList.add('hidden');
+      if (cBox) {
+        cBox.innerHTML = `
+          <div class="mb-5 p-4 bg-gradient-to-r from-rose-950/50 via-slate-900 to-slate-900 border border-rose-500/40 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold uppercase tracking-wider text-rose-400">Hồ Sơ Tình Báo Tác Chiến 1-1</span>
+                ${comp.is_manual ? '<span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded font-mono">Chủ DN Cung Cấp</span>' : '<span class="text-[10px] bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded font-mono">AI Quét Thị Trường</span>'}
+              </div>
+              <h3 class="text-base font-bold text-white mt-1 flex items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-rose-400"></i>
+                <span>Đối đầu với: ${comp.name}</span>
+              </h3>
+              <div class="flex flex-wrap items-center gap-3 text-xs text-slate-400 mt-1">
+                ${comp.website ? `<span><i class="fa-solid fa-link text-[10px]"></i> ${comp.website}</span>` : ''}
+                ${comp.phone ? `<span><i class="fa-solid fa-phone text-[10px] text-emerald-400"></i> ${comp.phone}</span>` : ''}
+                ${comp.social ? `<span><i class="fa-solid fa-share-nodes text-[10px] text-purple-400"></i> ${comp.social}</span>` : ''}
+              </div>
+            </div>
+            <button onclick="scanCompetitorAgain(${comp.id})" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shrink-0">
+              <i class="fa-solid fa-arrows-rotate text-sky-400"></i>
+              <span>Cập Nhật Lại Tình Báo</span>
+            </button>
+          </div>
+        ` + marked.parse(comp.battlecard_content || '');
+        cBox.classList.remove('hidden');
+        cBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // View or Scan Dossier
+    async function viewOrScanCompetitorDossier(compId) {
+      const comp = allLoadedCompetitors.find(c => c.id === compId);
+      if (comp && comp.battlecard_content && comp.battlecard_content.length > 50) {
+        displayCompetitorBattlecardUI(comp);
+        return;
+      }
+      await scanCompetitorAgain(compId);
+    }
+
+    // Scan competitor again via API
+    async function scanCompetitorAgain(compId) {
+      const pBox = document.getElementById('competitor-placeholder');
+      const lBox = document.getElementById('competitor-loading');
+      const cBox = document.getElementById('competitor-content');
+      const loadText = document.getElementById('comp-loading-text');
+
+      if (pBox) pBox.classList.add('hidden');
+      if (lBox) lBox.classList.remove('hidden');
+      if (cBox) cBox.classList.add('hidden');
+      if (loadText) loadText.innerText = 'Đang cào dữ liệu website và phân tích hồ sơ tình báo 1-1...';
+
+      showToast('🕵️ Đang quét website và lập hồ sơ tình báo sâu...');
+
+      try {
+        const res = await fetch('/api/competitors/dossier/scan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ competitor_id: compId })
+        });
+        const data = await res.json();
+        if (lBox) lBox.classList.add('hidden');
+        if (data.status === 'success' && data.competitor) {
+          const idx = allLoadedCompetitors.findIndex(c => c.id === compId);
+          if (idx !== -1) allLoadedCompetitors[idx] = data.competitor;
+          displayCompetitorBattlecardUI(data.competitor);
+          showToast(`✅ Đã hoàn thành hồ sơ tình báo đối đầu cho ${data.competitor.name}!`);
+          loadAutoPilotStatus();
+        } else {
+          showToast('Lỗi khi quét tình báo đối thủ', false);
+        }
+      } catch (err) {
+        if (lBox) lBox.classList.add('hidden');
+        showToast('Lỗi kết nối máy chủ', false);
+      }
+    }
+
+    // Delete competitor
+    async function deleteCompetitorUI(compId, compName) {
+      if (!confirm(`Bạn có chắc chắn muốn xóa đối thủ "${compName}" không?`)) return;
+      try {
+        const res = await fetch(`/api/competitors/dossier/${compId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.status === 'success') {
+          allLoadedCompetitors = data.competitors || [];
+          renderDiscoveredCards(allLoadedCompetitors);
+          showToast(`Đã xóa đối thủ ${compName}!`);
+        }
+      } catch (err) {
+        showToast('Lỗi khi xóa đối thủ', false);
+      }
     }
 
     async function loadDiscoveredCompetitors() {
       try {
         const res = await fetch('/api/competitors/discovered');
         const data = await res.json();
-        if (data.status === 'success' && data.competitors && data.competitors.length > 0) {
+        if (data.status === 'success' && data.competitors) {
           renderDiscoveredCards(data.competitors);
         }
       } catch (err) {
@@ -1716,7 +2130,7 @@
       }
     }
 
-    // Run Single Battlecard against a discovered competitor
+    // Run Single Battlecard against a discovered competitor (Legacy)
     async function runSingleBattlecard(compName, compUrl) {
       const pBox = document.getElementById('competitor-placeholder');
       const lBox = document.getElementById('competitor-loading');
@@ -2032,8 +2446,92 @@
       });
     }
 
-    // CATALYST Multi-Agent Campaign Orchestrator Handlers
+    // CATALYST Multi-Agent Campaign Orchestrator Handlers (6 Chuyên Gia AI Độc Lập)
     let lastCatalystPlan = '';
+    let currentCatalystSections = {};
+
+    function switchCatalystTab(tabName) {
+      document.querySelectorAll('.cat-subtab-btn').forEach(btn => {
+        btn.classList.remove('bg-indigo-600', 'text-white', 'shadow', 'active');
+        btn.classList.add('text-slate-400');
+      });
+      const activeBtn = document.getElementById(`btn-subtab-${tabName}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-400');
+        activeBtn.classList.add('bg-indigo-600', 'text-white', 'shadow', 'active');
+      }
+
+      document.querySelectorAll('.cat-pane').forEach(p => p.classList.add('hidden'));
+      const activePane = document.getElementById(`pane-cat-${tabName}`);
+      if (activePane) activePane.classList.remove('hidden');
+    }
+
+    function renderCatalystSpecialists(sections, fullMarkdown) {
+      lastCatalystPlan = fullMarkdown || '';
+      currentCatalystSections = sections || {};
+
+      const formatChips = (text) => {
+        if (!text) return '';
+        let html = marked.parse(text);
+        return html.replace(/\[NEEDS INPUT:([^\]]+)\]/g, '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-lg text-xs font-semibold my-1"><i class="fa-solid fa-circle-exclamation text-amber-400"></i> CẦN DOANH NGHIỆP CUNG CẤP: $1</span>');
+      };
+
+      const meta = [
+        { key: 'pmm', name: 'Giám Đốc PMM (Product Marketing Manager)', role: 'Chiến Lược Định Vị & Trụ Cột Thông Điệp Go-To-Market', icon: 'fa-bullseye', color: 'indigo' },
+        { key: 'intel', name: 'Đặc Nhiệm Tình Báo (Intel Sweeper)', role: 'Radar Rà Quét Đối Thủ & Phân Loại Watch / Notify / Act', icon: 'fa-radar', color: 'sky' },
+        { key: 'sales', name: 'Huấn Luyện Viên Sales (Sales Coach)', role: 'Sổ Tay Xử Lý Từ Chối (Objection Register) & Quy Trình L-A-E-R', icon: 'fa-shield-halved', color: 'amber' },
+        { key: 'content', name: 'Đội Ngũ Sáng Tạo (Content Studio)', role: 'Kịch Bản Video Ngắn 9:16 (TikTok/Reels) & Bài Viết Đa Kênh', icon: 'fa-video', color: 'teal' },
+        { key: 'aeo', name: 'Chuyên Gia AI Search & AEO/GEO', role: 'Khối Answer-First & FAQ Tối Ưu Để ChatGPT / Perplexity Trích Dẫn', icon: 'fa-bolt', color: 'cyan' },
+        { key: 'checklist', name: 'Ban Thẩm Định & QA (Action Checklist)', role: 'Danh Mục Cần Doanh Nghiệp Xác Thực Dữ Liệu Thực Tế', icon: 'fa-list-check', color: 'rose' }
+      ];
+
+      meta.forEach(m => {
+        const pane = document.getElementById(`pane-cat-${m.key}`);
+        if (!pane) return;
+        const sec = (sections && sections[m.key]) || {};
+        const mdText = sec.markdown || '';
+
+        pane.innerHTML = `
+          <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-2xl p-5 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-${m.color}-500/20 text-${m.color}-400 flex items-center justify-center text-lg shrink-0 border border-${m.color}-500/30">
+                  <i class="fa-solid ${m.icon}"></i>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white">${m.name}</h4>
+                  <p class="text-xs text-slate-400 mt-0.5">${m.role}</p>
+                </div>
+              </div>
+              <button onclick="copySpecialistDeliverable('${m.key}')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1.5 self-start sm:self-auto">
+                <i class="fa-solid fa-copy text-sky-400"></i>
+                <span>Sao Chép Phần Này</span>
+              </button>
+            </div>
+            <div class="markdown-body text-slate-300 text-sm leading-relaxed space-y-4">
+              ${formatChips(mdText || fullMarkdown)}
+            </div>
+          </div>
+        `;
+      });
+
+      // Full pane
+      const mdBody = document.getElementById('catalyst-markdown-body');
+      if (mdBody) {
+        mdBody.innerHTML = formatChips(fullMarkdown);
+      }
+
+      // Default activate PMM tab
+      switchCatalystTab('pmm');
+    }
+
+    function copySpecialistDeliverable(key) {
+      if (!currentCatalystSections || !currentCatalystSections[key]) return;
+      const text = currentCatalystSections[key].markdown || '';
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Đã sao chép sản phẩm bàn giao của chuyên viên AI vào clipboard!');
+      });
+    }
 
     async function runCatalystLoop(loopType) {
       const pBox = document.getElementById('catalyst-placeholder');
@@ -2041,14 +2539,13 @@
       const cBox = document.getElementById('catalyst-content');
       const briefInp = document.getElementById('catalyst-custom-brief');
       const badge = document.getElementById('catalyst-loop-badge');
-      const mdBody = document.getElementById('catalyst-markdown-body');
 
       if (pBox) pBox.classList.add('hidden');
       if (lBox) lBox.classList.remove('hidden');
       if (cBox) cBox.classList.add('hidden');
 
       const customBrief = (loopType === 'custom_brief' && briefInp) ? briefInp.value : '';
-      showToast('🎛️ CATALYST đang điều phối 5 chuyên viên AI chuyên trách phân tích và tạo chiến dịch...');
+      showToast('🎛️ Điều phối 6 chuyên viên AI chuyên trách phân tích và tạo chiến dịch...');
 
       try {
         const res = await fetch('/api/catalyst/run', {
@@ -2063,14 +2560,8 @@
         if (lBox) lBox.classList.add('hidden');
         if (data.status === 'success' && data.data) {
           const d = data.data;
-          lastCatalystPlan = d.content;
-          if (badge) badge.innerText = `${d.loop_name} | 5 Chuyên Viên AI Phối Hợp`;
-
-          // Format Needs Input tags into prominent yellow badges
-          let htmlContent = marked.parse(d.content);
-          htmlContent = htmlContent.replace(/\[NEEDS INPUT:([^\]]+)\]/g, '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-lg text-xs font-semibold my-1"><i class="fa-solid fa-circle-exclamation text-amber-400"></i> CẦN XÁC THỰC: $1</span>');
-
-          if (mdBody) mdBody.innerHTML = htmlContent;
+          if (badge) badge.innerText = `${d.loop_name} | 6 Chuyên Viên AI Chuyên Trách Phối Hợp`;
+          renderCatalystSpecialists(d.sections, d.content);
           if (cBox) cBox.classList.remove('hidden');
 
           showToast('✅ Đã hoàn tất điều phối chiến dịch Biệt Đội AI CATALYST!');
@@ -2090,19 +2581,14 @@
         const data = await res.json();
         if (data.status === 'success' && data.item) {
           const item = data.item;
-          lastCatalystPlan = item.content;
           const pBox = document.getElementById('catalyst-placeholder');
           const cBox = document.getElementById('catalyst-content');
           const badge = document.getElementById('catalyst-loop-badge');
-          const mdBody = document.getElementById('catalyst-markdown-body');
 
           if (pBox) pBox.classList.add('hidden');
           if (badge) badge.innerText = item.title;
 
-          let htmlContent = marked.parse(item.content);
-          htmlContent = htmlContent.replace(/\[NEEDS INPUT:([^\]]+)\]/g, '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 rounded-lg text-xs font-semibold my-1"><i class="fa-solid fa-circle-exclamation text-amber-400"></i> CẦN XÁC THỰC: $1</span>');
-
-          if (mdBody) mdBody.innerHTML = htmlContent;
+          renderCatalystSpecialists(data.sections, item.content);
           if (cBox) cBox.classList.remove('hidden');
         }
       } catch (e) {

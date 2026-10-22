@@ -2,6 +2,7 @@
 """Growth Console: số liệu, nhập CSV, ngân sách, UTM, thử nghiệm, máy tính, Local SEO, đối thủ, media."""
 from __future__ import annotations
 
+import math
 from datetime import date
 from typing import Any, Dict, Optional
 
@@ -74,9 +75,12 @@ def _num(body: Dict[str, Any], key: str, required: bool = True) -> Optional[floa
             raise HTTPException(400, f"Thiếu {key}.")
         return None
     try:
-        return float(val)
+        out = float(val)
     except (TypeError, ValueError):
         raise HTTPException(400, f"{key} phải là số.")
+    if not math.isfinite(out) or out < 0:
+        raise HTTPException(400, f"{key} phải là số không âm.")
+    return out
 
 
 @router.post("/calc/budget-reverse")

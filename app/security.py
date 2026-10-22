@@ -76,7 +76,8 @@ def password_problem(password: str) -> Optional[str]:
 
 _attempts: Dict[str, list] = {}
 _attempts_lock = threading.Lock()
-MAX_FAILS = 8
+MAX_FAILS = 8            # mỗi email trên một IP
+MAX_FAILS_PER_EMAIL = 30  # mỗi email trên mọi IP (chống dò mật khẩu phân tán hoặc giả IP qua X-Forwarded-For)
 WINDOW_SECONDS = 15 * 60
 
 
@@ -84,24 +85,34 @@ def _attempt_key(email: str, ip: str) -> str:
     return f"{normalize_email(email)}|{ip}"
 
 
+def _email_key(email: str) -> str:
+    return f"{normalize_email(email)}|*"
+
+
 def check_rate_limit(email: str, ip: str) -> None:
     now = time.time()
-    key = _attempt_key(email, ip)
     with _attempts_lock:
-        recent = [t for t in _attempts.get(key, []) if now - t < WINDOW_SECONDS]
-        _attempts[key] = recent
-        if len(recent) >= MAX_FAILS:
-            raise AuthError("Sai quá nhiều lần. Vui lòng thử lại sau 15 phút.", 429)
+        for key, limit in ((_attempt_key(email, ip), MAX_FAILS), (_email_key(email), MAX_FAILS_PER_EMAIL)):
+            recent = [t for t in _attempts.get(key, []) if now - t < WINDOW_SECONDS]
+            if recent:
+                _attempts[key] = recent
+            else:
+                _attempts.pop(key, None)
+            if len(recent) >= limit:
+                raise AuthError("Sai quá nhiều lần. Vui lòng thử lại sau 15 phút.", 429)
 
 
 def record_failure(email: str, ip: str) -> None:
+    now = time.time()
     with _attempts_lock:
-        _attempts.setdefault(_attempt_key(email, ip), []).append(time.time())
+        _attempts.setdefault(_attempt_key(email, ip), []).append(now)
+        _attempts.setdefault(_email_key(email), []).append(now)
 
 
 def clear_failures(email: str, ip: str) -> None:
     with _attempts_lock:
         _attempts.pop(_attempt_key(email, ip), None)
+        _attempts.pop(_email_key(email), None)
 
 
 def reset_rate_limits() -> None:
@@ -255,8 +266,11 @@ def user_by_ingest_secret(secret: str) -> Optional[dict]:
 
 def change_password(email: str, old_password: str, new_password: str) -> None:
     user = get_user(email)
-    if not user or not user.get("password_hash") or not verify_password(old_password, user["password_hash"]):
-        raise AuthError("Mật khẩu hiện tại không đúng.", 401)
+    if not user or not user.get("password_hash"):
+        raise AuthError("Tài khoản này đăng nhập bằng Google nên không có mật khẩu để đổi.", 400)
+    if not verify_password(old_password, user["password_hash"]):
+        # 400 chứ không 401: sai mật khẩu cũ không có nghĩa là phiên đăng nhập hết hạn
+        raise AuthError("Mật khẩu hiện tại không đúng.", 400)
     problem = password_problem(new_password)
     if problem:
         raise AuthError(problem)

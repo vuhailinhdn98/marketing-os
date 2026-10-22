@@ -18,19 +18,27 @@ import time
 
 _ingest_hits: Dict[str, list] = {}
 _ingest_lock = threading.Lock()
-INGEST_LIMIT, INGEST_WINDOW = 30, 600
+INGEST_LIMIT, INGEST_WINDOW = 30, 600   # mỗi IP
+INGEST_LIMIT_TOTAL = 300                 # mỗi đường dẫn nhận lead, mọi IP cộng lại
 
 
 def _ingest_allowed(secret: str, ip: str) -> bool:
     now = time.time()
-    key = f"{secret[:12]}|{ip}"
+    keys = ((f"{secret[:12]}|{ip}", INGEST_LIMIT), (f"{secret[:12]}|*", INGEST_LIMIT_TOTAL))
     with _ingest_lock:
-        hits = [t for t in _ingest_hits.get(key, []) if now - t < INGEST_WINDOW]
-        if len(hits) >= INGEST_LIMIT:
+        recent = {}
+        for key, limit in keys:
+            hits = [t for t in _ingest_hits.get(key, []) if now - t < INGEST_WINDOW]
             _ingest_hits[key] = hits
-            return False
-        hits.append(now)
-        _ingest_hits[key] = hits
+            if len(hits) >= limit:
+                return False
+            recent[key] = hits
+        for key, hits in recent.items():
+            hits.append(now)
+        # Dọn khóa cũ để bộ nhớ không phình khi bị gửi từ rất nhiều IP
+        if len(_ingest_hits) > 5000:
+            for key in [k for k, v in _ingest_hits.items() if not v or now - v[-1] >= INGEST_WINDOW]:
+                _ingest_hits.pop(key, None)
         return True
 
 

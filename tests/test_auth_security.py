@@ -105,6 +105,9 @@ def test_rotating_ingest_secret_invalidates_old(client):
 
 def test_logout_and_password_change(client):
     h = register(client, "p@example.com", "Abcdef123")
+    wrong = client.post("/api/auth/password", json={"old_password": "sai-roi-123", "new_password": "Moi12345x"}, headers=h)
+    assert wrong.status_code == 400  # không trả 401 để giao diện không tự đăng xuất
+    assert client.get("/api/auth/me", headers=h).status_code == 200
     res = client.post("/api/auth/password", json={"old_password": "Abcdef123", "new_password": "Moi12345x"}, headers=h)
     assert res.status_code == 200
     assert client.get("/api/auth/me", headers=h).status_code == 401
@@ -161,3 +164,34 @@ def test_ssrf_blocked():
 def test_webhook_url_must_be_public_https(client, auth):
     assert client.post("/api/settings/webhook", json={"content_webhook_url": "http://example.com/hook"}, headers=auth).status_code == 400
     assert client.post("/api/settings/webhook", json={"content_webhook_url": "https://127.0.0.1/hook"}, headers=auth).status_code == 400
+
+
+def test_rate_limit_per_email_across_ips():
+    from app import security
+    security.reset_rate_limits()
+    for i in range(security.MAX_FAILS_PER_EMAIL):
+        security.record_failure("victim@example.com", f"10.0.0.{i}")
+    import pytest
+    with pytest.raises(security.AuthError) as exc:
+        security.check_rate_limit("victim@example.com", "10.9.9.9")
+    assert exc.value.status == 429
+    security.check_rate_limit("other@example.com", "10.9.9.9")  # email khác không bị ảnh hưởng
+    security.reset_rate_limits()
+
+
+def test_ingest_total_limit(client, auth):
+    from app.routers import leads as leads_router
+    path = client.get("/api/settings/ingest", headers=auth).json()["path"]
+    secret = path.rsplit("/", 1)[1]
+    leads_router._ingest_hits.clear()
+    for i in range(leads_router.INGEST_LIMIT_TOTAL):
+        assert leads_router._ingest_allowed(secret, f"10.1.{i // 250}.{i % 250}")
+    assert leads_router._ingest_allowed(secret, "10.200.0.1") is False
+    leads_router._ingest_hits.clear()
+
+
+def test_head_and_static_cache_headers(client):
+    assert client.head("/").status_code == 200
+    assert client.head("/healthz").status_code == 200
+    r = client.get("/static/js/core.js")
+    assert r.status_code == 200 and r.headers["cache-control"] == "no-cache" and "Content-Security-Policy" in r.headers

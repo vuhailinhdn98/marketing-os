@@ -8,6 +8,7 @@ Không có giá trị bí mật nào được ghi cứng trong mã nguồn.
 from __future__ import annotations
 
 import os
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List
@@ -59,6 +60,21 @@ class Settings:
         return on_render and not os.environ.get("DATA_DIR")
 
 
+def apply_timezone() -> str:
+    """Đặt múi giờ cho tiến trình (mặc định giờ Việt Nam) để "hôm nay", lịch và tháng ngân sách đúng
+    cả khi máy chủ cloud chạy giờ UTC. Thời điểm lưu trong DB (CURRENT_TIMESTAMP) vẫn là UTC; giao diện tự đổi."""
+    tz = (os.environ.get("APP_TIMEZONE") or "Asia/Ho_Chi_Minh").strip()
+    if not hasattr(time, "tzset"):  # Windows: dùng giờ của máy
+        return ""
+    if "/" in tz and not Path("/usr/share/zoneinfo", tz).exists():
+        # Ảnh Docker tối giản có thể thiếu tzdata; Việt Nam không có giờ mùa hè nên dùng chuỗi POSIX tương đương
+        tz = "ICT-7" if tz == "Asia/Ho_Chi_Minh" else "UTC"
+    os.environ["TZ"] = tz
+    time.tzset()
+    return tz
+
+
+apply_timezone()
 settings = Settings()
 
 

@@ -66,6 +66,9 @@ async def security_headers(request: Request, call_next):
         response.headers.setdefault("Content-Security-Policy", CSP)
     if path.startswith("/api/"):
         response.headers.setdefault("Cache-Control", "no-store")
+    elif path == "/" or path.startswith("/static/"):
+        # Luôn hỏi lại máy chủ (rẻ nhờ ETag) để bản cập nhật giao diện có hiệu lực ngay sau khi triển khai
+        response.headers.setdefault("Cache-Control", "no-cache")
     return response
 
 
@@ -101,11 +104,11 @@ for r in (auth.router, core.router, skills.router, content.router, leads.router,
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
-@app.get("/", include_in_schema=False)
+@app.api_route("/", methods=["GET", "HEAD"], include_in_schema=False)
 def index() -> FileResponse:
     return FileResponse(str(STATIC_DIR / "index.html"), media_type="text/html")
 
 
-@app.get("/healthz", include_in_schema=False)
+@app.api_route("/healthz", methods=["GET", "HEAD"], include_in_schema=False)
 def healthz() -> dict:
     return {"ok": True, "version": APP_VERSION}

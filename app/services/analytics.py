@@ -9,6 +9,7 @@ import calendar as _cal
 import csv
 import io
 import json
+import math
 import re
 from collections import defaultdict
 from datetime import date, datetime, timedelta
@@ -36,6 +37,8 @@ def _f(value: Any, name: str, allow_none: bool = False) -> Optional[float]:
         out = float(value)
     except (TypeError, ValueError):
         raise DataError(f"{name} phải là số.")
+    if not math.isfinite(out):
+        raise DataError(f"{name} phải là số hữu hạn.")
     if out < 0:
         raise DataError(f"{name} không được âm.")
     return out

@@ -2942,6 +2942,9 @@
         });
         const data = await res.json();
         if (lBox) lBox.classList.add('hidden');
+        if (pBox && (!cBox || cBox.classList.contains('hidden'))) {
+          pBox.classList.remove('hidden');
+        }
         if (data.status === 'success' && data.competitors) {
           allLoadedCompetitors = data.competitors;
           renderDiscoveredCards(data.competitors);
@@ -3008,11 +3011,19 @@
           if (document.getElementById('man-comp-social')) document.getElementById('man-comp-social').value = '';
           if (document.getElementById('man-comp-notes')) document.getElementById('man-comp-notes').value = '';
 
+          // Reset filter to 'all' so new competitor is guaranteed visible in cards grid
+          currentCompFilter = 'all';
+          document.querySelectorAll('.comp-filter-btn').forEach(btn => {
+            btn.className = "comp-filter-btn px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-slate-200 border border-slate-800 transition";
+          });
+          const activeBtn = document.getElementById('cfilter-all');
+          if (activeBtn) activeBtn.className = "comp-filter-btn px-2.5 py-1 rounded-lg font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30 transition";
+
           allLoadedCompetitors = data.competitors || [];
           renderDiscoveredCards(allLoadedCompetitors);
 
-          // If battlecard was generated, display it immediately
-          if (data.competitor && data.competitor.battlecard_content) {
+          // If competitor data was returned, display battlecard immediately
+          if (data.competitor) {
             displayCompetitorBattlecardUI(data.competitor);
           }
 
@@ -3080,6 +3091,10 @@
         const data = await res.json();
         if (data.status === 'success') {
           showToast("🗑️ Đã xóa toàn bộ đối thủ trong danh sách!");
+          const pBox = document.getElementById('competitor-placeholder');
+          const cBox = document.getElementById('competitor-content');
+          if (pBox) pBox.classList.remove('hidden');
+          if (cBox) { cBox.classList.add('hidden'); cBox.innerHTML = ''; }
           await loadDiscoveredCompetitors();
         } else {
           alert("Lỗi khi xóa: " + (data.detail || "Không rõ"));
@@ -3197,6 +3212,7 @@
 
     // Display Battlecard UI
     function displayCompetitorBattlecardUI(comp) {
+      if (!comp) return;
       const pBox = document.getElementById('competitor-placeholder');
       const lBox = document.getElementById('competitor-loading');
       const cBox = document.getElementById('competitor-content');
@@ -3204,6 +3220,29 @@
       if (pBox) pBox.classList.add('hidden');
       if (lBox) lBox.classList.add('hidden');
       if (cBox) {
+        cBox.dataset.currentCompId = comp.id || '';
+        const battlecardText = comp.battlecard_content || comp.battlecard_markdown || '';
+        let bodyHtml = '';
+        if (battlecardText && battlecardText.trim().length > 20) {
+          bodyHtml = marked.parse(battlecardText);
+        } else {
+          bodyHtml = `
+            <div class="p-8 text-center bg-slate-950/60 rounded-xl border border-slate-800 space-y-4">
+              <div class="w-12 h-12 mx-auto rounded-full bg-rose-500/10 flex items-center justify-center text-rose-400 text-xl">
+                <i class="fa-solid fa-radar fa-spin"></i>
+              </div>
+              <div class="space-y-1">
+                <h4 class="text-sm font-bold text-white">Chưa có dữ liệu tình báo đối đầu cho đối thủ này</h4>
+                <p class="text-xs text-slate-400 max-w-md mx-auto">AI cần quét website hoặc phân tích theo lĩnh vực kinh doanh để lập 6 kịch bản phản đòn và bóc tách tử huyệt 1-1.</p>
+              </div>
+              <button onclick="scanCompetitorAgain(${comp.id})" class="bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white font-semibold text-xs px-5 py-2.5 rounded-xl transition shadow-lg inline-flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Kích Hoạt AI Quét Sâu & Lập Battlecard Ngay</span>
+              </button>
+            </div>
+          `;
+        }
+
         cBox.innerHTML = `
           <div class="mb-5 p-4 bg-gradient-to-r from-rose-950/50 via-slate-900 to-slate-900 border border-rose-500/40 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-3">
             <div>
@@ -3226,7 +3265,7 @@
               <span>Cập Nhật Lại Tình Báo</span>
             </button>
           </div>
-        ` + marked.parse(comp.battlecard_content || '');
+        ` + bodyHtml;
         cBox.classList.remove('hidden');
         cBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
@@ -3275,6 +3314,9 @@
         }
       } catch (err) {
         if (lBox) lBox.classList.add('hidden');
+        if (pBox && (!cBox || cBox.classList.contains('hidden'))) {
+          pBox.classList.remove('hidden');
+        }
         showToast('Lỗi kết nối máy chủ', false);
       }
     }
@@ -3288,6 +3330,13 @@
         if (data.status === 'success') {
           allLoadedCompetitors = data.competitors || [];
           renderDiscoveredCards(allLoadedCompetitors);
+          const cBox = document.getElementById('competitor-content');
+          const pBox = document.getElementById('competitor-placeholder');
+          if (cBox && String(cBox.dataset.currentCompId) === String(compId)) {
+            cBox.classList.add('hidden');
+            cBox.innerHTML = '';
+            if (pBox) pBox.classList.remove('hidden');
+          }
           showToast(`Đã xóa đối thủ ${compName}!`);
         }
       } catch (err) {

@@ -588,13 +588,26 @@ def add_or_update_competitor(comp: dict, user_email: str = "default@marketing-os
     if comp_id:
         cur.execute("""
         UPDATE discovered_competitors SET
-            name = ?, website = ?, phone = ?, social = ?, notes = ?,
-            competitor_type = ?, price_segment = ?, core_products = ?,
-            key_strengths = ?, vulnerabilities = ?,
+            name = CASE WHEN ? != '' THEN ? ELSE name END,
+            website = CASE WHEN ? != '' THEN ? ELSE website END,
+            phone = CASE WHEN ? != '' THEN ? ELSE phone END,
+            social = CASE WHEN ? != '' THEN ? ELSE social END,
+            notes = CASE WHEN ? != '' THEN ? ELSE notes END,
+            competitor_type = CASE WHEN ? != '' THEN ? ELSE competitor_type END,
+            price_segment = CASE WHEN ? != '' THEN ? ELSE price_segment END,
+            core_products = CASE WHEN ? != '' THEN ? ELSE core_products END,
+            key_strengths = CASE WHEN ? != '' THEN ? ELSE key_strengths END,
+            vulnerabilities = CASE WHEN ? != '' THEN ? ELSE vulnerabilities END,
             battlecard_content = CASE WHEN ? != '' THEN ? ELSE battlecard_content END,
-            is_manual = ?, market_context = ?
+            is_manual = ?,
+            market_context = CASE WHEN ? != '' THEN ? ELSE market_context END
         WHERE id = ? AND LOWER(user_email) = ?
-        """, (name, website, phone, social, notes, comp_type, price_seg, core_prod, strengths, vulns, battlecard, battlecard, is_manual, market_ctx, comp_id, email_norm))
+        """, (
+            name, name, website, website, phone, phone, social, social, notes, notes,
+            comp_type, comp_type, price_seg, price_seg, core_prod, core_prod,
+            strengths, strengths, vulns, vulns, battlecard, battlecard,
+            is_manual, market_ctx, market_ctx, comp_id, email_norm
+        ))
     else:
         cur.execute("SELECT id FROM discovered_competitors WHERE LOWER(name) = LOWER(?) AND LOWER(user_email) = ?", (name, email_norm))
         row = cur.fetchone()
@@ -663,10 +676,14 @@ def save_competitor_battlecard(comp_id: int, battlecard_text: str, user_email: s
 
 def get_competitor_by_id(comp_id: int, user_email: str = "default@marketing-os.local") -> Optional[dict]:
     init_app_db()
+    email_norm = normalize_email(user_email)
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM discovered_competitors WHERE id = ?", (comp_id,))
+    cur.execute("SELECT * FROM discovered_competitors WHERE id = ? AND LOWER(user_email) = ?", (comp_id, email_norm))
     row = cur.fetchone()
+    if not row:
+        cur.execute("SELECT * FROM discovered_competitors WHERE id = ?", (comp_id,))
+        row = cur.fetchone()
     conn.close()
     return dict(row) if row else None
 

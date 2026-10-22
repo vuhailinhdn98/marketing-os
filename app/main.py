@@ -524,9 +524,11 @@ def api_add_manual_competitor(req: ManualCompetitorRequest, request: Request):
     if req.scan_deep:
         try:
             dossier_res = analyze_deep_competitor_dossier(profile, comp_dict)
-            battlecard_md = dossier_res.get("battlecard_markdown", "")
+            battlecard_md = dossier_res.get("battlecard_content") or dossier_res.get("battlecard_markdown", "")
             if battlecard_md:
                 save_competitor_battlecard(comp_id, battlecard_md, user_email=user_email)
+            # Đồng bộ các thông tin đã cào và phân tích (điểm mạnh, tử huyệt, hotline...)
+            add_or_update_competitor({**comp_dict, **dossier_res, "id": comp_id}, user_email=user_email)
             log_automation("A02_INTEL", f"Tình báo chuyên sâu: {req.name}", "SUCCESS", f"Đã quét website/hotline và thiết lập hồ sơ tác chiến 1-1 với {req.name}", user_email=user_email)
         except Exception as e:
             print(f"[ERROR] Dossier scan error: {e}")
@@ -543,8 +545,9 @@ def api_scan_competitor_dossier(req: CompetitorDossierScanRequest, request: Requ
     if not comp:
         raise HTTPException(status_code=404, detail="Không tìm thấy đối thủ trong cơ sở dữ liệu")
     dossier_res = analyze_deep_competitor_dossier(profile, comp)
-    battlecard_md = dossier_res.get("battlecard_markdown", "")
+    battlecard_md = dossier_res.get("battlecard_content") or dossier_res.get("battlecard_markdown", "")
     save_competitor_battlecard(req.competitor_id, battlecard_md, user_email=user_email)
+    add_or_update_competitor({**comp, **dossier_res, "id": req.competitor_id}, user_email=user_email)
     log_automation("A02_INTEL", f"Tình báo đối thủ: {comp['name']}", "SUCCESS", f"Đã hoàn thành hồ sơ tình báo chuyên sâu & Battlecard cho {comp['name']}", user_email=user_email)
     return {"status": "success", "battlecard": battlecard_md, "competitor": get_competitor_by_id(req.competitor_id, user_email=user_email)}
 

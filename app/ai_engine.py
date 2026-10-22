@@ -938,6 +938,7 @@ YÊU CẦU LẬP BÁO CÁO TÌNH BÁO TOÀN DIỆN (GỒM 6 PHẦN RÕ RÀNG):
         "key_strengths": strengths_short,
         "vulnerabilities": vulns_short,
         "battlecard_content": ai_out,
+        "battlecard_markdown": ai_out,
         "is_manual": 1
     }
 

@@ -35,6 +35,7 @@ Dự án có sẵn `render.yaml`, `Procfile`, `Dockerfile`.
 
 1. Đưa mã lên GitHub → Render → **New + → Blueprint** → chọn repo. Render đọc `render.yaml` và hỏi giá trị `ADMIN_EMAILS`, `GOOGLE_CLIENT_ID` (có thể để trống).
 2. **Gói Free**: ổ đĩa là tạm thời — dữ liệu (tài khoản, hồ sơ, khách hàng…) **mất mỗi lần dịch vụ khởi động lại hoặc triển khai lại**, và dịch vụ ngủ khi không có truy cập. Chỉ dùng để thử.
+   Mẹo khi còn dùng gói Free: đặt `GEMINI_API_KEY` (và `ADMIN_EMAILS`) trong mục Environment của Render để không phải dán lại key sau mỗi lần dữ liệu bị xóa — key máy chủ chỉ tài khoản quản trị dùng được, trừ khi đặt thêm `SHARE_SERVER_GEMINI_KEY=1`.
 3. **Dùng thật**: nâng dịch vụ lên gói trả phí có **Persistent Disk**, gắn disk vào `/var/data` (mẫu có sẵn, đang để dạng chú thích trong `render.yaml`) và đặt `DATA_DIR=/var/data`.
 4. Kiểm tra: mở `https://<tên-dịch-vụ>.onrender.com/healthz` phải thấy `{"ok": true, ...}`.
 

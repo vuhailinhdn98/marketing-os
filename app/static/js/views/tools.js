@@ -465,8 +465,13 @@
       return;
     }
     el.querySelector('#s-models').innerHTML = (r.text_models || []).map((m) => `<option value="${esc(m)}">`).join('');
-    out.innerHTML = `<div class="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3 text-sm space-y-1">
-      <div class="text-emerald-300 font-semibold"><i class="fa-solid fa-circle-check"></i> Kết nối được Gemini${r.key_source === 'server' ? ' (key máy chủ)' : ''}.</div>
+    const g = r.generate || {};
+    const genHtml = r.generate ? (g.ok
+      ? `<div class="text-emerald-300"><i class="fa-solid fa-circle-check"></i> Thử tạo nội dung: thành công với <code>${esc(g.model)}</code>.</div>`
+      : `<div class="text-rose-300"><i class="fa-solid fa-circle-xmark"></i> Thử tạo nội dung: lỗi${g.model ? ' (' + esc(g.model) + ')' : ''} — ${esc(g.error)}</div>`) : '';
+    out.innerHTML = `<div class="rounded-xl border ${r.generate && !g.ok ? 'border-rose-500/40 bg-rose-500/5' : 'border-emerald-500/30 bg-emerald-500/5'} p-3 text-sm space-y-1">
+      <div class="text-emerald-300 font-semibold"><i class="fa-solid fa-circle-check"></i> Key hợp lệ, đọc được danh sách model${r.key_source === 'server' ? ' (key máy chủ)' : ''}.</div>
+      ${genHtml}
       <div class="text-xs text-slate-300">Model văn bản: ${(r.text_models || []).slice(0, 6).map((m) => `<code>${esc(m)}</code>`).join(', ') || '—'}</div>
       <div class="text-xs text-slate-300">Model ảnh: ${(r.image_models || []).map((m) => `<code>${esc(m)}</code>`).join(', ') || 'không thấy'} · Model video: ${(r.video_models || []).map((m) => `<code>${esc(m)}</code>`).join(', ') || 'không thấy'}</div></div>`;
   }

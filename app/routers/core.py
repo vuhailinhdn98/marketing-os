@@ -22,7 +22,7 @@ router = APIRouter(prefix="/api", tags=["core"])
 def system_status(user: CurrentUser = Depends(require_user)) -> Dict[str, Any]:
     ai = runner.ai_settings(user.email)
     server_key = bool(config.settings.server_gemini_key) and (user.is_admin or config.settings.share_server_key)
-    return {"version": "4.0.0", "ephemeral_storage": config.settings.ephemeral_storage_risk,
+    return {"version": "4.0.1", "ephemeral_storage": config.settings.ephemeral_storage_risk,
             "ai": {**ai, "server_key_available": server_key}, "web_fetch": config.settings.allow_web_fetch,
             "google_login": bool(config.settings.google_client_id)}
 
@@ -48,7 +48,7 @@ def check_ai(user: CurrentUser = Depends(require_user)) -> Dict[str, Any]:
     key, source = runner.resolve_key(user.email, user.is_admin)
     if not key:
         return {"ok": False, "error": "Chưa có Gemini API key."}
-    result = llm.check_key(key)
+    result = llm.check_key(key, generate_test=True, preferred_model=runner.ai_settings(user.email)["model"])
     result["key_source"] = source
     return result
 

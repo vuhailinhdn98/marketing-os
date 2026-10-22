@@ -358,3 +358,35 @@ def test_media_image(client, ready, fake, tmp_path):
     assert f.status_code == 200 and f.content.startswith(b"\x89PNG")
     bad = client.post("/api/media/image", json={"prompt": "Doraemon cầm ly cà phê muối"}, headers=ready)
     assert bad.status_code == 400
+
+
+def test_coerce_to_schema_fixes_small_deviations():
+    schema = {"type": "object", "required": ["stage", "n", "tags", "missing_info"], "properties": {
+        "stage": {"type": "string", "enum": ["Nhận biết", "Cân nhắc"]}, "n": {"type": "integer"},
+        "price": {"type": "number"}, "tags": {"type": "array", "items": {"type": "string"}, "maxItems": 2},
+        "missing_info": {"type": "array", "items": {"type": "string"}}, "label": {"type": "string"}}}
+    out = llm.coerce_to_schema({"stage": " nhận biết ", "n": "3", "price": "1.200.000 đ", "tags": "một", "label": 5}, schema)
+    assert out == {"stage": "Nhận biết", "n": 3, "price": 1200000.0, "tags": ["một"], "label": "5", "missing_info": []}
+    assert llm.coerce_to_schema({"tags": ["a", "b", "c"]}, schema)["tags"] == ["a", "b"]
+
+
+def test_check_key_runs_generation_probe(client, ready, fake):
+    r = client.post("/api/settings/ai/check", headers=ready).json()
+    assert r["ok"] and r["generate"]["ok"] and r["generate"]["model"].startswith("gemini-9.0")
+    fake.fail_first = [llm.LLMError("Gemini từ chối yêu cầu (thường do vùng/billing). Gemini báo: billing", "forbidden")]
+    r = client.post("/api/settings/ai/check", headers=ready).json()
+    assert r["ok"] and not r["generate"]["ok"] and "billing" in r["generate"]["error"]
+
+
+def test_truncated_output_reports_clearly(client, ready, fake):
+    orig = fake._post
+
+    def cut(api_key, path, body, timeout=120):
+        res = orig(api_key, path, body, timeout)
+        if "generateContent" in path and "tools" not in body:
+            res["candidates"][0]["content"]["parts"][0]["text"] = res["candidates"][0]["content"]["parts"][0]["text"][:40]
+            res["candidates"][0]["finishReason"] = "MAX_TOKENS"
+        return res
+    llm._post = cut
+    res = client.post("/api/skills/content_pillars/run", json={"inputs": {}}, headers=ready).json()
+    assert res["status"] == "not_generated" and res["provenance"]["error_code"] == "truncated"

@@ -1,5 +1,13 @@
 # Nhật ký thay đổi
 
+## 4.0.1 — 22/10/2026
+
+- “Kiểm tra kết nối” thử tạo một nội dung thật rất nhỏ và hiện nguyên văn lý do Gemini từ chối (billing, vùng, quota, model) thay vì chỉ kiểm danh sách model.
+- Thông báo lỗi Gemini kèm câu gốc của Gemini; ghi log lỗi phía máy chủ (không ghi key).
+- Giới hạn token theo từng model (đọc từ models.list), nới trần token cho model có “suy nghĩ”, báo rõ khi kết quả bị cắt.
+- Tự sửa lệch định dạng nhỏ trong JSON của AI (hoa/thường của lựa chọn, số viết dạng chữ, mảng thiếu) trước khi kiểm schema.
+- Tăng thời gian chờ Gemini lên 240 giây cho tác vụ dài.
+
 ## 4.0.0 — 22/10/2026
 
 Viết lại phần ứng dụng web theo phương án nâng cấp (Đợt 0–4), dựa trên bộ skill marketing tổng hợp.

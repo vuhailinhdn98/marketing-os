@@ -91,18 +91,22 @@ def _raise_for(resp: requests.Response) -> None:
     low = message.lower()
     if resp.status_code == 400 and ("api key not valid" in low or "api_key_invalid" in low or status == "INVALID_ARGUMENT" and "key" in low and "api" in low):
         raise LLMError("Gemini API key không hợp lệ. Kiểm tra lại key trong mục Cài đặt.", "invalid_key")
+    detail = f" Gemini báo: {message}" if message else ""
     if resp.status_code in (401, 403):
-        raise LLMError("API key không có quyền dùng Gemini API (kiểm tra giới hạn key hoặc billing).", "forbidden")
+        raise LLMError("API key không có quyền dùng Gemini API (kiểm tra giới hạn của key, dự án Google Cloud hoặc billing)." + detail,
+                       "forbidden")
     if resp.status_code == 404:
-        raise LLMError(f"Model không tồn tại hoặc không hỗ trợ: {message}", "model_not_found", retry_next_model=True)
+        raise LLMError(f"Model không tồn tại hoặc không còn hỗ trợ.{detail}", "model_not_found", retry_next_model=True)
     if resp.status_code == 429:
-        raise LLMError("Đã hết hạn mức (quota) của model này.", "quota", retry_next_model=True)
+        raise LLMError("Đã hết hạn mức (quota) của model này; hệ thống thử model khác." + detail, "quota", retry_next_model=True)
     if resp.status_code >= 500:
-        raise LLMError(f"Máy chủ Gemini lỗi tạm thời (HTTP {resp.status_code}).", "server", retry_next_model=True)
-    raise LLMError(f"Yêu cầu bị từ chối (HTTP {resp.status_code}): {message}", "bad_request")
+        raise LLMError(f"Máy chủ Gemini lỗi tạm thời (HTTP {resp.status_code}).{detail}", "server", retry_next_model=True)
+    if resp.status_code == 400 and status == "FAILED_PRECONDITION":
+        raise LLMError("Gemini từ chối yêu cầu (thường do vùng/billing của dự án)." + detail, "forbidden")
+    raise LLMError(f"Yêu cầu bị từ chối (HTTP {resp.status_code}).{detail}", "bad_request")
 
 
-def _post(api_key: str, path: str, body: Dict[str, Any], timeout: float = 120) -> Dict[str, Any]:
+def _post(api_key: str, path: str, body: Dict[str, Any], timeout: float = 240) -> Dict[str, Any]:
     try:
         resp = requests.post(f"{API_BASE}/{path}", headers=_headers(api_key), json=body, timeout=(10, timeout))
     except requests.RequestException as exc:
@@ -145,6 +149,19 @@ def list_models(api_key: str, force: bool = False) -> List[Dict[str, Any]]:
     with _cache_lock:
         _model_cache[kid] = (now, models)
     return models
+
+
+def output_limit(api_key: str, model: str, default: int = 8192) -> int:
+    """Giới hạn token đầu ra của model theo models.list (đã lưu đệm). Không có thông tin thì dùng mức an toàn."""
+    with _cache_lock:
+        cached = _model_cache.get(_key_id(api_key))
+    for m in (cached[1] if cached else []):
+        if _short(m.get("name", "")) == model:
+            try:
+                return int(m.get("outputTokenLimit") or default)
+            except (TypeError, ValueError):
+                return default
+    return default
 
 
 def clear_model_cache() -> None:
@@ -235,7 +252,14 @@ def _extract(payload: Dict[str, Any]) -> Tuple[str, Dict[str, Any], List[Dict[st
         raise LLMError(f"Kết quả bị Gemini chặn ({finish}).", "blocked")
     parts = (cand.get("content") or {}).get("parts") or []
     text = "".join(p.get("text", "") for p in parts if not p.get("thought"))
+    if not text.strip() and finish == "MAX_TOKENS":
+        raise LLMError("Model dùng hết giới hạn token trước khi trả kết quả.", "truncated", retry_next_model=True)
     return text, cand.get("groundingMetadata") or {}, parts
+
+
+def _finish_reason(payload: Dict[str, Any]) -> str:
+    cands = payload.get("candidates") or []
+    return str(cands[0].get("finishReason", "")) if cands else ""
 
 
 def _grounding(meta: Dict[str, Any]) -> Tuple[List[Dict[str, str]], List[str]]:
@@ -279,6 +303,59 @@ def parse_json_text(text: str) -> Any:
     return json.loads(s[start:end + 1])
 
 
+def _num_from_text(value: str) -> Optional[float]:
+    s = value.strip().replace(" ", "").replace("%", "").replace("đ", "").replace("VND", "").replace("vnd", "")
+    if re.fullmatch(r"-?\d{1,3}([.,]\d{3})+", s):
+        s = re.sub(r"[.,]", "", s)
+    s = s.replace(",", ".")
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+def coerce_to_schema(data: Any, schema: Optional[Dict[str, Any]]) -> Any:
+    """Sửa các lệch nhỏ hay gặp khi model không bị ép schema: enum khác hoa/thường, số viết dạng chữ,
+    số nguyên dạng 3.0, chuỗi đơn thay cho mảng, mảng dài quá maxItems, thiếu mảng bắt buộc.
+    Không bịa nội dung: chỉ đổi kiểu/định dạng, thiếu trường văn bản vẫn bị báo lỗi."""
+    if not isinstance(schema, dict):
+        return data
+    t = schema.get("type")
+    if "enum" in schema and isinstance(data, str) and data not in schema["enum"]:
+        low = data.strip().lower()
+        for opt in schema["enum"]:
+            if isinstance(opt, str) and opt.strip().lower() == low:
+                return opt
+        return data
+    if t in ("number", "integer"):
+        if isinstance(data, str):
+            num = _num_from_text(data)
+            if num is not None:
+                data = num
+        if t == "integer" and isinstance(data, float) and data.is_integer():
+            return int(data)
+        return data
+    if t == "string" and isinstance(data, (int, float)) and not isinstance(data, bool):
+        return str(data)
+    if t == "array":
+        if isinstance(data, (str, dict)) and data != "":
+            data = [data]
+        if not isinstance(data, list):
+            return data
+        items = [coerce_to_schema(x, schema.get("items")) for x in data]
+        if isinstance(schema.get("maxItems"), int):
+            items = items[: schema["maxItems"]]
+        return items
+    if t == "object" and isinstance(data, dict):
+        props = schema.get("properties") or {}
+        out = {k: coerce_to_schema(v, props.get(k)) for k, v in data.items()}
+        for key in schema.get("required") or []:
+            if key not in out and (props.get(key) or {}).get("type") == "array":
+                out[key] = []
+        return out
+    return data
+
+
 def _schema_errors(data: Any, schema: Optional[Dict[str, Any]]) -> List[str]:
     if not schema:
         return []
@@ -291,7 +368,7 @@ def _schema_errors(data: Any, schema: Optional[Dict[str, Any]]) -> List[str]:
 
 
 def generate_json(api_key: str, *, system: str, prompt: str, schema: Dict[str, Any],
-                  preferred_model: str = "", temperature: float = 0.5, max_output_tokens: int = 16384) -> LLMResult:
+                  preferred_model: str = "", temperature: float = 0.5, max_output_tokens: int = 32768) -> LLMResult:
     """Sinh JSON đúng schema. Trả LLMResult(ok=False) kèm lý do nếu không được."""
     try:
         models = pick_models(api_key, preferred_model, "text")
@@ -304,7 +381,8 @@ def generate_json(api_key: str, *, system: str, prompt: str, schema: Dict[str, A
     use_schema_field = {"on": True}
 
     def body_for(_model: str) -> Dict[str, Any]:
-        gen: Dict[str, Any] = {"temperature": temperature, "maxOutputTokens": max_output_tokens,
+        gen: Dict[str, Any] = {"temperature": temperature,
+                               "maxOutputTokens": min(max_output_tokens, output_limit(api_key, _model)),
                                "responseMimeType": "application/json"}
         if use_schema_field["on"]:
             gen["responseJsonSchema"] = schema
@@ -322,30 +400,39 @@ def generate_json(api_key: str, *, system: str, prompt: str, schema: Dict[str, A
             else:
                 raise
         text, _, _ = _extract(payload)
+        truncated = _finish_reason(payload) == "MAX_TOKENS"
         try:
-            data = parse_json_text(text)
+            data = coerce_to_schema(parse_json_text(text), schema)
             errors = _schema_errors(data, schema)
         except ValueError as exc:
             data, errors = None, [str(exc)]
+        if errors and truncated:
+            log.warning("generate_json truncated output model=%s chars=%s", model, len(text))
+            return LLMResult(ok=False, model=model, text=text, error_code="truncated",
+                             error="Kết quả quá dài nên bị Gemini cắt giữa chừng. Thử rút gọn yêu cầu (ít ngày/ít kênh hơn) "
+                                   "hoặc chọn model khác trong Cài đặt.")
         if errors:
+            log.info("generate_json repair model=%s errors=%s", model, errors[:3])
             repair = (f"Kết quả JSON trước đó chưa đúng schema. Lỗi: {errors}\n\nKết quả trước:\n{text[:12000]}\n\n"
                       f"Hãy trả lại JSON đã sửa, giữ nguyên nội dung đúng, theo schema:\n{schema_text}")
             payload = _post(api_key, f"models/{model}:generateContent", {
                 "systemInstruction": {"parts": [{"text": system}]},
                 "contents": [{"role": "user", "parts": [{"text": repair}]}],
-                "generationConfig": {"temperature": 0.1, "maxOutputTokens": max_output_tokens,
+                "generationConfig": {"temperature": 0.1, "maxOutputTokens": min(max_output_tokens, output_limit(api_key, model)),
                                      "responseMimeType": "application/json"},
             })
             text, _, _ = _extract(payload)
-            data = parse_json_text(text)
+            data = coerce_to_schema(parse_json_text(text), schema)
             errors = _schema_errors(data, schema)
             if errors:
                 return LLMResult(ok=False, model=model, text=text, error="AI trả về dữ liệu sai cấu trúc: " + "; ".join(errors[:3]),
                                  error_code="invalid_output")
         return LLMResult(ok=True, data=data, text=text, model=model)
     except LLMError as exc:
+        log.warning("generate_json failed code=%s msg=%s", exc.code, exc.message)
         return LLMResult(ok=False, error=exc.message, error_code=exc.code)
     except ValueError as exc:
+        log.warning("generate_json unreadable JSON: %s", exc)
         return LLMResult(ok=False, error=f"Không đọc được JSON từ AI: {exc}", error_code="invalid_output")
 
 
@@ -361,7 +448,7 @@ def generate_grounded(api_key: str, *, system: str, prompt: str, preferred_model
         return {"systemInstruction": {"parts": [{"text": system}]},
                 "contents": [{"role": "user", "parts": [{"text": prompt}]}],
                 "tools": [{"google_search": {}}],
-                "generationConfig": {"temperature": temperature, "maxOutputTokens": 12288}}
+                "generationConfig": {"temperature": temperature, "maxOutputTokens": min(12288, output_limit(api_key, _model))}}
 
     try:
         model, payload = _call_with_fallback(api_key, models, body_for)
@@ -369,18 +456,26 @@ def generate_grounded(api_key: str, *, system: str, prompt: str, preferred_model
         sources, queries = _grounding(meta)
         return LLMResult(ok=True, text=text, model=model, grounded=bool(sources), sources=sources, search_queries=queries)
     except LLMError as exc:
+        log.warning("generate_grounded failed code=%s msg=%s", exc.code, exc.message)
         return LLMResult(ok=False, error=exc.message, error_code=exc.code)
 
 
-def check_key(api_key: str) -> Dict[str, Any]:
-    """Kiểm tra key bằng models.list (không tốn hạn mức sinh nội dung)."""
+def check_key(api_key: str, *, generate_test: bool = False, preferred_model: str = "") -> Dict[str, Any]:
+    """Kiểm tra key bằng models.list; generate_test=True thử thêm một lần sinh nội dung rất nhỏ."""
     try:
         models = list_models(api_key, force=True)
     except LLMError as exc:
         return {"ok": False, "error": exc.message, "code": exc.code}
     text = rank_text_models(models)
-    return {"ok": True, "text_models": text[:12], "image_models": pick_models(api_key, kind="image"),
-            "video_models": pick_models(api_key, kind="video")}
+    out: Dict[str, Any] = {"ok": True, "text_models": text[:12], "image_models": pick_models(api_key, kind="image"),
+                           "video_models": pick_models(api_key, kind="video")}
+    if generate_test:
+        # Thử sinh một JSON rất nhỏ theo schema: phát hiện lỗi billing/vùng/quota mà models.list không lộ ra
+        res = generate_json(api_key, system="Bạn là trợ lý kiểm tra kết nối.", prompt="Trả về ok = true.",
+                            schema={"type": "object", "properties": {"ok": {"type": "boolean"}}, "required": ["ok"]},
+                            preferred_model=preferred_model, temperature=0, max_output_tokens=2048)
+        out["generate"] = {"ok": res.ok, "model": res.model, "error": res.error, "error_code": res.error_code}
+    return out
 
 
 # ---------------------------------------------------------------------------

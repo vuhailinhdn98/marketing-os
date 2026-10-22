@@ -53,106 +53,316 @@
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased">
 
   <!-- GOOGLE / GMAIL AUTHENTICATION GATE (LOCK SCREEN) -->
-  <div id="auth-gate-modal" class="fixed inset-0 z-[9999] bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-8 shadow-2xl shadow-sky-500/10 text-center relative overflow-hidden">
+  <div id="auth-gate-modal" class="fixed inset-0 z-[9999] bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl shadow-sky-500/10 text-center relative overflow-hidden">
       <!-- Glow ambient -->
       <div class="absolute -top-24 -left-24 w-48 h-48 bg-sky-500/20 rounded-full blur-3xl pointer-events-none"></div>
       <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
-      <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white text-2xl mx-auto shadow-xl shadow-sky-500/25 mb-4">
+      <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white text-xl sm:text-2xl mx-auto shadow-xl shadow-sky-500/25 mb-4">
         <i class="fa-solid fa-shield-halved"></i>
       </div>
 
-      <h2 class="text-2xl font-extrabold text-white tracking-tight">MARKETING OS</h2>
-      <p class="text-xs text-sky-400 font-semibold uppercase tracking-wider mt-1 mb-4">Hệ Thống Tự Động Hóa Tình Báo & Tăng Trưởng</p>
+      <h2 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">MARKETING OS</h2>
+      <p class="text-[11px] sm:text-xs text-sky-400 font-semibold uppercase tracking-wider mt-1 mb-4">Hệ Thống Tự Động Hóa Tình Báo & Tăng Trưởng</p>
 
-      <div class="bg-slate-800/70 border border-slate-700/60 rounded-2xl p-4 text-xs text-slate-300 mb-6 leading-relaxed text-left flex items-start gap-3">
-        <i class="fa-solid fa-lock text-emerald-400 text-sm mt-0.5 shrink-0"></i>
+      <div class="bg-slate-800/70 border border-slate-700/60 rounded-2xl p-3.5 sm:p-4 text-xs text-slate-300 mb-5 leading-relaxed text-left flex items-start gap-3">
+        <i class="fa-solid fa-user-lock text-emerald-400 text-sm mt-0.5 shrink-0"></i>
         <div>
-          <span class="font-bold text-white">Yêu cầu đăng nhập tài khoản Gmail:</span>
-          <p class="text-slate-400 mt-1">Để bảo vệ dữ liệu chiến lược, tình báo đối thủ và đồng bộ tự động 24/7, bạn cần xác thực bằng tài khoản Google (Gmail) để vào hệ thống.</p>
+          <span class="font-bold text-white">Không Gian Làm Việc Riêng Biệt Cho Mỗi Gmail:</span>
+          <p class="text-slate-400 mt-1">Mỗi tài khoản Gmail khi đăng nhập sẽ sở hữu 1 cơ sở dữ liệu riêng biệt. Dữ liệu hồ sơ, đối thủ, bài viết và lịch trình của bạn được bảo mật tuyệt đối và lưu trữ độc lập.</p>
         </div>
       </div>
 
       <!-- Google Sign-In One-Click Button -->
-      <button onclick="loginWithGooglePrompt()" class="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-100 text-slate-800 font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-white/5 transition mb-3.5 active:scale-95">
+      <button onclick="loginWithGooglePrompt()" class="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-100 text-slate-800 font-bold py-3 px-4 rounded-xl shadow-lg shadow-white/5 transition mb-3.5 active:scale-95 text-xs sm:text-sm">
         <svg class="w-5 h-5" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
           <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
           <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
           <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
         </svg>
-        <span>Đăng nhập nhanh với Google</span>
+        <span>Đăng nhập nhanh với Google (Gmail)</span>
       </button>
 
       <div class="flex items-center gap-3 my-3">
         <div class="h-px bg-slate-800 flex-1"></div>
-        <span class="text-[11px] text-slate-500 uppercase font-semibold">Hoặc nhập địa chỉ Gmail</span>
+        <span class="text-[10px] sm:text-[11px] text-slate-500 uppercase font-semibold">Hoặc nhập bất kỳ địa chỉ Gmail nào</span>
         <div class="h-px bg-slate-800 flex-1"></div>
       </div>
 
       <!-- Direct Gmail Input -->
-      <div class="space-y-3">
+      <form onsubmit="handleDirectEmailSubmit(event)" class="space-y-3">
         <div class="relative">
           <i class="fa-solid fa-envelope absolute left-3.5 top-3.5 text-slate-500 text-xs"></i>
-          <input id="auth-email-input" type="email" placeholder="Nhập địa chỉ Gmail (ví dụ: lindseyvu98@gmail.com)" class="w-full bg-slate-800 border border-slate-700 rounded-xl pl-9 pr-3.5 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
+          <input id="auth-email-input" type="email" required placeholder="Nhập địa chỉ Gmail (VD: tenban@gmail.com)" class="w-full bg-slate-800 border border-slate-700 rounded-xl pl-9 pr-3.5 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500">
         </div>
-        <button onclick="loginWithDirectEmail()" id="btn-login-submit" class="w-full bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-xl text-xs shadow-lg shadow-sky-500/20 transition flex items-center justify-center gap-2">
+        <button type="submit" id="btn-login-submit" class="w-full bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-xl text-xs shadow-lg shadow-sky-500/20 transition flex items-center justify-center gap-2">
           <i class="fa-solid fa-arrow-right-to-bracket"></i>
-          <span>Xác Thực Gmail & Truy Cập</span>
+          <span>Vào Không Gian Làm Việc Của Bạn</span>
         </button>
-      </div>
+      </form>
 
-      <p class="text-[11px] text-slate-500 mt-5 flex items-center justify-center gap-1.5">
-        <i class="fa-solid fa-shield text-emerald-400 text-[10px]"></i>
-        <span>Xác thực an toàn & đồng bộ thời gian thực</span>
+      <p class="text-[10px] sm:text-[11px] text-slate-500 mt-4 flex items-center justify-center gap-1.5">
+        <i class="fa-solid fa-shield-check text-emerald-400 text-xs"></i>
+        <span>Xác thực an toàn & Đồng bộ tự động với Google Sheets</span>
       </p>
     </div>
   </div>
 
   <!-- TOP NAVIGATION -->
-  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 px-6 py-3 flex justify-between items-center">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20">
-        <i class="fa-solid fa-rocket text-lg"></i>
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50 px-3 sm:px-6 py-2.5 sm:py-3 flex justify-between items-center">
+    <div class="flex items-center gap-2.5 sm:gap-3">
+      <!-- Mobile Drawer Hamburger Toggle Button -->
+      <button onclick="toggleMobileDrawer()" class="md:hidden p-2 text-slate-300 hover:text-white rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700/60 transition" aria-label="Mở Menu Điều Hướng">
+        <i class="fa-solid fa-bars text-sm"></i>
+      </button>
+
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20 shrink-0">
+        <i class="fa-solid fa-rocket text-sm sm:text-lg"></i>
       </div>
       <div>
-        <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-sky-400 to-indigo-300 bg-clip-text text-transparent">MARKETING OS</h1>
-        <p class="text-xs text-slate-400 flex items-center gap-1.5">
+        <h1 class="text-base sm:text-lg font-bold tracking-tight bg-gradient-to-r from-sky-400 to-indigo-300 bg-clip-text text-transparent">MARKETING OS</h1>
+        <p class="text-[10px] sm:text-xs text-slate-400 flex items-center gap-1.5">
           <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          Đang phục vụ: <span id="nav-brand-name" class="font-semibold text-slate-200">Chưa thiết lập</span>
+          <span class="hidden sm:inline">Đang phục vụ:</span> <span id="nav-brand-name" class="font-semibold text-slate-200 truncate max-w-[110px] sm:max-w-[200px]">Chưa thiết lập</span>
         </p>
       </div>
     </div>
     
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Google Sheets Management Button -->
+      <button onclick="openSheetsModal()" class="bg-emerald-950/40 hover:bg-emerald-900/60 border border-emerald-700/50 text-emerald-300 px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shadow shadow-emerald-900/20" title="Quản lý tài khoản đăng nhập & Đồng bộ Google Sheet">
+        <i class="fa-solid fa-table text-emerald-400 text-xs"></i>
+        <span class="hidden sm:inline">Google Sheets</span>
+      </button>
+
       <!-- Gmail User Profile Badge -->
-      <div id="user-header-profile" class="flex items-center gap-2 bg-slate-800/90 border border-slate-700 px-2.5 py-1.5 rounded-xl shadow-inner">
-        <img id="user-avatar-img" src="https://ui-avatars.com/api/?name=User&background=0ea5e9&color=fff" class="w-6 h-6 rounded-full border border-sky-400 object-cover">
-        <div class="text-left hidden md:block">
-          <span id="user-display-email" class="text-xs text-slate-200 font-medium block max-w-[150px] truncate">user@gmail.com</span>
+      <div id="user-header-profile" class="flex items-center gap-1.5 sm:gap-2 bg-slate-800/90 border border-slate-700 px-2 py-1.5 rounded-xl shadow-inner">
+        <img id="user-avatar-img" src="https://ui-avatars.com/api/?name=User&background=0ea5e9&color=fff" class="w-6 h-6 rounded-full border border-sky-400 object-cover shrink-0">
+        <div class="text-left hidden lg:block">
+          <span id="user-display-email" class="text-xs text-slate-200 font-medium block max-w-[140px] truncate">user@gmail.com</span>
         </div>
-        <button onclick="handleLogout()" class="text-slate-400 hover:text-rose-400 text-xs ml-1 transition" title="Đăng xuất tài khoản Gmail">
+        <button onclick="handleLogout()" class="text-slate-400 hover:text-rose-400 text-xs p-1 transition" title="Đăng xuất tài khoản">
           <i class="fa-solid fa-right-from-bracket"></i>
         </button>
       </div>
 
-      <div class="hidden sm:flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold text-emerald-400">
+      <div class="hidden xl:flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold text-emerald-400">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
         <span>AUTO-PILOT 24/7</span>
       </div>
 
-      <button onclick="confirmResetDatabase()" class="bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/60 text-rose-300 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition" title="Xóa dữ liệu cũ, đưa hệ thống về trạng thái mới tinh">
+      <button onclick="confirmResetDatabase()" class="hidden md:flex bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/60 text-rose-300 px-2.5 py-1.5 rounded-lg text-xs font-medium items-center gap-1.5 transition" title="Làm mới không gian làm việc này">
         <i class="fa-solid fa-rotate-left"></i>
-        <span class="hidden lg:inline">Làm Mới Hệ Thống</span>
+        <span class="hidden xl:inline">Làm Mới</span>
       </button>
 
-      <button onclick="switchTab('tab-profile')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
+      <button onclick="switchTab('tab-profile')" class="hidden sm:flex bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-2.5 py-1.5 rounded-lg text-xs font-medium items-center gap-1.5 transition">
         <i class="fa-solid fa-sliders"></i>
         <span class="hidden md:inline">Cấu Hình</span>
       </button>
     </div>
   </header>
+
+  <!-- MOBILE SLIDE-OUT DRAWER MENU -->
+  <div id="mobile-drawer" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex flex-col md:hidden animate-in fade-in duration-150">
+    <!-- Drawer Header -->
+    <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+      <div class="flex items-center gap-2.5">
+        <img id="drawer-user-avatar" src="https://ui-avatars.com/api/?name=User&background=0ea5e9&color=fff" class="w-8 h-8 rounded-full border border-sky-400 object-cover">
+        <div class="text-left">
+          <span id="drawer-user-email" class="text-xs text-white font-bold block max-w-[180px] truncate">user@gmail.com</span>
+          <span class="text-[10px] text-emerald-400 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            Đang hoạt động
+          </span>
+        </div>
+      </div>
+      <button onclick="closeMobileDrawer()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition">
+        <i class="fa-solid fa-xmark text-base"></i>
+      </button>
+    </div>
+
+    <!-- Drawer Navigation List -->
+    <div class="p-3 space-y-1 overflow-y-auto flex-1">
+      <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1.5">Khởi tạo & Cấu hình</div>
+      <button onclick="switchTabFromMobile('tab-profile')" id="m-btn-tab-profile" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-building text-sky-400 w-5"></i>
+        <span>Hồ sơ Doanh nghiệp</span>
+      </button>
+
+      <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1.5 pt-3">Trí tuệ Nhân tạo AI</div>
+      <button onclick="switchTabFromMobile('tab-research')" id="m-btn-tab-research" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-magnifying-glass-chart text-indigo-400 w-5"></i>
+        <span>Nghiên cứu Thị trường</span>
+      </button>
+      <button onclick="switchTabFromMobile('tab-competitors')" id="m-btn-tab-competitors" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-crosshairs text-rose-400 w-5"></i>
+        <span>Tình báo Đối thủ & Battlecard</span>
+      </button>
+      <button onclick="switchTabFromMobile('tab-personas')" id="m-btn-tab-personas" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-users text-amber-400 w-5"></i>
+        <span>Chân dung Khách hàng</span>
+      </button>
+
+      <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1.5 pt-3">Sản xuất & Chiến dịch</div>
+      <button onclick="switchTabFromMobile('tab-content')" id="m-btn-tab-content" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-pen-nib text-teal-400 w-5"></i>
+        <span>Xưởng Tạo Nội dung</span>
+      </button>
+      <button onclick="switchTabFromMobile('tab-calendar')" id="m-btn-tab-calendar" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-calendar-days text-purple-400 w-5"></i>
+        <span>Lịch Nội dung 30 Ngày</span>
+      </button>
+      <button onclick="switchTabFromMobile('tab-catalyst')" id="m-btn-tab-catalyst" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-network-wired text-cyan-400 w-5"></i>
+        <span>Biệt Đội AI (CATALYST 6 Chuyên Viên)</span>
+      </button>
+
+      <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1.5 pt-3">Vận hành & Đo lường</div>
+      <button onclick="switchTabFromMobile('tab-analytics')" id="m-btn-tab-analytics" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-chart-line text-emerald-400 w-5"></i>
+        <span>Báo cáo & Dashboard</span>
+      </button>
+      <button onclick="switchTabFromMobile('tab-automations')" id="m-btn-tab-automations" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-clock-rotate-left text-blue-400 w-5"></i>
+        <span>Lịch Chạy Tự Động</span>
+      </button>
+    </div>
+
+    <!-- Drawer Footer Actions -->
+    <div class="p-3 border-t border-slate-800 space-y-2 bg-slate-900/90">
+      <button onclick="openSheetsModal(); closeMobileDrawer();" class="w-full bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-600/50 text-emerald-300 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2">
+        <i class="fa-solid fa-table text-emerald-400"></i>
+        <span>Quản Lý Tài Khoản & Google Sheets</span>
+      </button>
+      <div class="flex gap-2">
+        <button onclick="confirmResetDatabase(); closeMobileDrawer();" class="flex-1 bg-rose-950/50 text-rose-300 border border-rose-800/60 py-2 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span>Làm Mới</span>
+        </button>
+        <button onclick="handleLogout()" class="flex-1 bg-slate-800 text-slate-300 border border-slate-700 py-2 rounded-xl text-xs font-medium flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-right-from-bracket text-rose-400"></i>
+          <span>Đăng Xuất</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOOGLE SHEETS & USER MANAGEMENT MODAL -->
+  <div id="modal-google-sheets" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm hidden animate-in fade-in duration-150">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-4xl max-h-[92vh] flex flex-col rounded-3xl shadow-2xl overflow-hidden">
+      <!-- Header -->
+      <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl shrink-0 border border-emerald-500/30">
+            <i class="fa-solid fa-table"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <span>Quản Lý Tài Khoản & Đồng Bộ Google Sheet</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Mỗi Gmail là 1 tài khoản riêng biệt. Lưu trữ và đồng bộ tự động vào Google Sheet của bạn.</p>
+          </div>
+        </div>
+        <button onclick="closeSheetsModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="p-4 sm:p-6 space-y-6 overflow-y-auto flex-1 text-xs text-slate-300">
+        <!-- Section 1: Webhook URL Configuration -->
+        <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-800/80">
+            <h4 class="text-xs font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-link text-emerald-400"></i>
+              <span>Cấu Hình Webhook Tự Động Ghi Vào Google Sheet</span>
+            </h4>
+            <span id="sheet-conn-badge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700 self-start sm:self-auto">Đang kiểm tra...</span>
+          </div>
+
+          <p class="text-slate-400 leading-relaxed text-[11px]">
+            Dán <strong>URL ứng dụng web (Google Apps Script Web App URL)</strong> từ Google Sheet của bạn vào ô dưới. Mỗi khi có bất kỳ ai đăng nhập Gmail vào hệ thống, dữ liệu tài khoản sẽ tự động được ghi nhận theo thời gian thực!
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input type="url" id="inp-sheet-webhook-url" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500">
+            <button onclick="saveSheetsConfig()" id="btn-save-sheet-url" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-4 py-2.5 rounded-xl transition flex items-center justify-center gap-1.5 shrink-0 shadow">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Lưu URL Kết Nối</span>
+            </button>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 pt-2">
+            <button onclick="syncAllToSheets()" id="btn-sync-all-sheets" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+              <i class="fa-solid fa-cloud-arrow-up text-emerald-400"></i>
+              <span>Đồng Bộ Toàn Bộ Danh Sách Lên Google Sheet Ngay</span>
+            </button>
+            <button onclick="downloadSheetsCSV()" class="bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-700 font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+              <i class="fa-solid fa-file-csv text-sky-400"></i>
+              <span>Tải File CSV (Mở trong Google Sheet/Excel)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Section 2: Real-time Registered Users Table -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-users text-sky-400"></i>
+              <span>Tất Cả Tài Khoản Đã Đăng Nhập (<span id="sheet-total-users">0</span>)</span>
+            </h4>
+            <button onclick="loadSheetsModalData()" class="text-xs text-sky-400 hover:text-sky-300 flex items-center gap-1">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>Làm mới</span>
+            </button>
+          </div>
+
+          <div class="border border-slate-800 rounded-2xl overflow-hidden overflow-x-auto bg-slate-950/60">
+            <table class="w-full text-left text-xs text-slate-300 min-w-[600px]">
+              <thead class="bg-slate-900/90 text-slate-400 border-b border-slate-800 text-[11px] font-semibold uppercase">
+                <tr>
+                  <th class="p-3">Tài Khoản Gmail</th>
+                  <th class="p-3">Họ Tên</th>
+                  <th class="p-3 text-center">Số Lần Đăng Nhập</th>
+                  <th class="p-3">Thương Hiệu Đã Cấu Hình</th>
+                  <th class="p-3">Lần Đăng Nhập Gần Nhất</th>
+                </tr>
+              </thead>
+              <tbody id="sheet-users-tbody" class="divide-y divide-slate-800/60">
+                <tr>
+                  <td colspan="5" class="p-4 text-center text-slate-500 italic">Đang tải danh sách tài khoản...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 3: Google Apps Script Instructions & Copy Snippet -->
+        <div class="bg-slate-950 border border-slate-800/80 rounded-2xl p-4 sm:p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-code text-amber-400"></i>
+              <span>Mã Nguồn Google Apps Script (Dán vào Google Sheet trong 30s)</span>
+            </h4>
+            <button onclick="copyAppsScriptCode()" class="bg-slate-800 hover:bg-slate-700 text-sky-300 px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition">
+              <i class="fa-solid fa-copy"></i>
+              <span>Sao Chép Mã Code</span>
+            </button>
+          </div>
+          <ol class="list-decimal list-inside space-y-1 text-slate-400 text-[11px] leading-relaxed">
+            <li>Mở file <strong>Google Sheets</strong> của bạn, chọn menu: <code>Tiện ích mở rộng (Extensions)</code> &rarr; <code>Apps Script</code>.</li>
+            <li>Xóa code mặc định và dán đoạn mã bên dưới vào.</li>
+            <li>Bấm <strong>Triển khai (Deploy)</strong> &rarr; <strong>Tùy chọn triển khai mới (New deployment)</strong> &rarr; Chọn loại: <strong>Ứng dụng web (Web app)</strong>.</li>
+            <li>Đặt quyền truy cập: <em>"Bất kỳ ai" (Anyone)</em> &rarr; Bấm Triển khai &rarr; Copy URL dán vào ô Cấu hình ở trên.</li>
+          </ol>
+          <pre id="code-apps-script-snippet" class="bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-[11px] text-sky-300 font-mono overflow-x-auto max-h-48 leading-relaxed"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- AUTO-PILOT BANNER -->
   <div class="bg-slate-900 border-b border-slate-800 px-6 py-2 flex flex-wrap justify-between items-center text-xs text-slate-400 gap-2">
@@ -222,7 +432,7 @@
     </aside>
 
     <!-- CONTENT AREA -->
-    <main class="flex-1 overflow-y-auto p-6 lg:p-8 space-y-6">
+    <main class="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-8 space-y-6 pb-28 md:pb-8">
 
       <!-- TAB 1: BUSINESS PROFILE -->
       <section id="tab-profile" class="tab-pane hidden space-y-6">
@@ -1202,6 +1412,34 @@
     </main>
   </div>
 
+  <!-- MOBILE BOTTOM NAVIGATION BAR (FIX CHO GIAO DIỆN ĐIỆN THOẠI) -->
+  <nav id="mobile-bottom-nav" class="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 border-t border-slate-800 backdrop-blur-lg flex justify-around items-center py-2 px-1 md:hidden shadow-2xl">
+    <button onclick="switchTab('tab-profile')" id="bnav-tab-profile" class="mobile-bnav-btn flex flex-col items-center gap-1 text-[10px] font-semibold text-slate-400 hover:text-sky-400 py-1 px-2 rounded-lg transition active:scale-95">
+      <i class="fa-solid fa-building text-base"></i>
+      <span>Hồ Sơ</span>
+    </button>
+    <button onclick="switchTab('tab-research')" id="bnav-tab-research" class="mobile-bnav-btn flex flex-col items-center gap-1 text-[10px] font-semibold text-slate-400 hover:text-indigo-400 py-1 px-2 rounded-lg transition active:scale-95">
+      <i class="fa-solid fa-magnifying-glass-chart text-base"></i>
+      <span>Thị Trường</span>
+    </button>
+    <button onclick="switchTab('tab-competitors')" id="bnav-tab-competitors" class="mobile-bnav-btn flex flex-col items-center gap-1 text-[10px] font-semibold text-slate-400 hover:text-rose-400 py-1 px-2 rounded-lg transition active:scale-95">
+      <i class="fa-solid fa-crosshairs text-base"></i>
+      <span>Đối Thủ</span>
+    </button>
+    <button onclick="switchTab('tab-content')" id="bnav-tab-content" class="mobile-bnav-btn flex flex-col items-center gap-1 text-[10px] font-semibold text-slate-400 hover:text-teal-400 py-1 px-2 rounded-lg transition active:scale-95">
+      <i class="fa-solid fa-pen-nib text-base"></i>
+      <span>Nội Dung</span>
+    </button>
+    <button onclick="switchTab('tab-catalyst')" id="bnav-tab-catalyst" class="mobile-bnav-btn flex flex-col items-center gap-1 text-[10px] font-semibold text-slate-400 hover:text-cyan-400 py-1 px-2 rounded-lg transition active:scale-95">
+      <i class="fa-solid fa-network-wired text-base"></i>
+      <span>Biệt Đội AI</span>
+    </button>
+    <button onclick="openMobileDrawer()" class="flex flex-col items-center gap-1 text-[10px] font-semibold text-slate-400 hover:text-amber-400 py-1 px-2 rounded-lg transition active:scale-95">
+      <i class="fa-solid fa-ellipsis text-base"></i>
+      <span>Thêm</span>
+    </button>
+  </nav>
+
   <!-- MODAL: TRỌN GÓI NỘI DUNG ĐA PHƯƠNG TIỆN (BÀI VIẾT + VIDEO DỌC + PROMPT ẢNH) -->
   <div id="modal-content-package" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
     <div class="bg-slate-900 border border-slate-700/80 rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
@@ -1327,6 +1565,33 @@
   </div>
 
   <script>
+    // --- MULTI-TENANT FETCH INTERCEPTOR ---
+    // Tự động đính kèm token phiên và email người dùng vào tất cả API requests
+    const _nativeFetch = window.fetch;
+    window.fetch = function(url, options = {}) {
+      if (typeof url === 'string' && url.startsWith('/api/')) {
+        options = options || {};
+        options.headers = options.headers || {};
+        const token = localStorage.getItem('marketing_os_token');
+        const userStr = localStorage.getItem('marketing_os_user');
+        let email = '';
+        if (userStr) {
+          try { email = JSON.parse(userStr)?.email || ''; } catch(e){}
+        }
+        if (options.headers instanceof Headers) {
+          if (token) options.headers.set('Authorization', 'Bearer ' + token);
+          if (email) options.headers.set('X-User-Email', email);
+        } else if (Array.isArray(options.headers)) {
+          if (token) options.headers.push(['Authorization', 'Bearer ' + token]);
+          if (email) options.headers.push(['X-User-Email', email]);
+        } else {
+          if (token) options.headers['Authorization'] = 'Bearer ' + token;
+          if (email) options.headers['X-User-Email'] = email;
+        }
+      }
+      return _nativeFetch.apply(this, arguments);
+    };
+
     // App State
     let currentProfile = {};
 
@@ -1343,27 +1608,176 @@
       }, 3500);
     }
 
+    // Mobile Drawer Handlers
+    function toggleMobileDrawer() {
+      const d = document.getElementById('mobile-drawer');
+      if (d) d.classList.toggle('hidden');
+    }
+    function openMobileDrawer() {
+      const d = document.getElementById('mobile-drawer');
+      if (d) d.classList.remove('hidden');
+    }
+    function closeMobileDrawer() {
+      const d = document.getElementById('mobile-drawer');
+      if (d) d.classList.add('hidden');
+    }
+    function switchTabFromMobile(tabId) {
+      switchTab(tabId);
+      closeMobileDrawer();
+    }
+
     function switchTab(tabId) {
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      
+      // Desktop sidebar active state
       document.querySelectorAll('.nav-item').forEach(el => {
         el.classList.remove('bg-sky-500/10', 'text-sky-400', 'font-semibold');
         el.classList.add('text-slate-300');
       });
-
-      const targetPane = document.getElementById(tabId);
-      if (targetPane) targetPane.classList.remove('hidden');
-
-      const btnId = 'btn-' + tabId;
-      const targetBtn = document.getElementById(btnId);
+      const targetBtn = document.getElementById('btn-' + tabId);
       if (targetBtn) {
         targetBtn.classList.remove('text-slate-300');
         targetBtn.classList.add('bg-sky-500/10', 'text-sky-400', 'font-semibold');
       }
 
+      // Mobile Bottom Nav active state
+      document.querySelectorAll('.mobile-bnav-btn').forEach(btn => {
+        btn.classList.remove('text-sky-400', 'font-bold');
+        btn.classList.add('text-slate-400');
+      });
+      const bnavBtn = document.getElementById('bnav-' + tabId);
+      if (bnavBtn) {
+        bnavBtn.classList.remove('text-slate-400');
+        bnavBtn.classList.add('text-sky-400', 'font-bold');
+      }
+
+      const targetPane = document.getElementById(tabId);
+      if (targetPane) targetPane.classList.remove('hidden');
+
       if (tabId === 'tab-competitors') loadDiscoveredCompetitors();
       if (tabId === 'tab-calendar') loadCalendar();
       if (tabId === 'tab-catalyst') loadLatestCatalyst();
       if (tabId === 'tab-analytics') loadAnalytics();
+    }
+
+    // Google Sheets & Account Management Modal Handlers
+    async function openSheetsModal() {
+      const m = document.getElementById('modal-google-sheets');
+      if (m) m.classList.remove('hidden');
+      await loadSheetsModalData();
+    }
+
+    function closeSheetsModal() {
+      const m = document.getElementById('modal-google-sheets');
+      if (m) m.classList.add('hidden');
+    }
+
+    async function loadSheetsModalData() {
+      try {
+        const [usersRes, configRes] = await Promise.all([
+          fetch('/api/admin/users').then(r => r.json()),
+          fetch('/api/admin/sheets/config').then(r => r.json())
+        ]);
+
+        const inpUrl = document.getElementById('inp-sheet-webhook-url');
+        const badge = document.getElementById('sheet-conn-badge');
+        const codePre = document.getElementById('code-apps-script-snippet');
+
+        if (inpUrl && configRes.webhook_url) inpUrl.value = configRes.webhook_url;
+        if (badge) {
+          if (configRes.is_connected) {
+            badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+            badge.innerText = "Đã Kết Nối Google Sheet";
+          } else {
+            badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30";
+            badge.innerText = "Chưa Kết Nối Webhook";
+          }
+        }
+        if (codePre && configRes.apps_script_template) {
+          codePre.innerText = configRes.apps_script_template;
+        }
+
+        const tbody = document.getElementById('sheet-users-tbody');
+        const totalLbl = document.getElementById('sheet-total-users');
+        if (usersRes.status === 'success' && usersRes.users) {
+          if (totalLbl) totalLbl.innerText = usersRes.total || usersRes.users.length;
+          if (tbody) {
+            if (usersRes.users.length === 0) {
+              tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">Chưa có tài khoản nào đăng nhập.</td></tr>';
+            } else {
+              tbody.innerHTML = usersRes.users.map(u => `
+                <tr class="hover:bg-slate-900/50 transition">
+                  <td class="p-3 font-semibold text-white flex items-center gap-2">
+                    <img src="${u.picture || 'https://ui-avatars.com/api/?name=User&background=0ea5e9&color=fff'}" class="w-6 h-6 rounded-full border border-sky-400 shrink-0">
+                    <span>${u.email}</span>
+                  </td>
+                  <td class="p-3 text-slate-300">${u.name || '---'}</td>
+                  <td class="p-3 text-center">
+                    <span class="px-2 py-0.5 bg-sky-500/10 text-sky-400 rounded-full font-bold text-[11px]">${u.login_count || 1} lần</span>
+                  </td>
+                  <td class="p-3 text-slate-300">${u.brand_name ? `<span class="text-emerald-400 font-semibold">${u.brand_name}</span> (${u.industry || 'Ngành'})` : '<span class="text-slate-500 italic">Chưa cấu hình</span>'}</td>
+                  <td class="p-3 text-slate-400 font-mono text-[11px]">${u.last_login ? u.last_login.replace('T', ' ').slice(0, 19) : '---'}</td>
+                </tr>
+              `).join('');
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Lỗi tải thông tin Google Sheets:", err);
+      }
+    }
+
+    async function saveSheetsConfig() {
+      const inp = document.getElementById('inp-sheet-webhook-url');
+      const url = inp ? inp.value.trim() : '';
+      if (!url) {
+        alert("Vui lòng nhập Google Apps Script Web App URL!");
+        return;
+      }
+      try {
+        const res = await fetch('/api/admin/sheets/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ webhook_url: url })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          showToast("✅ Đã lưu URL kết nối Google Sheet thành công!");
+          await loadSheetsModalData();
+        } else {
+          alert("Lỗi lưu cấu hình: " + (data.detail || "Không rõ"));
+        }
+      } catch (err) {
+        alert("Lỗi kết nối máy chủ: " + err);
+      }
+    }
+
+    async function syncAllToSheets() {
+      showToast("🚀 Đang đồng bộ danh sách tài khoản lên Google Sheet...");
+      try {
+        const res = await fetch('/api/admin/sheets/sync-all', { method: 'POST' });
+        const data = await res.json();
+        if (data.status === 'success') {
+          showToast(`✅ ${data.message}`);
+        } else {
+          alert(data.detail || "Lỗi khi đồng bộ lên Google Sheet");
+        }
+      } catch (err) {
+        alert("Lỗi kết nối: " + err);
+      }
+    }
+
+    function downloadSheetsCSV() {
+      window.open('/api/admin/users/export-sheets', '_blank');
+      showToast("📥 Đang tải file CSV cho Google Sheet...");
+    }
+
+    function copyAppsScriptCode() {
+      const codePre = document.getElementById('code-apps-script-snippet');
+      if (!codePre) return;
+      navigator.clipboard.writeText(codePre.innerText).then(() => {
+        showToast("Đã sao chép mã Google Apps Script vào clipboard!");
+      });
     }
 
     // Load Profile
@@ -2666,20 +3080,22 @@
     }
 
     function updateUserHeader(user) {
+      const email = user.email || 'user@gmail.com';
+      const pic = user.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(email.split('@')[0])}&background=0ea5e9&color=fff`;
+
       const emailEl = document.getElementById('user-display-email');
       const avatarEl = document.getElementById('user-avatar-img');
-      if (emailEl) emailEl.textContent = user.email || 'user@gmail.com';
-      if (avatarEl && user.picture) avatarEl.src = user.picture;
+      const drawerEmailEl = document.getElementById('drawer-user-email');
+      const drawerAvatarEl = document.getElementById('drawer-user-avatar');
+
+      if (emailEl) emailEl.textContent = email;
+      if (avatarEl) avatarEl.src = pic;
+      if (drawerEmailEl) drawerEmailEl.textContent = email;
+      if (drawerAvatarEl) drawerAvatarEl.src = pic;
     }
 
-    function loginWithGooglePrompt() {
-      const emailPrompt = prompt("Nhập tài khoản Gmail của bạn để xác thực:", "lindseyvu98@gmail.com");
-      if (emailPrompt) {
-        authenticateGmail(emailPrompt);
-      }
-    }
-
-    function loginWithDirectEmail() {
+    function handleDirectEmailSubmit(e) {
+      if (e) e.preventDefault();
       const inp = document.getElementById('auth-email-input');
       const email = inp ? inp.value.trim() : '';
       if (!email) {
@@ -2687,6 +3103,24 @@
         return;
       }
       authenticateGmail(email);
+    }
+
+    function loginWithDirectEmail() {
+      handleDirectEmailSubmit();
+    }
+
+    function loginWithGooglePrompt() {
+      const inp = document.getElementById('auth-email-input');
+      if (inp && inp.value.trim()) {
+        authenticateGmail(inp.value.trim());
+        return;
+      }
+      const emailPrompt = prompt("Vui lòng nhập tài khoản Google (Gmail) của bạn để vào không gian làm việc:");
+      if (emailPrompt && emailPrompt.trim()) {
+        authenticateGmail(emailPrompt.trim());
+      } else if (inp) {
+        inp.focus();
+      }
     }
 
     async function authenticateGmail(email) {

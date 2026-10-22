@@ -28,5 +28,5 @@ Chào mừng bạn đến với hệ thống Marketing OS. Đây là bộ quy t�
 
 ## 2. Tiêu chuẩn thương hiệu & Tuân thủ pháp lý
 - Tuân thủ Luật Quảng cáo Việt Nam và các nghị định hướng dẫn liên quan.
-- Tuân thủ Nghị định 13/2023/NĐ-CP về Bảo vệ dữ liệu cá nhân trong toàn bộ các chiến dịch CRM và Lead Generation.
+- Tuân thủ Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 (hiệu lực 01/01/2026) và Nghị định 356/2025/NĐ-CP (thay Nghị định 13/2023/NĐ-CP) trong toàn bộ các chiến dịch CRM và Lead Generation: chỉ gửi tiếp thị cho người đã đồng ý rõ ràng, lưu bằng chứng đồng ý, cho phép rút lại đồng ý và xóa dữ liệu.
 - Không đưa ra các cam kết sai sự thật hoặc cam kết tuyệt đối vi phạm chính sách của nền tảng (như 100% khỏi bệnh, cam kết lợi nhuận tài chính phi thực tế...).

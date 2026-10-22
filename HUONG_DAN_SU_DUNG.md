@@ -1,79 +1,95 @@
-# 📖 HƯỚNG DẪN SỬ DỤNG HỆ THỐNG TỰ ĐỘNG HÓA MARKETING OS
-*(Ứng Dụng Phần Mềm Vận Hành Marketing Toàn Diện - Dành Cho Doanh Nghiệp)*
+# 📖 HƯỚNG DẪN SỬ DỤNG MARKETING OS 4.0
 
-Chào mừng bạn đến với **Marketing OS**! Đây là **phần mềm hệ thống tự động hóa marketing hoàn chỉnh**, có giao diện đồ họa (Web App), tích hợp trực tiếp **Google AI Studio (Gemini 1.5)** và động cơ trí tuệ nhân tạo nội bộ.
+Marketing OS là web app giúp chủ shop và người làm marketing ở doanh nghiệp nhỏ làm marketing có quy trình: hiểu khách trước, viết nội dung có kiểm duyệt, ghi khách vào phễu và đo bằng số thật.
 
----
-
-## 🚀 1. CÁCH KHỞI ĐỘNG HỆ THỐNG (1 CÚ CLICK)
-
-Bạn có 2 cách cực kỳ đơn giản để mở phần mềm:
-- **Cách 1 (Nhanh nhất):** Nhấp đúp chuột vào file **[`start_marketing_os.bat`](file:///C:/Users/Admin/.gemini/antigravity/scratch/marketing-os/start_marketing_os.bat)**.
-- **Cách 2 (Bằng dòng lệnh):** Mở terminal và gõ:
-  ```bash
-  cd C:\Users\Admin\.gemini\antigravity\scratch\marketing-os
-  python run_app.py
-  ```
-
-👉 Trình duyệt sẽ tự động bật lên địa chỉ: **`http://localhost:8000`**.
+Nguyên tắc của hệ thống:
+- **Bối cảnh trước, chiến thuật sau**: mọi tác vụ AI đọc Hồ sơ bối cảnh. Thiếu thông tin cốt lõi thì hệ thống hỏi lại, không đoán.
+- **Không tự chế**: khi AI lỗi hoặc chưa có key, màn hình báo “Chưa tạo được” kèm lý do; không có nội dung mẫu hay số liệu giả.
+- **Có nguồn gốc**: mỗi kết quả ghi model, thời điểm, phiên bản hồ sơ, nguồn tìm kiếm (nếu có).
+- **Có cổng duyệt**: nội dung còn lỗi tuân thủ không thể chuyển sang “Đã duyệt” hay xuất bản.
 
 ---
 
-## 🖥️ 2. HƯỚNG DẪN SỬ DỤNG GIAO DIỆN PHẦN MỀM
+## 1. Khởi động
 
-Giao diện phần mềm được chia thành các phân hệ chuyên nghiệp:
+- Windows: nhấp đúp **`start_marketing_os.bat`** (lần đầu tự cài thư viện).
+- Hoặc: `pip install -r requirements.txt` rồi `python run_app.py`, mở **http://localhost:8000**.
 
-### 🏢 Phân hệ 1: Hồ sơ Doanh nghiệp & Kết nối AI Studio
-- **Nhập thông tin doanh nghiệp của bạn:**
-  - Tên thương hiệu, Ngành hàng, Mô hình (B2C, D2C, B2B...).
-  - Sản phẩm/dịch vụ chủ lực, khoảng giá, khách hàng mục tiêu.
-  - Danh sách 3–5 đối thủ cạnh tranh chính.
-  - Ngân sách và giọng điệu thương hiệu mong muốn.
-- **Kết nối Google AI Studio (Tùy chọn):** Dán Gemini API Key từ `https://aistudio.google.com/` vào ô API Key. *(Nếu chưa có key, hệ thống vẫn tự động chạy bằng Động cơ Thông minh Nội bộ)*.
-- **Bấm "Lưu Hồ Sơ":** Toàn bộ hệ thống sẽ cập nhật ngay lập tức theo thông tin của bạn!
+**Tạo tài khoản** bằng email + mật khẩu (ít nhất 8 ký tự, có chữ và số). Tài khoản đầu tiên là quản trị.
+Đã dùng bản cũ (chỉ nhập email)? Chọn **Tạo tài khoản** với đúng email cũ để đặt mật khẩu; dữ liệu cũ được giữ.
 
-### 🔍 Phân hệ 2: Nghiên cứu Thị trường AI (Market Research)
-- Nhấp nút **"Chạy Phân Tích Bằng AI"**:
-- Hệ thống sẽ tự động quét, tính toán và xuất báo cáo:
-  - Quy mô thị trường **TAM / SAM / SOM** cho ngành của bạn.
-  - Phân tích vĩ mô **PESTEL** (Chính trị, Kinh tế, Xã hội, Công nghệ...).
-  - Phân tích **5 Lực lượng Cạnh tranh Porter**.
-  - 3 Cơ hội tăng trưởng và 3 rủi ro cần phòng tránh.
+## 2. Ba việc đầu tiên
 
-### ⚔️ Phân hệ 3: Tình báo Đối thủ & Battlecards
-- Nhấp nút **"Soi Đối Thủ & Tạo Battlecards"**:
-- Hệ thống tự động phân tích từng đối thủ bạn đã nhập:
-  - Điểm mạnh, điểm yếu cốt tử của đối thủ.
-  - Vũ khí và lợi thế để bạn giành chiến thắng (Where We Win).
-  - **Kịch bản xử lý từ chối (Objection Handling):** Hướng dẫn nhân viên phản hồi khi khách hàng so sánh giá hoặc khen đối thủ.
+1. **Cài đặt → Gemini API**: dán key lấy tại https://aistudio.google.com/apikey → **Kiểm tra kết nối** (hiện danh sách model khả dụng). Để trống “Model ưu tiên” để hệ thống tự chọn và tự đổi model khi hết hạn mức.
+2. **Hồ sơ bối cảnh → Phỏng vấn nhanh 5 câu**: trả lời các mục cốt lõi (sản phẩm, ai mua, giá, biên lãi gộp, kênh, khu vực…). Lặp lại đến khi thanh đầy đủ trên 70%.
+3. **Tổng quan → Khởi động nhanh**: chạy nền trụ cột nội dung, lịch 14 ngày và ý tưởng marketing; theo dõi ở “Nhật ký hệ thống”.
 
-### 🎯 Phân hệ 4: Chân dung Khách hàng (Buyer Personas)
-- Nhấp nút **"Tạo 3 Chân Dung Khách Hàng"**:
-- AI tự động xây dựng 3 nhóm khách hàng mục tiêu với đầy đủ: Nỗi đau, mong muốn, kênh tiêu thụ thông tin và thông điệp tiếp cận (Elevator Pitch) hiệu quả nhất.
+## 3. Các màn hình
 
-### ✍️ Phân hệ 5: Xưởng Sản Xuất Nội Dung (Content Studio)
-- Chọn kênh muốn tạo: **TikTok (Video ngắn 9:16 có hook 3s)**, **Facebook Post**, **Blog SEO**, **Email Nurture**, hoặc **Quảng cáo Ads Copy**.
-- Nhập chủ đề bạn muốn viết (hoặc bấm chọn nhanh gợi ý).
-- Nhấp **"Tạo Nội Dung Bằng AI"**: Bản thảo hoàn chỉnh sẽ xuất hiện ngay lập tức kèm nút **"Sao chép toàn bộ"**.
+### Tổng quan
+Độ đầy đủ hồ sơ, số liệu nhanh, quy trình 6 bước mỗi tuần, các dịp lễ trong 60 ngày tới kèm ngày nên bắt đầu chuẩn bị, kết quả AI gần đây và nhật ký.
 
-### 📅 Phân hệ 6: Lịch Nội Dung 30 Ngày (Content Calendar)
-- Nhấp **"Tạo Kế Hoạch 30 Ngày Mới"**: Hệ thống tự động sinh ma trận 30 ngày đăng bài bám sát theo phễu (TOFU/MOFU/BOFU) và các trụ cột nội dung.
+### Hồ sơ bối cảnh
+12 nhóm thông tin theo skill marketing: thương hiệu, sản phẩm & kinh tế đơn vị, khách hàng & vấn đề, 4 lực chuyển đổi, cạnh tranh, ngôn ngữ khách, bằng chứng & FAQ, mục tiêu & kênh.
+- Ô nhiều dòng: mỗi dòng một ý. Danh sách giá: `Tên | giá`. Lời từ chối: `khách nói | cách trả lời`. Bằng chứng: `loại | nội dung | nguồn | có/không được phép dùng`. FAQ: `câu hỏi | câu trả lời`.
+- Mỗi lần lưu tạo một phiên bản; ghi “Vì sao thay đổi” để sau này biết lý do (xem **Nhật ký thay đổi**).
 
-### 📊 Phân hệ 7: Báo Cáo & Chỉ Số (Dashboard)
-- Theo dõi các chỉ số quan trọng: **MER** (Hiệu quả tổng), **ROAS** (Lợi nhuận ads), **CAC** (Chi phí thu nạp khách mới).
-- Có form nhập nhanh chi tiêu và đơn hàng mỗi ngày.
+### Skill Studio
+26 tác vụ chia 8 nhóm: Chiến lược, Ưu đãi & Nội dung, Quảng cáo, Khách hàng & Bán hàng, Giữ chân, SEO & Local, PR & KOL, Đo lường. Tác vụ có biểu tượng Google dùng tìm kiếm thật và liệt kê nguồn.
+- Thiếu thông tin hồ sơ → hiện câu hỏi ngay trong khung kết quả; trả lời xong bấm **Lưu và chạy lại**.
+- Kết quả có: model & nguồn, **cổng tuân thủ** (đỏ = phải sửa, vàng = nên xem), phần **Hệ thống đã kiểm/tính lại** (các con số do code tính, không do AI), **Cần bổ sung**, **Bài học**.
+- Nút lưu đúng chỗ: phương án bài viết → Kho nội dung; lịch → Lịch nội dung; ngân sách → Ngân sách tháng; vòng lặp tuần → Thử nghiệm; tìm/hồ sơ đối thủ → Danh sách đối thủ; VoC → câu nguyên văn vào Hồ sơ; prompt ảnh → Ảnh & Video.
+- Tải `.md`, sao chép, xem lại lịch sử và **Chạy lại với đầu vào này**.
 
----
+### Nghiên cứu & Đối thủ
+Danh sách đối thủ (nhập tay hoặc từ tìm kiếm, có link nguồn), battlecard, nút lập/cập nhật hồ sơ đối thủ. Kết quả nghiên cứu của bản cũ nằm trong mục riêng, gắn nhãn “Chưa kiểm chứng”.
 
-## 🤖 3. VẬN HÀNH TỰ ĐỘNG THEO LỊCH (CRON JOBS)
+### Kho nội dung
+Bảng 7 cột: Ý tưởng → Bản nháp → Chờ duyệt → Đã duyệt → Đã lên lịch → Đã đăng → Đã đo.
+- Mở thẻ để sửa, xem cổng tuân thủ, đổi phương án AI, chuyển trạng thái, **Biên tập bằng AI**.
+- Sửa bài đã duyệt → tự quay về Chờ duyệt.
+- Có khan hiếm thật (“chỉ còn 20 hộp”)? Ghi bằng chứng vào ô “Bằng chứng giới hạn có thật”.
+- **Xuất bản qua webhook** (Zapier/Make/n8n, cấu hình trong Cài đặt): chỉ đánh dấu “Đã đăng” khi webhook nhận thành công. Sau khi đăng có checklist quảng bá 11 bước.
 
-Bên cạnh giao diện phần mềm trực quan, toàn bộ **18 lịch chạy tự động** (A01 - A17) đã được cài đặt sẵn vào Antigravity.
-- Bạn có thể xem và bật các lịch tự động tại: [Trang Automations của Antigravity](sidecar://dashboard).
-- Ví dụ:
-  - **07:00 sáng:** Tự động tạo bản tin thị trường ngày.
-  - **08:00 sáng:** Tự động soạn bản nháp nội dung cho 2 ngày tới.
-  - **08:30 sáng:** Lập báo cáo Standup công việc trong ngày.
-  - **22:00 đêm:** Tự động sao lưu dữ liệu và kiểm tra sức khỏe hệ thống.
+### Lịch nội dung
+Xem 14/31/60 ngày, có ngày lễ dương lịch, âm lịch và mùa sale. Mỗi dòng: kênh, giai đoạn phễu, trụ cột, loại (tìm được/chia sẻ được/thử nghiệm), hook, CTA, chỉ số đo. **Viết bằng AI** mở Gói nội dung đa kênh; **Đưa vào kho** tạo ý tưởng trong Kho nội dung.
 
----
-*Bây giờ bạn chỉ cần nhấp đúp vào [`start_marketing_os.bat`](file:///C:/Users/Admin/.gemini/antigravity/scratch/marketing-os/start_marketing_os.bat) để bắt đầu sử dụng phần mềm!*
+### Ảnh & Video
+Tạo ảnh từ mô tả (model ảnh Gemini) và video (Veo, cần key có bật thanh toán; bấm **Kiểm tra** để cập nhật). Không dùng người nổi tiếng, nhân vật hay logo có bản quyền.
+
+### Khách hàng (CRM)
+Phễu 6 tầng (Mới → Đang tư vấn → Mua lần đầu → Mua lần 2+ → Giới thiệu → Thân quen) và cột Mất (ghi lý do).
+- **Đồng ý tiếp thị**: chỉ đánh dấu khi khách đồng ý rõ ràng, ghi lại khách đồng ý điều gì, qua kênh nào. Khách rút lại → bấm “Khách rút lại đồng ý”.
+- **CSV đã đồng ý**: danh sách được phép gửi tiếp thị. **CSV tất cả**: lưu trữ nội bộ.
+- **Nhận lead từ form**: lấy mã form mẫu dán vào landing page; lead tự vào cột Mới kèm UTM.
+- Bảng **nút thắt** chỉ ra bước chuyển yếu nhất (cần ít nhất 5 khách mỗi tầng).
+
+### Growth Console
+- **Tổng quan**: doanh thu, tổng chi marketing, **MER** (doanh thu ÷ tổng chi), **ROAS** so với **ROAS hòa vốn** (= 1 ÷ biên lãi gộp), **lãi gộp sau marketing**, **CAC** (chỉ tính khi có số khách mới), chi phí mỗi đơn, chi phí mỗi lead; biểu đồ theo ngày; bảng theo kênh.
+- **Nhập số liệu**: nhập tay theo ngày/kênh; hoặc nhập CSV từ nền tảng (đặt tên file `ads_`, `sales_`, `web_`, `social_`, `email_`, `seo_`, `spend_`, `leads_`…; file mẫu trong `data/samples/`). Nhập lại cùng khoảng ngày sẽ thay dữ liệu cũ, không nhân đôi. Báo cáo CSV có ngày bất thường (lệch ±30%) và dự báo tuyến tính (chỉ tham khảo).
+- **Ngân sách**: hạng mục dự kiến/thực chi theo 7 chương trình, chênh lệch, nhịp chi trong tháng.
+- **Link UTM**: tạo link chuẩn hóa (chữ thường, không dấu).
+- **Thử nghiệm**: giả thuyết → thay đổi → chỉ số chính → chỉ số bảo vệ → điều kiện dừng → kết quả → bài học.
+- **Máy tính**: ngân sách ngược từ mục tiêu, KPI phễu quảng cáo, LTV/CAC & hoàn vốn, kiểm định A/B, cỡ mẫu.
+
+### Local SEO & AI search
+NAP chuẩn, checklist Google Business Profile, mã JSON-LD (LocalBusiness, FAQPage chỉ từ FAQ đã xác nhận) để dán vào website.
+
+### Kiểm duyệt nội dung
+Dán bất kỳ bài/quảng cáo/tin nhắn nào để kiểm theo G01–G11 trước khi đăng.
+
+### Cài đặt
+Gemini key và model, webhook xuất bản, địa chỉ nhận lead, đổi mật khẩu, **tải bản sao lưu**, làm mới workspace (gõ `XOA`), xóa tài khoản. Quản trị viên xem danh sách tài khoản và đồng bộ Google Sheet.
+
+## 4. Nhịp làm việc gợi ý mỗi tuần
+
+| Ngày | Việc |
+|---|---|
+| Thứ 2 | Nhập số liệu tuần trước → Growth Console → tác vụ **Vòng lặp tuần** → tạo 1 thử nghiệm |
+| Thứ 2–3 | Viết bài theo lịch (Gói nội dung / Copy Studio) → duyệt trong Kho nội dung |
+| Hằng ngày | Ghi khách mới vào CRM, chuyển tầng, trả lời đánh giá |
+| Cuối tháng | Cập nhật thực chi ngân sách, rà Hồ sơ bối cảnh, lập ngân sách tháng sau |
+
+## 5. Các tự động hóa Antigravity
+
+18 playbook A01–A17 trong `13_ops/` vẫn dùng được như trước. Ứng dụng web không phụ thuộc chúng.

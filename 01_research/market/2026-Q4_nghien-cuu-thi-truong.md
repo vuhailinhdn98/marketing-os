@@ -18,7 +18,7 @@
 3. **Xã hội - Văn hóa (Social):** Người tiêu dùng Việt Nam chuyển dịch mạnh sang xu hướng mua sắm kết hợp (Phygital) - xem hàng online mua offline hoặc trải nghiệm tại shop rồi đặt hàng trên livestream để nhận voucher.
 4. **Công nghệ (Technological):** Hạ tầng thanh toán VietQR và thanh toán chạm (NFC/Apple Pay) phát triển thần tốc; công nghệ AI sinh nhận diện hình ảnh và tự động phân loại tồn kho trở thành xu thế bắt buộc.
 5. **Môi trường (Environmental):** Người tiêu dùng ưu tiên các thương hiệu thân thiện môi trường; xu hướng hóa đơn điện tử thay thế hóa đơn giấy in nhiệt đang nhận được sự ủng hộ rộng rãi.
-6. **Pháp lý (Legal):** Luật Quảng cáo và Nghị định 13 về dữ liệu người dùng yêu cầu các hệ sinh thái phần mềm phải cam kết bảo mật tuyệt đối thông tin danh bạ khách hàng.
+6. **Pháp lý (Legal):** Luật Quảng cáo và Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15 (cùng Nghị định 356/2025/NĐ-CP) về dữ liệu người dùng yêu cầu các hệ sinh thái phần mềm phải cam kết bảo mật tuyệt đối thông tin danh bạ khách hàng.
 
 ---
 

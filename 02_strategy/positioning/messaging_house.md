@@ -11,5 +11,5 @@
   - Proof 1: Tự động phân khúc khách hàng VIP, khách có nguy cơ rời bỏ, kích hoạt kịch bản ưu đãi qua Zalo/Email.
   - Proof 2: Gia tăng 35% tỷ lệ khách hàng quay lại mua lần 2 sau 30 ngày.
 - **Nền móng thương hiệu (Brand Foundation):**
-  - Công nghệ Cloud vận hành 99.9% uptime, bảo vệ dữ liệu chuẩn Nghị định 13/2023.
+  - Công nghệ Cloud vận hành 99.9% uptime, bảo vệ dữ liệu theo Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15.
   - Dịch vụ hỗ trợ trực tiếp 24/7/365 trên toàn quốc.

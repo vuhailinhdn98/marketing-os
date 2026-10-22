@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Hệ thống Tự Động Hóa Marketing - run_app.py
-Khởi động Web App Marketing Automation Engine trên localhost:8000
+Khởi động Marketing OS trên máy cá nhân (mặc định http://localhost:8000).
 """
 import sys
 import os
@@ -28,8 +28,8 @@ def main():
     port = int(os.environ.get("PORT", 8000))
     print("=" * 65)
     print("  🚀 KHỞI ĐỘNG HỆ THỐNG TỰ ĐỘNG HÓA MARKETING OS")
-    print(f"  🌐 Truy cập trên cổng: {port}")
-    print("  ⚡ Động cơ AI: Tích hợp Google AI Studio (Gemini) + Local Intelligence")
+    print(f"  🌐 Mở trình duyệt: http://localhost:{port}")
+    print("  ⚡ AI: Google Gemini (thêm API key trong Cài đặt). Không có key thì tác vụ AI báo chưa tạo được, không tự chế nội dung.")
     print("=" * 65)
 
     # Chỉ mở trình duyệt tự động khi chạy máy cá nhân (không phải trên Cloud)

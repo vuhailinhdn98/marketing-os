@@ -4,3 +4,12 @@ cloudflared.exe
 *.log
 .vscode/
 .idea/
+
+# Dữ liệu chạy thật — không bao giờ đưa lên GitHub
+data/runtime/
+data/runtime-test/
+*.db-wal
+*.db-shm
+.env
+.pytest_cache/
+backups/

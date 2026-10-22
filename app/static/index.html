@@ -827,14 +827,51 @@
         </div>
 
         <!-- Discovered Competitors List Cards -->
-        <div>
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i class="fa-solid fa-list-check text-sky-400"></i>
-              <span>Danh Sách Đối Thủ Trong Tầm Ngắm (<span id="comp-count-label">0</span>)</span>
-            </h3>
-            <span class="text-xs text-slate-400">Bao gồm đối thủ do bạn nhập và đối thủ AI phát hiện trên thị trường</span>
+        <div class="space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-slate-800">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-sky-400"></i>
+                <span>Danh Sách Đối Thủ Trong Tầm Ngắm (<span id="comp-count-label" class="text-rose-400 font-extrabold">0</span> bên)</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Không giới hạn số lượng đối thủ — Rà soát toàn diện các công ty, chuỗi và đại lý có thật trên thị trường</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="confirmClearAllCompetitors()" class="text-xs bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/60 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-trash-can text-[11px]"></i>
+                <span>Xóa Toàn Bộ</span>
+              </button>
+            </div>
           </div>
+
+          <!-- Quick Search & Filter Bar -->
+          <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs shadow-sm">
+            <!-- Filter Pills -->
+            <div class="flex flex-wrap items-center gap-1.5">
+              <button onclick="setCompetitorFilter('all')" id="cfilter-all" class="comp-filter-btn px-2.5 py-1 rounded-lg font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30">
+                Tất cả (<span id="filter-count-all">0</span>)
+              </button>
+              <button onclick="setCompetitorFilter('direct')" id="cfilter-direct" class="comp-filter-btn px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-slate-200 border border-slate-800">
+                Trực tiếp (<span id="filter-count-direct">0</span>)
+              </button>
+              <button onclick="setCompetitorFilter('indirect')" id="cfilter-indirect" class="comp-filter-btn px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-slate-200 border border-slate-800">
+                Gián tiếp / Khác (<span id="filter-count-indirect">0</span>)
+              </button>
+              <button onclick="setCompetitorFilter('manual')" id="cfilter-manual" class="comp-filter-btn px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-slate-200 border border-slate-800">
+                Tự nhập (<span id="filter-count-manual">0</span>)
+              </button>
+              <button onclick="setCompetitorFilter('ai')" id="cfilter-ai" class="comp-filter-btn px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-slate-200 border border-slate-800">
+                AI Quét (<span id="filter-count-ai">0</span>)
+              </button>
+            </div>
+
+            <!-- Search Box -->
+            <div class="relative w-full md:w-64">
+              <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+              <input type="text" id="filter-comp-keyword" oninput="filterCompetitorsList()" placeholder="Tìm theo tên, website..." class="w-full bg-slate-800 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500">
+            </div>
+          </div>
+
           <div id="discovered-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </div>
 
@@ -2347,20 +2384,94 @@
       }
     }
 
+    // State for Competitors filtering
+    let currentCompFilter = 'all';
+
+    function setCompetitorFilter(filterType) {
+      currentCompFilter = filterType;
+      document.querySelectorAll('.comp-filter-btn').forEach(btn => {
+        btn.className = "comp-filter-btn px-2.5 py-1 rounded-lg font-medium text-slate-400 hover:text-slate-200 border border-slate-800 transition";
+      });
+      const activeBtn = document.getElementById('cfilter-' + filterType);
+      if (activeBtn) {
+        activeBtn.className = "comp-filter-btn px-2.5 py-1 rounded-lg font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30 transition";
+      }
+      filterCompetitorsList();
+    }
+
+    function filterCompetitorsList() {
+      const keyword = (document.getElementById('filter-comp-keyword')?.value || '').toLowerCase().trim();
+      let filtered = (allLoadedCompetitors || []).filter(c => {
+        // Filter by tab pill
+        if (currentCompFilter === 'manual' && c.is_manual !== 1) return false;
+        if (currentCompFilter === 'ai' && c.is_manual === 1) return false;
+        const typeStr = (c.competitor_type || c.type || '').toLowerCase();
+        if (currentCompFilter === 'direct' && !typeStr.includes('trực tiếp')) return false;
+        if (currentCompFilter === 'indirect' && typeStr.includes('trực tiếp')) return false;
+
+        // Filter by keyword
+        if (keyword) {
+          const matchName = (c.name || '').toLowerCase().includes(keyword);
+          const matchWeb = (c.website || '').toLowerCase().includes(keyword);
+          const matchProd = (c.core_products || '').toLowerCase().includes(keyword);
+          const matchStrengths = (c.key_strengths || '').toLowerCase().includes(keyword);
+          const matchVuln = (c.vulnerabilities || '').toLowerCase().includes(keyword);
+          if (!matchName && !matchWeb && !matchProd && !matchStrengths && !matchVuln) return false;
+        }
+        return true;
+      });
+
+      renderDiscoveredCardsGrid(filtered);
+    }
+
+    async function confirmClearAllCompetitors() {
+      if (!confirm("⚠️ Bạn có chắc chắn muốn xóa TOÀN BỘ danh sách đối thủ này không?\n\nHành động này sẽ làm sạch danh sách đối thủ để bạn có thể rà quét lại từ đầu theo bối cảnh thị trường mới.")) {
+        return;
+      }
+      try {
+        const res = await fetch('/api/competitors/all', { method: 'DELETE' });
+        const data = await res.json();
+        if (data.status === 'success') {
+          showToast("🗑️ Đã xóa toàn bộ đối thủ trong danh sách!");
+          await loadDiscoveredCompetitors();
+        } else {
+          alert("Lỗi khi xóa: " + (data.detail || "Không rõ"));
+        }
+      } catch (err) {
+        alert("Lỗi kết nối: " + err);
+      }
+    }
+
     // Render competitor cards with badges and actions
     function renderDiscoveredCards(cards) {
-      const container = document.getElementById('discovered-cards-container');
+      allLoadedCompetitors = cards || [];
       const countLabel = document.getElementById('comp-count-label');
+      if (countLabel) countLabel.innerText = allLoadedCompetitors.length;
+
+      // Update counts on filter pills
+      const elAll = document.getElementById('filter-count-all');
+      const elDir = document.getElementById('filter-count-direct');
+      const elIndir = document.getElementById('filter-count-indirect');
+      const elMan = document.getElementById('filter-count-manual');
+      const elAi = document.getElementById('filter-count-ai');
+
+      if (elAll) elAll.innerText = allLoadedCompetitors.length;
+      if (elDir) elDir.innerText = allLoadedCompetitors.filter(c => (c.competitor_type || c.type || '').toLowerCase().includes('trực tiếp')).length;
+      if (elIndir) elIndir.innerText = allLoadedCompetitors.filter(c => !(c.competitor_type || c.type || '').toLowerCase().includes('trực tiếp')).length;
+      if (elMan) elMan.innerText = allLoadedCompetitors.filter(c => c.is_manual === 1).length;
+      if (elAi) elAi.innerText = allLoadedCompetitors.filter(c => c.is_manual !== 1).length;
+
+      filterCompetitorsList();
+    }
+
+    function renderDiscoveredCardsGrid(cards) {
+      const container = document.getElementById('discovered-cards-container');
       if (!container) return;
 
       if (!cards || cards.length === 0) {
-        container.innerHTML = '<div class="col-span-full text-center py-6 text-xs text-slate-500 italic">Chưa có đối thủ nào trong danh mục. Nhập thủ công ở trên hoặc chạy rà quét theo thị trường.</div>';
-        if (countLabel) countLabel.innerText = '0';
+        container.innerHTML = '<div class="col-span-full text-center py-8 text-xs text-slate-500 italic bg-slate-900/40 rounded-xl border border-slate-800">Không tìm thấy đối thủ nào phù hợp với bộ lọc hiện tại. Bấm "Rà Quét Đối Thủ Theo Thị Trường" để tìm kiếm thêm.</div>';
         return;
       }
-
-      allLoadedCompetitors = cards;
-      if (countLabel) countLabel.innerText = cards.length;
 
       container.innerHTML = cards.map(c => {
         const isMan = c.is_manual === 1;
@@ -2368,25 +2479,30 @@
           ? `<span class="text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded flex items-center gap-1 shrink-0"><i class="fa-solid fa-user-check text-[9px]"></i> Tự nhập</span>`
           : `<span class="text-[10px] font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/30 px-2 py-0.5 rounded flex items-center gap-1 shrink-0"><i class="fa-solid fa-robot text-[9px]"></i> AI Quét</span>`;
 
+        const typeBadge = c.competitor_type || c.type || 'Trực tiếp';
+
         return `
-          <div class="bg-slate-900 border ${isMan ? 'border-amber-500/30 hover:border-amber-400' : 'border-indigo-500/30 hover:border-indigo-400'} rounded-2xl p-4 space-y-3 transition shadow-md flex flex-col justify-between">
-            <div class="space-y-2">
+          <div class="bg-slate-900 border ${isMan ? 'border-amber-500/30 hover:border-amber-400' : 'border-slate-800 hover:border-indigo-500/60'} rounded-2xl p-4 space-y-3 transition shadow-md flex flex-col justify-between group">
+            <div class="space-y-2.5">
               <div class="flex items-start justify-between gap-2">
-                <h4 class="text-xs font-bold text-white truncate flex items-center gap-1.5" title="${c.name}">
-                  <i class="fa-solid fa-crosshairs text-rose-400"></i>
-                  <span>${c.name}</span>
-                </h4>
+                <div class="space-y-0.5 min-w-0 flex-1">
+                  <h4 class="text-xs font-bold text-white truncate flex items-center gap-1.5" title="${c.name}">
+                    <i class="fa-solid fa-crosshairs text-rose-400 shrink-0"></i>
+                    <span class="truncate">${c.name}</span>
+                  </h4>
+                  <span class="text-[10px] text-slate-400 block truncate">${typeBadge} • ${c.price_segment || 'Tiêu chuẩn'}</span>
+                </div>
                 ${badgeHtml}
               </div>
 
               <!-- Contact & Links Bar -->
-              <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-slate-400">
+              <div class="flex flex-wrap items-center gap-2 pt-0.5 text-[11px] text-slate-400">
                 ${c.website ? `
                   <a href="${c.website.startsWith('http') ? c.website : 'https://' + c.website}" target="_blank" class="text-sky-400 hover:underline flex items-center gap-1 truncate max-w-[140px]" title="${c.website}">
                     <i class="fa-solid fa-globe text-[10px]"></i>
-                    <span>${c.website.replace('https://', '').replace('http://', '').replace(/\/$/, '')}</span>
+                    <span class="truncate">${c.website.replace('https://', '').replace('http://', '').replace(/\/$/, '')}</span>
                   </a>
-                ` : ''}
+                ` : '<span class="text-slate-600 italic text-[10px] flex items-center gap-1"><i class="fa-solid fa-globe text-[10px]"></i> Chưa có web</span>'}
                 ${c.phone ? `
                   <a href="tel:${c.phone}" class="text-emerald-400 hover:underline flex items-center gap-1" title="Hotline">
                     <i class="fa-solid fa-phone text-[10px]"></i>
@@ -2394,17 +2510,17 @@
                   </a>
                 ` : ''}
                 ${c.social ? `
-                  <a href="${c.social.startsWith('http') ? c.social : 'https://' + c.social}" target="_blank" class="text-purple-400 hover:underline flex items-center gap-1 truncate max-w-[120px]" title="Social">
+                  <a href="${c.social.startsWith('http') ? c.social : 'https://' + c.social}" target="_blank" class="text-purple-400 hover:underline flex items-center gap-1 truncate max-w-[100px]" title="Social">
                     <i class="fa-solid fa-share-nodes text-[10px]"></i>
-                    <span>Mạng XH</span>
+                    <span>Social</span>
                   </a>
                 ` : ''}
               </div>
 
               <!-- Highlights / Products -->
               ${(c.core_products || c.key_strengths || c.notes) ? `
-                <p class="text-[11px] text-slate-300 line-clamp-2 leading-relaxed bg-slate-800/40 p-2 rounded-lg border border-slate-800">
-                  ${c.key_strengths || c.core_products || c.notes}
+                <p class="text-[11px] text-slate-300 line-clamp-2 leading-relaxed bg-slate-800/50 p-2 rounded-lg border border-slate-800/80">
+                  <strong class="text-slate-200">Sản phẩm / Điểm mạnh:</strong> ${c.key_strengths || c.core_products || c.notes}
                 </p>
               ` : ''}
 

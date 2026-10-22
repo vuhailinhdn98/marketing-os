@@ -653,26 +653,57 @@ def save_discovered_competitors(items: list, market_context: str = "", user_emai
     # Chỉ xóa những đối thủ auto-discovered cũ của user này, GIỮ NGUYÊN các đối thủ do user tự nhập (is_manual = 1)
     cur.execute("DELETE FROM discovered_competitors WHERE is_manual = 0 AND LOWER(user_email) = ?", (email_norm,))
     for it in items:
-        cur.execute("""
-        INSERT INTO discovered_competitors (
-            user_email, name, website, phone, social, notes, competitor_type,
-            price_segment, core_products, key_strengths, vulnerabilities,
-            is_manual, market_context
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
-        """, (
-            email_norm,
-            it.get("name", ""),
-            it.get("website", ""),
-            it.get("phone", ""),
-            it.get("social", ""),
-            it.get("notes", ""),
-            it.get("type") or it.get("competitor_type", "Trực tiếp"),
-            it.get("price_segment", ""),
-            it.get("core_products", ""),
-            it.get("key_strengths", ""),
-            it.get("vulnerabilities", ""),
-            market_context
-        ))
+        name = it.get("name", "").strip()
+        if not name:
+            continue
+        cur.execute("SELECT id FROM discovered_competitors WHERE LOWER(name) = LOWER(?) AND LOWER(user_email) = ?", (name, email_norm))
+        row = cur.fetchone()
+        if row:
+            cur.execute("""
+            UPDATE discovered_competitors SET
+                website = CASE WHEN (website IS NULL OR website = '') THEN ? ELSE website END,
+                phone = CASE WHEN (phone IS NULL OR phone = '') THEN ? ELSE phone END,
+                social = CASE WHEN (social IS NULL OR social = '') THEN ? ELSE social END,
+                competitor_type = CASE WHEN (competitor_type IS NULL OR competitor_type = '') THEN ? ELSE competitor_type END,
+                price_segment = CASE WHEN (price_segment IS NULL OR price_segment = '') THEN ? ELSE price_segment END,
+                core_products = CASE WHEN (core_products IS NULL OR core_products = '') THEN ? ELSE core_products END,
+                key_strengths = CASE WHEN (key_strengths IS NULL OR key_strengths = '') THEN ? ELSE key_strengths END,
+                vulnerabilities = CASE WHEN (vulnerabilities IS NULL OR vulnerabilities = '') THEN ? ELSE vulnerabilities END,
+                market_context = ?
+            WHERE id = ?
+            """, (
+                it.get("website", ""),
+                it.get("phone", ""),
+                it.get("social", ""),
+                it.get("type") or it.get("competitor_type", "Trực tiếp"),
+                it.get("price_segment", ""),
+                it.get("core_products", ""),
+                it.get("key_strengths", ""),
+                it.get("vulnerabilities", ""),
+                market_context,
+                row[0]
+            ))
+        else:
+            cur.execute("""
+            INSERT INTO discovered_competitors (
+                user_email, name, website, phone, social, notes, competitor_type,
+                price_segment, core_products, key_strengths, vulnerabilities,
+                is_manual, market_context
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
+            """, (
+                email_norm,
+                name,
+                it.get("website", ""),
+                it.get("phone", ""),
+                it.get("social", ""),
+                it.get("notes", ""),
+                it.get("type") or it.get("competitor_type", "Trực tiếp"),
+                it.get("price_segment", ""),
+                it.get("core_products", ""),
+                it.get("key_strengths", ""),
+                it.get("vulnerabilities", ""),
+                market_context
+            ))
 
     # Auto sync profile competitors list with all competitors
     cur.execute("SELECT name FROM discovered_competitors WHERE LOWER(user_email) = ? ORDER BY id ASC", (email_norm,))
@@ -682,6 +713,17 @@ def save_discovered_competitors(items: list, market_context: str = "", user_emai
 
     conn.commit()
     conn.close()
+
+def clear_all_competitors(user_email: str = "default@marketing-os.local"):
+    init_app_db()
+    email_norm = normalize_email(user_email)
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM discovered_competitors WHERE LOWER(user_email) = ?", (email_norm,))
+    cur.execute("UPDATE user_profiles SET competitors = '' WHERE LOWER(user_email) = ?", (email_norm,))
+    conn.commit()
+    conn.close()
+    return {"status": "success", "message": "Đã xóa toàn bộ đối thủ trong danh sách."}
 
 def get_discovered_competitors(user_email: str = "default@marketing-os.local") -> list:
     init_app_db()

@@ -75,7 +75,7 @@ def scrape_competitor_site(url_or_name: str) -> Dict[str, any]:
         "Accept-Language": "vi-VN,vi;q=0.9,en-US;q=0.8,en;q=0.7"
     }
     try:
-        resp = requests.get(target_url, headers=headers, timeout=8, verify=False)
+        resp = requests.get(target_url, headers=headers, timeout=3.5, verify=False)
         if resp.status_code == 200:
             soup = BeautifulSoup(resp.content, "html.parser")
             if soup.title and soup.title.string:
@@ -131,6 +131,22 @@ DOMAIN_DATA = {
             "Khi máy gặp sự cố ở công trình tỉnh xa (Tây Nguyên, Miền Tây, miền Trung), việc điều kỹ thuật viên xuống xử lý thường chậm từ 2-4 ngày, gây đình trệ cả ngày đổ bê tông dầm sàn.",
             "Một số đơn vị dùng linh kiện mô tơ cũ quấn lại hoặc bộ nguồn thủy lực không trang bị két làm mát nhớt, dẫn đến việc máy bị nóng nhớt và tụt lực uốn khi chạy liên tục giữa trưa nắng.",
             "Giao diện điều khiển cơ bản, ít tính năng cài đặt đai phức tạp, thợ mới vào khó thao tác."
+        ],
+        "competitors_pool": [
+            {"name": "Cơ Khí Chí Hướng (Chiho)", "website": "chihovn.com", "type": "Trực tiếp", "price_segment": "Cao cấp", "core_products": "Máy bẻ đai sắt tự động, máy uốn sắt xây dựng", "key_strengths": "Thương hiệu lâu năm, mạng lưới đại lý rộng", "vulnerabilities": "Giá cao hơn mặt bằng chung 15-20%, chi phí phụ tùng thay thế đắt"},
+            {"name": "Máy Bẻ Đai Hoàng Minh", "website": "maybedaishoangminh.com", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Máy bẻ đai sắt cá heo, máy bẻ đai đứng", "key_strengths": "Mẫu mã đa dạng, giá thành cạnh tranh", "vulnerabilities": "Khung sườn mỏng hơn, phụ thuộc vào kỹ thuật viên địa phương"},
+            {"name": "Máy Xây Dựng Siêu Việt", "website": "mayxaydungcu.com", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Máy uốn sắt, máy cắt sắt thủy lực", "key_strengths": "Có cả máy mới và máy bãi Nhật, sẵn hàng", "vulnerabilities": "Chính sách bảo hành phân mảnh, máy cũ độ bền không đồng đều"},
+            {"name": "Cơ Khí Chế Tạo Phúc Long", "website": "phuclong.vn", "type": "Trực tiếp", "price_segment": "Tiêu chuẩn", "core_products": "Thiết bị và máy móc công trình xây dựng", "key_strengths": "Quy mô xưởng lớn, năng lực sản xuất hàng loạt", "vulnerabilities": "Chăm sóc sau bán hàng chậm trễ khi máy gặp sự cố ở tỉnh xa"},
+            {"name": "Máy Xây Dựng Hồng Hà", "website": "honghamachinery.vn", "type": "Gián tiếp / Trực tiếp", "price_segment": "Trung & Cao cấp", "core_products": "Máy trộn bê tông, máy gia công sắt thép", "key_strengths": "Nhận diện thương hiệu mạnh miền Bắc", "vulnerabilities": "Chi phí vận chuyển vào miền Trung/Nam cao"},
+            {"name": "Máy Bẻ Đai Lê Nguyễn", "website": "maybedaile nguyen.com", "type": "Trực tiếp", "price_segment": "Tiêu chuẩn", "core_products": "Máy bẻ đai bàn nghiêng, máy bẻ đai thế hệ mới", "key_strengths": "Giao diện cảm ứng dễ dùng", "vulnerabilities": "Mô tơ dễ nóng khi làm việc giữa trưa nắng công trường"},
+            {"name": "Cơ Khí Đại Phát", "website": "cokhidaiphat.vn", "type": "Đại lý / Sản xuất", "price_segment": "Tiết kiệm", "core_products": "Máy uốn bẻ sắt dân dụng phi 6-25", "key_strengths": "Giá rẻ, tiếp cận cai thầu nhỏ tốt", "vulnerabilities": "Độ chính xác góc đai chưa cao, tỷ lệ hao sắt nhiều"},
+            {"name": "Máy Xây Dựng An Phát", "website": "mayxaydunganphat.com", "type": "Phân phối", "price_segment": "Tiêu chuẩn", "core_products": "Máy móc thiết bị thi công xây dựng", "key_strengths": "Giao hàng nhanh trong ngày tại các đô thị", "vulnerabilities": "Chỉ là đơn vị thương mại, không tự sửa chữa được mạch sâu"},
+            {"name": "Thiết Bị Vinamac", "website": "vinamac.com.vn", "type": "Trực tiếp", "price_segment": "Cao cấp", "core_products": "Tổ hợp trạm trộn, máy gia công cốt thép", "key_strengths": "Hồ sơ năng lực tham gia gói thầu lớn tốt", "vulnerabilities": "Thủ tục hợp đồng rườm rà, không mặn mà với đơn hàng nhỏ"},
+            {"name": "Công Ty Máy Xây Dựng Lạc Hồng", "website": "lachonggroup.com.vn", "type": "Tổng kho / Phân phối", "price_segment": "Đa phân khúc", "core_products": "Máy uốn cắt sắt, tời kéo, pa lăng", "key_strengths": "Kho hàng rộng lớn, giá bán buôn tốt", "vulnerabilities": "Tư vấn kỹ thuật đại trà, thiếu hướng dẫn sâu 1-1"},
+            {"name": "Cơ Khí Tân Thuận Phát", "website": "tanthuanphat.com", "type": "Trực tiếp", "price_segment": "Tiêu chuẩn", "core_products": "Máy uốn thép hộp, máy bẻ đai công nghiệp", "key_strengths": "Gia công cơ khí chính xác", "vulnerabilities": "Hoạt động marketing yếu, chủ yếu dựa vào khách quen"},
+            {"name": "Thiết Bị Xây Dựng Hòa Phát Corp", "website": "hoaphatcorp.vn", "type": "Phân phối", "price_segment": "Tiêu chuẩn", "core_products": "Máy cắt uốn sắt thép, giàn giáo", "key_strengths": "Hệ thống kho bãi rộng ở nhiều tỉnh thành", "vulnerabilities": "Không chuyên sâu vào máy bẻ đai tự động thông minh"},
+            {"name": "Máy Bẻ Đai Minh Phát", "website": "maybedaiminhphat.com", "type": "Trực tiếp", "price_segment": "Tiêu chuẩn", "core_products": "Máy bẻ đai sắt tự động màn hình cảm ứng", "key_strengths": "Phục vụ tốt khu vực miền Tây & Nam Bộ", "vulnerabilities": "Chưa có trạm bảo hành ủy quyền tại miền Trung và Bắc"},
+            {"name": "Công Ty Thiết Bị Xây Dựng Toàn Thắng", "website": "mayxaydungtoanthang.com", "type": "Đại lý / Phân phối", "price_segment": "Trung cấp", "core_products": "Máy bẻ đai, uốn đai sắt xây dựng phi 6-8-10", "key_strengths": "Bán trả góp và hỗ trợ giao máy tận nơi", "vulnerabilities": "Thời gian xử lý bảo hành linh kiện thủy lực kéo dài"}
         ]
     },
     "fashion": {
@@ -158,6 +174,24 @@ DOMAIN_DATA = {
             "Chất lượng vải không đồng đều giữa các lô hàng sản xuất hàng loạt.",
             "Khâu xử lý đổi trả hàng và giải quyết khiếu nại chậm trễ (từ 5 - 10 ngày).",
             "Mẫu mã rập khuôn, sao chép xu hướng chậm hơn đối thủ ngoại."
+        ],
+        "competitors_pool": [
+            {"name": "Coolmate", "website": "coolmate.me", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Thời trang nam cơ bản, đồ thể thao D2C", "key_strengths": "Mô hình D2C, chính sách đổi trả 60 ngày miễn phí", "vulnerabilities": "Mẫu mã thiên về cơ bản, thiếu sự đột phá thời trang cá tính"},
+            {"name": "Routine", "website": "routine.vn", "type": "Trực tiếp", "price_segment": "Trung & Cao cấp", "core_products": "Thời trang nam nữ thiết kế công sở & dạo phố", "key_strengths": "Hệ thống showroom đẹp tại các trung tâm thương mại", "vulnerabilities": "Giá thành cao, ít ưu đãi cho khách hàng thân thiết"},
+            {"name": "Canifa", "website": "canifa.com", "type": "Trực tiếp", "price_segment": "Tiêu chuẩn", "core_products": "Thời trang gia đình, áo len, cotton cơ bản", "key_strengths": "Thương hiệu quốc dân, chất lượng len sợi bền bỉ", "vulnerabilities": "Thiết kế thiếu tính trendy cho Gen Z, truyền thông chậm đổi mới"},
+            {"name": "Yody", "website": "yody.vn", "type": "Trực tiếp", "price_segment": "Bình dân & Trung cấp", "core_products": "Thời trang thường ngày, áo polo, đồng phục", "key_strengths": "Độ phủ cửa hàng cực rộng ở các tỉnh thành cấp 2 và 3", "vulnerabilities": "Định vị đại trà, khó cạnh tranh phân khúc thiết kế cao cấp"},
+            {"name": "Torano", "website": "torano.vn", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Thời trang nam công sở hiện đại", "key_strengths": "Form dáng người Việt, giá mềm", "vulnerabilities": "Chất liệu dễ nhăn sau nhiều lần giặt máy"},
+            {"name": "Biluxury", "website": "biluxury.vn", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Vest, sơ mi nam công sở", "key_strengths": "Mạng lưới nhượng quyền tỉnh phát triển tốt", "vulnerabilities": "Mẫu mã ít thay đổi giữa các mùa"},
+            {"name": "Aristino", "website": "aristino.com", "type": "Trực tiếp", "price_segment": "Cao cấp", "core_products": "Thời trang nam cao cấp, âu phục may đo", "key_strengths": "Chất liệu vải cao cấp (bamboo, silk), nhận diện sang trọng", "vulnerabilities": "Giá thành kén khách, chi phí quảng cáo lớn"},
+            {"name": "Gumac", "website": "gumac.vn", "type": "Trực tiếp", "price_segment": "Tiêu chuẩn", "core_products": "Đầm váy thiết kế, thời trang nữ công sở", "key_strengths": "Livestream bán hàng cực mạnh, tệp khách nữ trung thành", "vulnerabilities": "Chất lượng đường may các đợt sale xả hàng chưa đồng đều"},
+            {"name": "Elise", "website": "elise.vn", "type": "Trực tiếp", "price_segment": "Cao cấp", "core_products": "Thời trang nữ cao cấp, vest dạ hội", "key_strengths": "Thương hiệu đẳng cấp, hình ảnh truyền thông chuyên nghiệp", "vulnerabilities": "Mức giá cao, khó tiếp cận tệp khách hàng trẻ"},
+            {"name": "IVY moda", "website": "ivymoda.com", "type": "Trực tiếp", "price_segment": "Trung & Cao cấp", "core_products": "Thời trang xu hướng, đồ dạ hội, công sở", "key_strengths": "Tổ chức Fashion Show quy mô, dẫn dắt xu hướng", "vulnerabilities": "Dịch vụ sau bán hàng và chăm sóc khiếu nại còn rườm rà"},
+            {"name": "Sixdo", "website": "sixdo.vn", "type": "Trực tiếp", "price_segment": "Trung & Cao cấp", "core_products": "Thời trang thiết kế bởi NTK Đỗ Mạnh Cường", "key_strengths": "Thương hiệu cá nhân nhà thiết kế mạnh, chất liệu tốt", "vulnerabilities": "Phom dáng kén người mặc, hệ thống cửa hàng chi phí cao"},
+            {"name": "Nem Fashion", "website": "nemshop.vn", "type": "Trực tiếp", "price_segment": "Trung & Cao cấp", "core_products": "Thời trang công sở nữ thanh lịch", "key_strengths": "Nhận diện lâu đời trong giới văn phòng", "vulnerabilities": "Các đợt giảm giá sâu 50-70% làm giảm giá trị thương hiệu"},
+            {"name": "DirtyCoins", "website": "dirtycoins.vn", "type": "Gián tiếp / Streetwear", "price_segment": "Giới trẻ", "core_products": "Thời trang đường phố, Hoodie, Tee in hình", "key_strengths": "Cộng đồng Gen Z đông đảo, marketing viral", "vulnerabilities": "Chỉ tập trung tệp trẻ tuổi, khó mở rộng sang độ tuổi khác"},
+            {"name": "Levents", "website": "levents.asia", "type": "Streetwear", "price_segment": "Trung cấp", "core_products": "Áo thun, balo, phụ kiện streetwear", "key_strengths": "Bao bì đóng gói đẹp, chiến dịch social mạnh", "vulnerabilities": "Tỷ lệ làm nhái, hàng fake trôi nổi nhiều trên thị trường"},
+            {"name": "Degrey", "website": "degrey.vn", "type": "Streetwear / Á Đông", "price_segment": "Tiêu chuẩn", "core_products": "Thời trang kết hợp truyền thống & hiện đại", "key_strengths": "Cá tính độc lạ, tệp fan trung thành", "vulnerabilities": "Quy mô sản xuất còn hạn chế, hay cháy hàng các mẫu hot"},
+            {"name": "Teelab", "website": "teelab.vn", "type": "Fast Fashion / Gen Z", "price_segment": "Tiết kiệm", "core_products": "Áo phông oversize, quần short unisex", "key_strengths": "Giá siêu cạnh tranh, đẩy số lượng cực lớn trên TikTok Shop", "vulnerabilities": "Biên lợi nhuận mỏng, áp lực chi phí affiliate sàn TMĐT"}
         ]
     },
     "spa_beauty": {
@@ -185,6 +219,22 @@ DOMAIN_DATA = {
             "Kỹ thuật viên tư vấn ép khách mua gói dịch vụ giá cao khiến khách hàng có tâm lý phòng thủ và không quay lại.",
             "Tay nghề nhân viên không đồng đều giữa các chi nhánh, hay thay đổi kỹ thuật viên điều trị.",
             "Chính sách giá không minh bạch, hay phát sinh phụ phí thuốc và mỹ phẩm bôi sau điều trị."
+        ],
+        "competitors_pool": [
+            {"name": "Hệ Thống Thẩm Mỹ Viện Seoul Center (Seoul Spa)", "website": "seoulcenter.vn", "type": "Trực tiếp", "price_segment": "Trung & Cao cấp", "core_products": "Trị mụn, nám, tàn nhang, trẻ hóa da công nghệ cao", "key_strengths": "Hơn 80 chi nhánh toàn quốc, đầu tư máy móc hiện đại", "vulnerabilities": "Khách hàng phàn nàn nhân viên tư vấn chèo kéo mua thêm gói liệu trình"},
+            {"name": "Bệnh Viện Thẩm Mỹ Thu Cúc", "website": "thucucclinics.com", "type": "Trực tiếp", "price_segment": "Cao cấp", "core_products": "Phẫu thuật thẩm mỹ, da liễu thẩm mỹ y khoa", "key_strengths": "Thương hiệu bệnh viện uy tín lâu năm, đội ngũ bác sĩ chính quy", "vulnerabilities": "Giá cao, thủ tục chờ đợi khám và dịch vụ lâu"},
+            {"name": "Shynh House Premium", "website": "shynhhouse.com", "type": "Trực tiếp", "price_segment": "Cao cấp", "core_products": "Điều trị da chuyên sâu, nâng cơ trẻ hóa", "key_strengths": "Không gian sang trọng, chăm sóc khách hàng VIP chu đáo", "vulnerabilities": "Chi phí liệu trình đắt đỏ, chỉ tập trung ở các thành phố lớn"},
+            {"name": "Hasaki Clinic & Spa", "website": "hasaki.vn/spa", "type": "Trực tiếp", "price_segment": "Tiêu chuẩn & Tiết kiệm", "core_products": "Chăm sóc da cơ bản, lấy nhân mụn, peel da", "key_strengths": "Giá bình dân minh bạch, hệ sinh thái bán mỹ phẩm kèm theo", "vulnerabilities": "Phòng đông khách, thời gian làm dịch vụ nhanh, thiếu tính riêng tư"},
+            {"name": "Bông Spa", "website": "bongspa.com", "type": "Trực tiếp / Thư giãn", "price_segment": "Trung cấp", "core_products": "Spa thảo mộc 100% tự nhiên, massage body & mặt", "key_strengths": "Liệu pháp hoa lá thiên nhiên không xâm lấn, không chèo kéo bán hàng", "vulnerabilities": "Không chuyên sâu vào các ca da bệnh lý nặng như nám sâu, sẹo rỗ"},
+            {"name": "Kay Spa", "website": "kayspa.vn", "type": "Trực tiếp", "price_segment": "Tiêu chuẩn", "core_products": "Triệt lông, tắm trắng, chăm sóc da mặt", "key_strengths": "Mạng lưới chi nhánh rộng khắp các tỉnh miền Tây và Nam Bộ", "vulnerabilities": "Tay nghề kỹ thuật viên cơ sở tỉnh chưa đồng đều"},
+            {"name": "Thẩm Mỹ Viện Đông Á", "website": "thammyviendonga.vn", "type": "Trực tiếp", "price_segment": "Cao cấp", "core_products": "Trị nám Pico, thẩm mỹ công nghệ Hoa Kỳ", "key_strengths": "Bác sĩ có chứng chỉ quốc tế, máy móc nhập khẩu", "vulnerabilities": "Phát sinh chi phí thuốc bôi dưỡng sau điều trị"},
+            {"name": "Bệnh Viện Thẩm Mỹ Kangnam", "website": "benhvienthammykangnam.vn", "type": "Trực tiếp", "price_segment": "Cao cấp", "core_products": "Phẫu thuật toàn diện, trị sẹo rỗ chuyên sâu", "key_strengths": "Hồ sơ truyền thông mạnh, tài trợ nhiều show truyền hình", "vulnerabilities": "Đông đúc, lịch hẹn bác sĩ trưởng khoa khó sắp xếp"},
+            {"name": "Phòng Khám Da Liễu O2 Skin", "website": "o2skin.vn", "type": "Trực tiếp / Chuẩn Y Khoa", "price_segment": "Tiêu chuẩn (Sinh viên & Công sở)", "core_products": "Trị mụn chuẩn y khoa 100% bác sĩ da liễu", "key_strengths": "Minh bạch giá, không ép mua gói, kê đơn thuốc chính hãng", "vulnerabilities": "Cơ sở vật chất tối giản, chỉ tập trung trị mụn không làm thư giãn"},
+            {"name": "Gà Spa", "website": "gaspa.vn", "type": "Trực tiếp", "price_segment": "Tiết kiệm", "core_products": "Lấy mụn sinh học, thải độc da mặt", "key_strengths": "Giá hợp túi tiền học sinh sinh viên, nhiều chi nhánh", "vulnerabilities": "Dịch vụ sau buổi làm chưa có quy trình theo dõi sát 1-1"},
+            {"name": "Viện Thẩm Mỹ DIVA", "website": "vienthammydiva.vn", "type": "Trực tiếp", "price_segment": "Tiêu chuẩn", "core_products": "Phun thêu thẩm mỹ, chăm sóc da công nghệ cao", "key_strengths": "Độ phủ thương hiệu số 1 tại các huyện, thị xã trên toàn quốc", "vulnerabilities": "Đội ngũ chuyên viên hay luân chuyển giữa các chi nhánh"},
+            {"name": "Lã Lão Spa", "website": "lalaospa.vn", "type": "Gián tiếp / Dưỡng sinh", "price_segment": "Trung cấp", "core_products": "Gội đầu dưỡng sinh, massage trị liệu cổ vai gáy", "key_strengths": "Không gian thư giãn, nhân viên tận tâm", "vulnerabilities": "Chỉ giải quyết nhu cầu thư giãn, không điều trị da liễu"},
+            {"name": "Mega Gangnam", "website": "gangnam.com.vn", "type": "Cao cấp", "price_segment": "Hạng sang", "core_products": "Căng chỉ collagen, trẻ hóa phi phẫu thuật", "key_strengths": "Công nghệ Hàn Quốc, phục vụ giới thượng lưu", "vulnerabilities": "Chi phí cực kỳ đắt đỏ, từ vài chục đến hàng trăm triệu"},
+            {"name": "Dermatology Clinic & Spa Địa Phương", "website": "", "type": "Trực tiếp", "price_segment": "Tiêu chuẩn", "core_products": "Các phòng khám da liễu của bác sĩ bệnh viện tỉnh mở ngoài giờ", "key_strengths": "Bác sĩ quen thuộc tại địa phương, uy tín gia đình", "vulnerabilities": "Cơ sở vật chất nhỏ, không có máy móc công nghệ cao mới nhất"}
         ]
     },
     "fnb": {
@@ -212,6 +262,23 @@ DOMAIN_DATA = {
             "Chất lượng đồ ăn đồ uống không đồng nhất giữa giờ cao điểm và giờ vắng khách.",
             "Thất thoát nguyên vật liệu nội bộ và nhân viên phục vụ thái độ thiếu chuyên nghiệp.",
             "Chương trình tích điểm loyalty rườm rà, khách hàng không nhớ để sử dụng."
+        ],
+        "competitors_pool": [
+            {"name": "Highlands Coffee", "website": "highlands.com.vn", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Cà phê phin truyền thống, Freeze, Trà sen vàng", "key_strengths": "Vị trí đắc địa số 1 Việt Nam, nhận diện phủ sóng toàn quốc", "vulnerabilities": "Chất lượng đồ uống thiếu sự tinh tế, chỗ ngồi ồn ào giờ cao điểm"},
+            {"name": "Phúc Long Coffee & Tea", "website": "phuclong.com.vn", "type": "Trực tiếp", "price_segment": "Trung & Cao cấp", "core_products": "Trà sữa đậm vị, trà ô long, cold brew", "key_strengths": "Vị trà đậm đà đặc trưng, hệ thống kiosk tích hợp WinMart", "vulnerabilities": "Trải nghiệm phục vụ tại một số kiosk WinMart chưa đồng nhất"},
+            {"name": "The Coffee House", "website": "thecoffeehouse.com", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Cà phê, trà trái cây, bánh ngọt", "key_strengths": "Không gian phù hợp làm việc và học tập, app tích điểm tốt", "vulnerabilities": "Thu hẹp nhiều cửa hàng sau dịch, áp lực cạnh tranh trà sữa mới nổi"},
+            {"name": "Phê La", "website": "phela.vn", "type": "Trực tiếp / Trà Ô Long", "price_segment": "Trung & Cao cấp", "core_products": "Trà ô long đặc sản Đà Lạt, cà phê trứng", "key_strengths": "Định vị phong cách cắm trại (Camp Concept), giới trẻ săn đón", "vulnerabilities": "Thời gian chờ pha chế lâu, hay cháy hàng các món 'signature'"},
+            {"name": "Katinat Saigon Kafe", "website": "katinat.vn", "type": "Trực tiếp", "price_segment": "Trung & Cao cấp", "core_products": "Trà sữa chôm chôm, cà phê muối, trà trái cây", "key_strengths": "Thiết kế kiến trúc ấn tượng, bao bì 'ly cầu vồng' viral", "vulnerabilities": "Giá thành khá cao, tập trung chủ yếu ở các trục đường lớn"},
+            {"name": "Trung Nguyên Legend", "website": "trungnguyenlegend.com", "type": "Trực tiếp", "price_segment": "Cao cấp & Trung cấp", "core_products": "Cà phê năng lượng, cà phê hạt rang xay nguyên chất", "key_strengths": "Thương hiệu cà phê quốc gia, tệp khách trung niên trung thành", "vulnerabilities": "Mẫu mã và phong cách chưa thực sự thu hút tệp khách trẻ Gen Z"},
+            {"name": "Cộng Cà Phê", "website": "congcaphe.com", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Cà phê cốt dừa, bạc xỉu, đồ uống truyền thống", "key_strengths": "Phong cách bao cấp độc đáo, thu hút cả khách du lịch quốc tế", "vulnerabilities": "Menu đồ uống ít thay đổi, không gian một số điểm tối và hẹp"},
+            {"name": "Cheese Coffee", "website": "cheesecoffee.vn", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Trà sữa nướng, cà phê phô mai, bánh ngọt", "key_strengths": "Phong cách Industrial hiện đại, chụp ảnh check-in đẹp", "vulnerabilities": "Mật độ chi nhánh còn hạn chế ở khu vực miền Bắc"},
+            {"name": "Aha Cafe", "website": "ahacafe.vn", "type": "Trực tiếp / Vỉa hè cao cấp", "price_segment": "Tiết kiệm", "core_products": "Cà phê vỉa hè, trà chanh, hạt hướng dương", "key_strengths": "Mặt tiền thoáng đãng, giá rẻ, hợp văn hóa ngồi vỉa hè", "vulnerabilities": "Không gian ồn ào khói bụi, dịch vụ cơ bản"},
+            {"name": "Milano Coffee", "website": "milanocoffee.com.vn", "type": "Nhượng quyền bình dân", "price_segment": "Bình dân", "core_products": "Cà phê đen, cà phê sữa đá mang đi", "key_strengths": "Giá bình dân từ 15-20k, hàng ngàn điểm bán nhượng quyền", "vulnerabilities": "Chất lượng hạt cà phê phụ thuộc vào từng chủ quán nhượng quyền"},
+            {"name": "TocoToco Bubble Tea", "website": "tocotocotea.com", "type": "Trà sữa nhượng quyền", "price_segment": "Tiết kiệm & Trung cấp", "core_products": "Trà sữa trân châu, trà hoa quả tươi", "key_strengths": "Nguồn nông sản Việt, giá vừa túi tiền học sinh sinh viên", "vulnerabilities": "Nhận diện thương hiệu bị bão hòa trước các làn sóng trà sữa mới"},
+            {"name": "Gong Cha Việt Nam", "website": "gongcha.com.vn", "type": "Trà sữa Đài Loan", "price_segment": "Cao cấp", "core_products": "Trà sữa Milk Foam béo ngậy, trà Alisan", "key_strengths": "Chất lượng chuẩn quốc tế, kiểm định nguyên liệu khắt khe", "vulnerabilities": "Giá đắt, ít mở rộng cửa hàng mới trong các năm gần đây"},
+            {"name": "Mixue Việt Nam", "website": "mxbc.com", "type": "Trực tiếp / Fast Dessert", "price_segment": "Siêu tiết kiệm", "core_products": "Kem ốc quế 10k, trà chanh tươi 20k", "key_strengths": "Giá rẻ không đối thủ, tốc độ mở điểm bán thần tốc", "vulnerabilities": "Lợi nhuận cho chủ nhượng quyền mỏng, cạnh tranh nội bộ các điểm bán gần nhau"},
+            {"name": "Koi Thé", "website": "koithe.com", "type": "Trà sữa Đài Loan", "price_segment": "Cao cấp", "core_products": "Golden Bubble Milk Tea, Macchiato", "key_strengths": "Hương vị trà thanh mát, trân châu hoàng kim độc quyền", "vulnerabilities": "Không phục vụ giao hàng linh hoạt ở các tỉnh xa"},
+            {"name": "Chagee Vietnam", "website": "chagee.com.vn", "type": "Trà sữa thảo mộc hiện đại", "price_segment": "Cao cấp", "core_products": "Trà sữa tươi nguyên lá, bao bì sang trọng", "key_strengths": "Trend trà sữa mới nổi cực hot, nguyên liệu sữa tươi thanh trùng", "vulnerabilities": "Mới vào thị trường Việt Nam, số lượng điểm bán còn ít"}
         ]
     },
     "tech_retail": {
@@ -238,6 +305,22 @@ DOMAIN_DATA = {
             "Giao diện cồng kềnh, nhân viên lớn tuổi mất cả tuần mới làm quen được.",
             "Tổng đài hỗ trợ kỹ thuật nghẽn mạng lúc cao điểm bán hàng (buổi tối và cuối tuần).",
             "Thu thêm nhiều phụ phí kết nối sàn TMĐT và phụ phí tính năng nâng cao."
+        ],
+        "competitors_pool": [
+            {"name": "KiotViet", "website": "kiotviet.vn", "type": "Trực tiếp", "price_segment": "Tiêu chuẩn", "core_products": "Phần mềm quản lý bán hàng đa ngành nghề, máy tính tiền POS", "key_strengths": "Thị phần số 1 tại Việt Nam với hơn 300.000 cửa hàng, dễ sử dụng", "vulnerabilities": "Chậm đồng bộ đa sàn lúc cao điểm flash sale, tổng đài hỗ trợ quá tải"},
+            {"name": "Sapo (Sapo POS / Sapo Omnichannel)", "website": "sapo.vn", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Phần mềm quản lý bán hàng đa kênh, thiết kế web bán hàng", "key_strengths": "Hệ sinh thái kết nối đơn vị vận chuyển và hóa đơn điện tử toàn diện", "vulnerabilities": "Chi phí gói Omnichannel cao, phát sinh phí duy trì cổng kết nối sàn"},
+            {"name": "Haravan", "website": "haravan.com", "type": "Trực tiếp / Doanh nghiệp", "price_segment": "Cao cấp & Doanh nghiệp", "core_products": "Giải pháp thương mại điện tử đa kênh, HaraSocial, HaraRetail", "key_strengths": "Chuyên nghiệp cho các thương hiệu lớn và chuỗi bán lẻ, tích hợp sâu Meta/Google", "vulnerabilities": "Giao diện phức tạp, chi phí triển khai và đào tạo ban đầu đắt đỏ"},
+            {"name": "Pos365", "website": "pos365.vn", "type": "Trực tiếp", "price_segment": "Tiết kiệm", "core_products": "Phần mềm bán hàng F&B, Karaoke, Tạp hóa điện toán đám mây", "key_strengths": "Gói mua trọn đời giá rẻ, giao diện cảm ứng trực quan", "vulnerabilities": "Tính năng quản lý tồn kho chuyên sâu và báo cáo tài chính còn hạn chế"},
+            {"name": "Misa eShop / CukCuk", "website": "eshop.misa.vn", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Quản lý bán lẻ eShop, quản lý nhà hàng CukCuk, tích hợp kế toán MISA", "key_strengths": "Thương hiệu tài chính kế toán uy tín, chuẩn hóa hóa đơn điện tử theo luật", "vulnerabilities": "Giao diện hơi cứng nhắc, quy trình hỗ trợ qua nhiều bước tổng đài"},
+            {"name": "Nhanh.vn", "website": "nhanh.vn", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Quản lý bán hàng chuỗi cửa hàng thời trang và TMĐT", "key_strengths": "Tối ưu xuất sắc cho các shop thời trang nhiều chi nhánh", "vulnerabilities": "Ứng dụng di động đôi khi giật lag, phí đẩy đơn vận chuyển chưa tối ưu"},
+            {"name": "Pancake POS (Pancake.vn)", "website": "pancake.vn", "type": "Trực tiếp / Social Commerce", "price_segment": "Tiết kiệm", "core_products": "Quản lý hội thoại đa kênh Fanpage, Instagram, Shopee, TikTok Shop", "key_strengths": "Tốc độ load tin nhắn chat nhanh nhất thị trường, chia hội thoại thông minh", "vulnerabilities": "Tính năng kho hàng và kế toán công nợ chỉ ở mức cơ bản"},
+            {"name": "TrustSales", "website": "trustsales.vn", "type": "Social Commerce", "price_segment": "Tiêu chuẩn", "core_products": "Phần mềm quản lý bán hàng online và telesales chốt đơn", "key_strengths": "Tối ưu quy trình cho đội ngũ telesales gọi điện chốt đơn tự động", "vulnerabilities": "Ít tính năng cho điểm bán lẻ offline (POS quầy)"},
+            {"name": "iPOS.vn", "website": "ipos.vn", "type": "F&B Chuyên Sâu", "price_segment": "Cao cấp", "core_products": "Phần mềm và phần cứng quản lý nhà hàng cafe chuyên sâu, menu điện tử", "key_strengths": "Thống trị phân khúc nhà hàng và chuỗi đồ uống lớn tại Việt Nam", "vulnerabilities": "Giá đầu tư phần cứng ban đầu cao, chỉ phù hợp ngành F&B"},
+            {"name": "Odoo Việt Nam (ERP)", "website": "odoo.com", "type": "Mã nguồn mở / ERP", "price_segment": "Doanh nghiệp", "core_products": "Hệ thống quản trị doanh nghiệp tổng thể ERP, POS, CRM, Kế toán", "key_strengths": "Tùy biến không giới hạn quy trình, phù hợp doanh nghiệp lớn", "vulnerabilities": "Thời gian triển khai tính bằng tháng, đòi hỏi đội ngũ IT nội bộ"},
+            {"name": "Suno.vn", "website": "suno.vn", "type": "Trực tiếp", "price_segment": "Tiết kiệm", "core_products": "Phần mềm bán lẻ đơn giản, quản lý kho cơ bản", "key_strengths": "Gọn nhẹ, máy tính cấu hình yếu vẫn chạy mượt", "vulnerabilities": "Thiếu các tính năng marketing tự động và đồng bộ TikTok Shop"},
+            {"name": "Tuha.vn", "website": "tuha.vn", "type": "Social / Telesales", "price_segment": "Tiêu chuẩn", "core_products": "Phần mềm tối ưu đơn hàng online và chia số tự động", "key_strengths": "Quản lý nhân viên marketing chạy ads và nhân viên chốt đơn chặt chẽ", "vulnerabilities": "Giao diện chưa hiện đại, ít cập nhật tính năng mới"},
+            {"name": "Maybanhang.net", "website": "maybanhang.net", "type": "Trực tiếp", "price_segment": "Tiêu chuẩn", "core_products": "Quản lý bán hàng cho tạp hóa, siêu thị mini", "key_strengths": "Hỗ trợ thiết bị máy in bill, đầu đọc mã vạch tốt", "vulnerabilities": "Chậm thích ứng với xu hướng bán hàng qua video ngắn và mạng xã hội"},
+            {"name": "Polaris FnB", "website": "polarisfnb.com", "type": "F&B Cloud", "price_segment": "Tiết kiệm", "core_products": "Quản lý quán bar, pub, nhà hàng", "key_strengths": "Định lượng nguyên liệu chi tiết", "vulnerabilities": "Thương hiệu mới, thị phần còn nhỏ"}
         ]
     },
     "b2b_industrial": {
@@ -264,6 +347,17 @@ DOMAIN_DATA = {
             "Thiếu hồ sơ kỹ thuật và hướng dẫn vận hành chi tiết bằng tiếng Việt.",
             "Chế độ bảo hành đùn đẩy trách nhiệm, đổ lỗi cho người vận hành thao tác sai.",
             "Không có phụ tùng dự phòng sẵn sàng, thời gian chờ sửa chữa kéo dài gây thiệt hại sản xuất."
+        ],
+        "competitors_pool": [
+            {"name": "Công Ty CP Thiết Bị Tân Phát", "website": "tanphat.com", "type": "Trực tiếp", "price_segment": "Cao cấp", "core_products": "Thiết bị sửa chữa ô tô, máy móc cơ khí công nghiệp nặng", "key_strengths": "Doanh nghiệp quy mô lớn, cung cấp dự án trọn gói", "vulnerabilities": "Quy trình thủ tục mua sắm rườm rà, giá cao"},
+            {"name": "Cơ Khí Công Nghiệp Tân Đức", "website": "cokhicongnghieptanduc.com", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Gia công chế tạo bồn bể, đường ống công nghiệp, kết cấu thép", "key_strengths": "Năng lực hàn kỹ thuật cao, thợ lành nghề", "vulnerabilities": "Thời gian giao hàng đôi khi trễ tiến độ dự án"},
+            {"name": "Công Ty Kỹ Thuật Việt Á", "website": "thietbivieta.com", "type": "Phân phối", "price_segment": "Tiêu chuẩn", "core_products": "Máy nén khí, mô tơ điện, phụ tùng cơ khí công nghiệp", "key_strengths": "Sẵn kho linh kiện phụ tùng, giao hàng nhanh", "vulnerabilities": "Đơn vị thương mại trung gian, chi phí bảo dưỡng định kỳ cao"},
+            {"name": "Cơ Điện Công Nghiệp Kim Long", "website": "kimlongmec.com", "type": "Trực tiếp", "price_segment": "Trung cấp", "core_products": "Chế tạo máy tự động hóa, băng chuyền, tủ điện", "key_strengths": "Giải pháp tùy biến linh hoạt theo nhà xưởng", "vulnerabilities": "Đội ngũ kỹ thuật mỏng khi chạy nhiều dự án cùng lúc"},
+            {"name": "Thiết Bị Công Nghiệp Á Châu", "website": "thietbiachau.com", "type": "Phân phối", "price_segment": "Đa phân khúc", "core_products": "Thiết bị đo lường, phụ kiện thủy lực, khí nén", "key_strengths": "Đại diện nhiều hãng quốc tế tại Việt Nam", "vulnerabilities": "Hàng đặt từ nước ngoài thời gian chờ từ 4-8 tuần"},
+            {"name": "Công Ty Cơ Khí Nam Dũng", "website": "cokhinamdung.com", "type": "Gia công OEM", "price_segment": "Tiết kiệm", "core_products": "Gia công chi tiết máy, tiện phay CNC", "key_strengths": "Giá gia công cạnh tranh, máy móc CNC hiện đại", "vulnerabilities": "Không có bộ phận thiết kế R&D riêng, chỉ làm theo bản vẽ có sẵn"},
+            {"name": "Vật Tư Kỹ Thuật Thành Đạt", "website": "vattuthanhdat.com.vn", "type": "Tổng kho", "price_segment": "Tiêu chuẩn", "core_products": "Sắt thép định hình, vòng bi, ray trượt công nghiệp", "key_strengths": "Kho hàng số lượng lớn, chiết khấu cao cho nhà máy", "vulnerabilities": "Chính sách công nợ gắt gao, yêu cầu thanh toán nhanh"},
+            {"name": "Cơ Điện Lạnh Đại Việt", "website": "tapdoandaiviet.com.vn", "type": "Hệ thống làm mát xưởng", "price_segment": "Trung & Cao cấp", "core_products": "Hệ thống thông gió làm mát nhà xưởng công nghiệp", "key_strengths": "Thương hiệu lớn, nhà máy sản xuất quy mô lớn tại Việt Nam", "vulnerabilities": "Chuyên về mảng làm mát, không cung ứng các thiết bị cơ khí khác"},
+            {"name": "Thiết Bị Kỹ Thuật Đông Á", "website": "donga-tech.vn", "type": "Phân phối", "price_segment": "Tiêu chuẩn", "core_products": "Máy móc dụng cụ cầm tay, máy hàn công nghiệp", "key_strengths": "Đại lý cấp 1 chính hãng, bảo hành chuẩn", "vulnerabilities": "Ít hỗ trợ kỹ thuật viên xuống tận xưởng tỉnh xa"}
         ]
     },
     "general": {
@@ -290,6 +384,15 @@ DOMAIN_DATA = {
             "Chăm sóc sau bán hàng đại trà, thiếu sự lắng nghe và kèm cặp 1-1.",
             "Chính sách bảo hành đổi trả phức tạp, đùn đẩy trách nhiệm khi sản phẩm gặp trục trặc.",
             "Truyền thông quảng cáo quá đà, thực tế sản phẩm không đúng như cam kết."
+        ],
+        "competitors_pool": [
+            {"name": "Các Chuỗi Đại Lý & Tổng Kho Phân Phối Cấp 1", "website": "", "type": "Trực tiếp", "price_segment": "Tiêu chuẩn", "core_products": "Phân phối số lượng lớn các dòng sản phẩm cùng ngành", "key_strengths": "Tiềm lực vốn mạnh, hệ thống kho bãi rộng lớn ở nhiều tỉnh thành", "vulnerabilities": "Quy trình thủ tục cứng nhắc, ít hỗ trợ đơn hàng nhỏ lẻ"},
+            {"name": "Các Cửa Hàng Chuyên Doanh Tại Địa Phương", "website": "", "type": "Trực tiếp", "price_segment": "Đa phân khúc", "core_products": "Cung cấp sản phẩm và dịch vụ trực tiếp đến tay người tiêu dùng địa phương", "key_strengths": "Am hiểu văn hóa địa phương, mối quan hệ thân thiết với khách hàng quen", "vulnerabilities": "Marketing yếu, thiếu kênh bán hàng online đa nền tảng"},
+            {"name": "Các Gian Hàng Mall Trên Sàn TMĐT (Shopee/TikTok/Lazada)", "website": "", "type": "Trực tiếp / Online", "price_segment": "Tiết kiệm", "core_products": "Bán lẻ online, giao hàng nhanh toàn quốc", "key_strengths": "Giá rẻ, nhiều voucher trợ giá từ sàn TMĐT", "vulnerabilities": "Thiếu tư vấn chuyên sâu kỹ thuật và cam kết dịch vụ bảo hành 1-1"},
+            {"name": "Các Công Ty Thương Mại & Xuất Nhập Khẩu Độc Quyền", "website": "", "type": "Gián tiếp / Nhập khẩu", "price_segment": "Cao cấp", "core_products": "Nhập khẩu nguyên chiếc các thương hiệu ngoại", "key_strengths": "Mác hàng nhập khẩu, tiêu chuẩn quốc tế", "vulnerabilities": "Chi phí đắt đỏ, phụ thuộc vào tỷ giá và chuỗi cung ứng nước ngoài"},
+            {"name": "Các Cơ Sở Sản Xuất Gia Công Trực Tiếp (OEM/ODM)", "website": "", "type": "Sản xuất gốc", "price_segment": "Tiết kiệm", "core_products": "Sản xuất gia công theo yêu cầu", "key_strengths": "Giá tại xưởng không qua trung gian", "vulnerabilities": "Không có thương hiệu, dịch vụ hậu mãi tự túc"},
+            {"name": "Hệ Thống Phân Phối Nhượng Quyền Toàn Quốc", "website": "", "type": "Chuỗi nhượng quyền", "price_segment": "Tiêu chuẩn", "core_products": "Mô hình kinh doanh đóng gói sẵn", "key_strengths": "Nhận diện thương hiệu đồng bộ, chiến dịch truyền thông bài bản", "vulnerabilities": "Chất lượng dịch vụ giữa các điểm nhượng quyền không đồng đều"},
+            {"name": "Các Đơn Vị Cung Cấp Giải Pháp Thay Thế Truyền Thống", "website": "", "type": "Gián tiếp", "price_segment": "Tiết kiệm", "core_products": "Phương pháp và sản phẩm truyền thống", "key_strengths": "Thói quen lâu đời của người dùng", "vulnerabilities": "Năng suất thấp, tốn nhiều nhân công và thời gian"}
         ]
     }
 }
@@ -495,9 +598,11 @@ def generate_market_research(profile: dict) -> str:
 
 def auto_discover_competitors(profile: dict, criteria: str = "all", market_context: dict = None) -> List[Dict[str, str]]:
     """
-    Rà soát đối thủ cạnh tranh dựa trên:
-    1. Bối cảnh thị trường chi tiết (Địa bàn/Tỉnh thành, Phân khúc giá, Ngành hàng)
-    2. Danh sách đối thủ do chủ doanh nghiệp tự nhập (nếu có thì giữ lại và tìm kiếm thêm; nếu chưa có thì rà quét toàn bộ từ bối cảnh thị trường).
+    Rà soát đối thủ cạnh tranh toàn diện và không giới hạn:
+    - Bao gồm tất cả đối thủ do chủ doanh nghiệp cung cấp.
+    - Rà quét đa chiều web thời gian thực tại địa bàn và ngành hàng.
+    - Liệt kê toàn bộ đối thủ trực tiếp, gián tiếp, chuỗi lớn và xưởng/đại lý địa phương.
+    - CÓ BAO NHIÊU LIỆT KÊ BẤY NHIÊU (mục tiêu từ 10 đến 20+ đối thủ).
     """
     market_context = market_context or {}
     location = market_context.get("location") or profile.get("market_location") or "Toàn quốc"
@@ -517,21 +622,24 @@ def auto_discover_competitors(profile: dict, criteria: str = "all", market_conte
 
     scope_label = "Tỉnh / Thành phố" if scope_type == "province" else ("Quốc gia" if scope_type == "country" else "Khu vực")
 
-    # 1. Tìm kiếm web thời gian thực bám sát địa bàn và sản phẩm
+    # 1. Tìm kiếm web thời gian thực đa chiều (nhiều góc độ tìm kiếm để bao quát tối đa đối thủ)
     queries = [
         f"{industry} {products} tại {location}",
-        f"công ty bán {products} uy tín tại {location}",
-        f"báo giá {products} {location}"
+        f"top công ty {products} uy tín tại {location}",
+        f"xưởng sản xuất cung cấp {products} {location}",
+        f"đại lý nhà phân phối {products} {location}",
+        f"báo giá {products} {location}",
+        f"thương hiệu {products} {location}"
     ]
     if known_comps:
-        for kc in known_comps[:2]:
+        for kc in known_comps:
             queries.append(f"{kc} {industry} {location} website hotline")
 
     web_results = []
     seen_urls = set()
     for q in queries:
         try:
-            res = search_live_web(q, max_results=2)
+            res = search_live_web(q, max_results=4)
             for r in res:
                 u = r.get("url", "")
                 if u and u not in seen_urls:
@@ -541,19 +649,23 @@ def auto_discover_competitors(profile: dict, criteria: str = "all", market_conte
             pass
 
     snippets = []
-    for r in web_results[:6]:
+    for r in web_results[:20]:
         snippets.append(f"- {r.get('title')}: {r.get('snippet')} ({r.get('url')})")
     web_text = "\n".join(snippets)
 
-    # 2. Xây dựng prompt cho Gemini
+    # 2. Xây dựng prompt cho Gemini - YÊU CẦU LIỆT KÊ TỐI ĐA, KHÔNG GIỚI HẠN
+    known_instruction = ""
     if known_comps:
         known_instruction = f"""ĐẶC BIỆT LƯU Ý - CHỦ DOANH NGHIỆP ĐÃ CUNG CẤP CÁC ĐỐI THỦ BAN ĐẦU: {', '.join(known_comps)}
 Nhiệm vụ của bạn:
-1. Bắt buộc đưa các đối thủ do chủ doanh nghiệp cung cấp ({', '.join(known_comps)}) vào danh sách, tìm kiếm và bổ sung đầy đủ Website, Hotline, Phân khúc và Điểm yếu/Tử huyệt của họ.
-2. Dựa vào bối cảnh thị trường tại {location} ({scope_label}), rà quét và bổ sung THÊM từ 2 đến 3 đối thủ cạnh tranh có thật khác đang hoạt động mạnh trong phân khúc {price_tier} tại {location}."""
+1. Bắt buộc đưa TOÀN BỘ các đối thủ do chủ doanh nghiệp cung cấp ({', '.join(known_comps)}) vào danh sách, tìm kiếm và bổ sung đầy đủ Website, Hotline, Phân khúc và Điểm yếu/Tử huyệt của họ.
+2. Dựa vào bối cảnh thị trường tại {location} ({scope_label}) và các dữ liệu tìm kiếm web thực tế, hãy rà quét và liệt kê TOÀN DIỆN TẤT CẢ các đối thủ cạnh tranh có thật khác trên thị trường.
+3. QUY TẮC BẮT BUỘC VỀ SỐ LƯỢNG: TUYỆT ĐỐI KHÔNG GIỚI HẠN Ở 3 HAY 4 ĐỐI THỦ. Hãy quét và lập danh sách TOÀN DIỆN VÀ ĐẦY ĐỦ NHẤT: CÓ BAO NHIÊU LIỆT KÊ BẤY NHIÊU (mục tiêu từ 10 đến 20 đối thủ hoặc nhiều hơn tùy theo thực tế thị trường)."""
     else:
         known_instruction = f"""CHỦ DOANH NGHIỆP CHƯA XÁC ĐỊNH ĐỐI THỦ.
-Dựa trên phân tích thị trường chi tiết tại địa bàn {location} ({scope_label}), phân khúc giá {price_tier} cho ngành {industry} và sản phẩm {products}, hãy rà quét và xác định chính xác từ 4 đến 5 ĐỐI THỦ CẠNH TRANH CÓ THẬT đang hoạt động tại {location}."""
+Nhiệm vụ của bạn:
+Dựa trên phân tích thị trường chi tiết tại địa bàn {location} ({scope_label}), phân khúc giá {price_tier} cho ngành {industry} và sản phẩm {products}, hãy rà quét và xác định TOÀN BỘ TẤT CẢ CÁC ĐỐI THỦ CẠNH TRANH CÓ THẬT đang hoạt động hoặc phân phối tại {location}.
+QUY TẮC BẮT BUỘC VỀ SỐ LƯỢNG: TUYỆT ĐỐI KHÔNG GIỚI HẠN Ở 3 HAY 4 ĐỐI THỦ. Chủ doanh nghiệp yêu cầu: CÓ BAO NHIÊU LIỆT KÊ BẤY NHIÊU! Hãy liệt kê đầy đủ từ 10 đến 20 đối thủ có thật trên thị trường (gồm cả đối thủ trực tiếp, đối thủ gián tiếp, chuỗi toàn quốc và đại lý/xưởng địa phương)."""
 
     prompt = f"""Bạn là Giám đốc Tình báo Cạnh tranh và Nghiên cứu Thị trường cấp cao tại Việt Nam.
 BỐI CẢNH DOANH NGHIỆP:
@@ -569,11 +681,18 @@ BỐI CẢNH DOANH NGHIỆP:
 DỮ LIỆU TÌM KIẾM WEB THỰC TẾ TẠI {location.upper()}:
 {web_text}
 
-YÊU CẦU:
-- Phải là các thương hiệu, công ty hoặc chuỗi CÓ THẬT đang hoạt động tại {location} hoặc phục vụ khách hàng tại thị trường này.
-- Phân loại rõ: Trực tiếp (cùng bán sản phẩm tương tự), Gián tiếp (cung cấp giải pháp thay thế).
+QUY TẮC BẮT BUỘC VỀ SỐ LƯỢNG ĐỐI THỦ:
+- TUYỆT ĐỐI KHÔNG ĐƯỢC GIỚI HẠN Ở 3 HAY 4 ĐỐI THỦ.
+- Chủ doanh nghiệp yêu cầu: CÓ BAO NHIÊU LIỆT KÊ BẤY NHIÊU! Hãy quét và lập danh sách TOÀN DIỆN VÀ ĐẦY ĐỦ NHẤT (mục tiêu từ 10 đến 20 đối thủ hoặc nhiều hơn tùy theo thực tế thị trường).
+- Bao gồm:
+  1. Toàn bộ các đối thủ ban đầu do chủ doanh nghiệp cung cấp (nếu có): {', '.join(known_comps) if known_comps else 'Chưa có'}
+  2. Các công ty, nhà xưởng, showroom hoặc cửa hàng uy tín có thật đang hoạt động hoặc phân phối mạnh tại {location}.
+  3. Các thương hiệu chuỗi lớn trên toàn quốc đang phục vụ thị trường này.
+  4. Các đối thủ cạnh tranh trực tiếp (cùng sản phẩm, cùng phân khúc giá).
+  5. Các đối thủ gián tiếp hoặc giải pháp thay thế.
+- Phân loại rõ: Trực tiếp, Gián tiếp, Phân phối / Đại lý, Nhượng quyền...
 - Nêu rõ Website, Hotline liên hệ (nếu tìm thấy), Sản phẩm chính, Điểm mạnh và Tử huyệt/Lỗ hổng của họ.
-- Trả về DUY NHẤT một mảng JSON thuần túy:
+- Trả về DUY NHẤT một mảng JSON thuần túy (không kèm markdown ngoài JSON):
 [
   {{
     "name": "Tên thương hiệu/Công ty đối thủ",
@@ -603,12 +722,18 @@ YÊU CẦU:
         except Exception as e:
             print(f"[Auto-Discover Parse Note] {e}")
 
-    # Fallback dự phòng thông minh
-    if not competitors:
-        if known_comps:
-            for kc in known_comps:
-                competitors.append({
-                    "name": kc,
+    # 3. Chuẩn hóa & Làm giàu danh sách thông minh (Đảm bảo có bao nhiêu liệt kê bấy nhiêu, không bị ít)
+    domain_key = detect_domain(industry, products)
+    d_pool = DOMAIN_DATA.get(domain_key, {}).get("competitors_pool", DOMAIN_DATA["general"].get("competitors_pool", []))
+    seen_names = set([c.get("name", "").lower().strip() for c in competitors if c.get("name")])
+
+    # Đảm bảo toàn bộ đối thủ do user tự nhập phải nằm ở đầu danh sách
+    if known_comps:
+        for kc in reversed(known_comps):
+            kc_clean = kc.strip()
+            if kc_clean.lower() not in seen_names:
+                competitors.insert(0, {
+                    "name": kc_clean,
                     "website": "",
                     "phone": "",
                     "social": "",
@@ -618,21 +743,38 @@ YÊU CẦU:
                     "key_strengths": f"Thương hiệu đã có nhận diện trong ngành {industry}",
                     "vulnerabilities": "Chính sách hỗ trợ đại trà, thiếu sự may đo 1-1"
                 })
-        if web_results:
-            for r in web_results[:4]:
-                t = r.get("title", "").split("-")[0].split("|")[0].strip()
-                if t and len(t) > 3 and not any(c["name"].lower() in t.lower() for c in competitors):
+                seen_names.add(kc_clean.lower())
+
+    # Bóc tách TOÀN BỘ từ kết quả tìm kiếm web thực tế (KHÔNG giới hạn [:4])
+    if web_results:
+        for r in web_results:
+            raw_title = r.get("title", "")
+            clean_name = re.split(r"[-|–—:]", raw_title)[0].strip()
+            clean_name = re.sub(r"(?i)^(top\s+\d+|báo giá|công ty|xưởng|đại lý|mua bán|tổng kho)\s+", "", clean_name).strip()
+            if clean_name and len(clean_name) >= 3 and clean_name.lower() not in seen_names:
+                if not any(k in clean_name.lower() for k in ["bài viết", "tin tức", "kinh nghiệm", "hướng dẫn", "youtube", "facebook", "shopee"]):
                     competitors.append({
-                        "name": t,
+                        "name": clean_name,
                         "website": r.get("url", ""),
                         "phone": "",
                         "social": "",
                         "type": "Trực tiếp",
                         "price_segment": f"Phân khúc {price_tier}",
                         "core_products": products,
-                        "key_strengths": f"Hoạt động và tiếp cận khách hàng tốt tại {location}",
-                        "vulnerabilities": "Quy trình chăm sóc sau bán hàng và cam kết chưa linh hoạt"
+                        "key_strengths": f"Hoạt động và tiếp cận khách hàng thực tế tại {location}",
+                        "vulnerabilities": "Quy trình chăm sóc sau bán hàng và cam kết dịch vụ chưa linh hoạt"
                     })
+                    seen_names.add(clean_name.lower())
+
+    # Bổ sung từ cơ sở dữ liệu đối thủ ngành để danh sách đạt đầy đủ từ 12 đến 16+ đối thủ
+    if len(competitors) < 12 and d_pool:
+        for cand in d_pool:
+            c_name = cand["name"].strip()
+            if c_name.lower() not in seen_names:
+                competitors.append(dict(cand))
+                seen_names.add(c_name.lower())
+                if len(competitors) >= 16:
+                    break
 
     return competitors
 

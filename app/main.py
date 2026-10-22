@@ -24,7 +24,7 @@ from app.database import (
     log_automation, get_automation_logs,
     save_calendar_items, get_calendar_items,
     save_discovered_competitors, get_discovered_competitors,
-    add_or_update_competitor, delete_competitor,
+    add_or_update_competitor, delete_competitor, clear_all_competitors,
     save_competitor_battlecard, get_competitor_by_id,
     save_content_package, get_content_items,
     create_or_update_user, create_session, verify_session, delete_session,
@@ -504,6 +504,13 @@ def api_scan_competitor_dossier(req: CompetitorDossierScanRequest, request: Requ
     log_automation("A02_INTEL", f"Tình báo đối thủ: {comp['name']}", "SUCCESS", f"Đã hoàn thành hồ sơ tình báo chuyên sâu & Battlecard cho {comp['name']}", user_email=user_email)
     return {"status": "success", "battlecard": battlecard_md, "competitor": get_competitor_by_id(req.competitor_id, user_email=user_email)}
 
+@app.delete("/api/competitors/all")
+def api_clear_all_competitors_endpoint(request: Request):
+    user_email = get_current_user_email(request)
+    clear_all_competitors(user_email=user_email)
+    log_automation("A02_INTEL", "Xóa toàn bộ đối thủ", "SUCCESS", "Đã xóa sạch danh sách đối thủ để rà quét lại từ đầu", user_email=user_email)
+    return {"status": "success", "competitors": []}
+
 @app.delete("/api/competitors/dossier/{comp_id}")
 def api_delete_competitor_endpoint(comp_id: int, request: Request):
     user_email = get_current_user_email(request)
@@ -525,11 +532,19 @@ def api_generate_single_battlecard(req: SingleBattlecardRequest, request: Reques
 def api_run_competitor_analysis(request: Request):
     user_email = get_current_user_email(request)
     profile = get_profile(user_email=user_email)
+    
+    # Đồng bộ toàn bộ đối thủ đang có trong DB để phân tích đầy đủ, không giới hạn
+    disc_items = get_discovered_competitors(user_email=user_email)
+    if disc_items:
+        comp_names = [f"{c['name']} ({c.get('website', '')})" if c.get('website') else c['name'] for c in disc_items]
+        profile["competitors"] = ", ".join(comp_names)
+        
     result_md = generate_competitor_analysis(profile)
     updated_profile = get_profile(user_email=user_email)
     save_research_record("battlecards", f"Tình báo đối thủ: {updated_profile.get('brand_name')}", result_md, user_email=user_email)
-    log_automation("A02_COMPETITORS", "Tình báo đối thủ", "SUCCESS", "Đã cập nhật tình báo đối thủ & Battlecards", user_email=user_email)
-    return {"status": "success", "result": result_md, "competitors": updated_profile.get("competitors")}
+    total_comps = len(disc_items) if disc_items else (len(profile.get("competitors", "").split(",")) if profile.get("competitors") else 0)
+    log_automation("A02_COMPETITORS", "Tình báo đối thủ", "SUCCESS", f"Đã cập nhật tình báo đối thủ & Battlecards cho toàn bộ {total_comps} đối thủ trên thị trường", user_email=user_email)
+    return {"status": "success", "result": result_md, "competitors": profile.get("competitors")}
 
 @app.post("/api/strategy/personas")
 def api_run_personas(request: Request):

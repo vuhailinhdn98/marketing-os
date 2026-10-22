@@ -221,6 +221,10 @@
       </button>
 
       <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1.5 pt-3">Vận hành & Đo lường</div>
+      <button onclick="switchTabFromMobile('tab-leads')" id="m-btn-tab-leads" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-address-book text-amber-400 w-5"></i>
+        <span>Lead Hub & Mini CRM</span>
+      </button>
       <button onclick="switchTabFromMobile('tab-analytics')" id="m-btn-tab-analytics" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white transition">
         <i class="fa-solid fa-chart-line text-emerald-400 w-5"></i>
         <span>Báo cáo & Dashboard</span>
@@ -421,6 +425,10 @@
       </button>
 
       <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-2 pt-4">Vận hành & Đo lường</div>
+      <button onclick="switchTab('tab-leads')" id="btn-tab-leads" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
+        <i class="fa-solid fa-address-book text-amber-400 w-5"></i>
+        <span>Lead Hub & Mini CRM</span>
+      </button>
       <button onclick="switchTab('tab-analytics')" id="btn-tab-analytics" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition">
         <i class="fa-solid fa-chart-line text-emerald-400 w-5"></i>
         <span>Báo cáo & Dashboard</span>
@@ -742,6 +750,33 @@
             <i class="fa-solid fa-arrow-right"></i>
           </button>
         </div>
+
+        <!-- AEO / GEO SCHEMA GENERATOR & AI SEARCH OPTIMIZATION -->
+        <div class="bg-slate-900 border border-indigo-500/30 rounded-2xl p-5 sm:p-6 space-y-5 shadow-xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white text-xl shadow-lg shadow-sky-500/20 shrink-0">
+                <i class="fa-solid fa-brain"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="text-base font-bold text-white">Tối Ưu Tìm Kiếm AI (AEO / GEO) & Schema JSON-LD</h3>
+                  <span class="text-[10px] font-bold uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full">Gemini • ChatGPT • Perplexity</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-0.5">Tự động cấu trúc dữ liệu theo định dạng Schema.org và Answers-First FAQs giúp website được trích dẫn ưu tiên trong AI Search.</p>
+              </div>
+            </div>
+            <button onclick="generateAEOSchemaUI()" id="btn-gen-aeo" class="bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-sky-500/25 transition flex items-center gap-2 shrink-0">
+              <i class="fa-solid fa-code"></i>
+              <span>Tạo Schema JSON-LD & AEO</span>
+            </button>
+          </div>
+
+          <!-- AEO Result Area -->
+          <div id="aeo-result-container" class="space-y-4">
+            <p class="text-xs text-slate-400 italic text-center py-4">Bấm <strong>"Tạo Schema JSON-LD & AEO"</strong> để tự động xuất mã cấu trúc dữ liệu chuẩn cho website.</p>
+          </div>
+        </div>
       </section>
 
       <!-- TAB 3: COMPETITORS -->
@@ -997,6 +1032,111 @@
             </div>
           </div>
         </div>
+
+        <!-- KANBAN CONTENT BOARD (QUẢN LÝ TIẾN ĐỘ NỘI DUNG & XUẤT BẢN ĐA KÊNH) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-5 shadow-xl">
+          <!-- Kanban Toolbar -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-500 to-emerald-600 flex items-center justify-center text-white text-lg shadow-md shadow-teal-500/20 shrink-0">
+                <i class="fa-solid fa-table-columns"></i>
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                  <span>Tiến Độ Nội Dung & Xuất Bản Đa Kênh (Kanban Board)</span>
+                  <span id="kanban-total-badge" class="bg-teal-500/20 text-teal-300 text-xs px-2.5 py-0.5 rounded-full border border-teal-500/30 font-semibold">0 Bài</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">Theo dõi luồng sản xuất: Lên ý tưởng ➔ Soạn thảo ➔ Sẵn sàng ➔ Xuất bản 1 chạm qua Webhook.</p>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2.5">
+              <!-- Channel Filter -->
+              <div class="flex items-center gap-1.5 bg-slate-800/80 border border-slate-700 px-2.5 py-1.5 rounded-xl text-xs text-slate-300">
+                <i class="fa-solid fa-filter text-teal-400"></i>
+                <select id="kanban-filter-channel" onchange="filterKanbanBoard()" class="bg-transparent text-white focus:outline-none text-xs">
+                  <option value="all">Tất cả kênh</option>
+                  <option value="TikTok">TikTok / Reels</option>
+                  <option value="Facebook">Facebook</option>
+                  <option value="SEO">Website SEO</option>
+                  <option value="Email">Email Nurture</option>
+                  <option value="Ads">Quảng cáo Ads</option>
+                </select>
+              </div>
+
+              <!-- Quick Create Card Button -->
+              <button onclick="openQuickContentModal()" class="bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition shadow flex items-center gap-1.5">
+                <i class="fa-solid fa-plus"></i>
+                <span>+ Thêm Thẻ Nhanh</span>
+              </button>
+
+              <!-- Webhook Settings Button -->
+              <button onclick="openWebhookConfigModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold px-3 py-2 rounded-xl transition flex items-center gap-1.5" title="Cài đặt Webhook URL bắn bài viết sang Make, Zapier, Telegram, Zalo">
+                <i class="fa-solid fa-satellite-dish text-sky-400"></i>
+                <span>Webhook Push</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Kanban Columns -->
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            <!-- 1. Ý tưởng (ideas) -->
+            <div class="bg-slate-950/60 border border-amber-500/20 rounded-2xl p-3.5 flex flex-col min-h-[460px]">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-3 px-1">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-400 ring-4 ring-amber-400/20 animate-pulse"></span>
+                  <span class="text-xs font-bold uppercase tracking-wider text-amber-300">💡 1. Ý Tưởng</span>
+                </div>
+                <span id="badge-count-ideas" class="text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full">0</span>
+              </div>
+              <div id="col-ideas" class="space-y-3 flex-1 overflow-y-auto max-h-[580px] pr-1">
+                <p class="text-xs text-slate-500 italic text-center py-8">Chưa có thẻ ý tưởng mới</p>
+              </div>
+            </div>
+
+            <!-- 2. Đang soạn thảo (drafting) -->
+            <div class="bg-slate-950/60 border border-sky-500/20 rounded-2xl p-3.5 flex flex-col min-h-[460px]">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-3 px-1">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-sky-400 ring-4 ring-sky-400/20"></span>
+                  <span class="text-xs font-bold uppercase tracking-wider text-sky-300">✍️ 2. Soạn Thảo</span>
+                </div>
+                <span id="badge-count-drafting" class="text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/30 px-2 py-0.5 rounded-full">0</span>
+              </div>
+              <div id="col-drafting" class="space-y-3 flex-1 overflow-y-auto max-h-[580px] pr-1">
+                <p class="text-xs text-slate-500 italic text-center py-8">Chưa có bài đang soạn</p>
+              </div>
+            </div>
+
+            <!-- 3. Sẵn sàng xuất bản (ready) -->
+            <div class="bg-slate-950/60 border border-emerald-500/20 rounded-2xl p-3.5 flex flex-col min-h-[460px]">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-3 px-1">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 ring-4 ring-emerald-400/20"></span>
+                  <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">🚀 3. Sẵn Sàng</span>
+                </div>
+                <span id="badge-count-ready" class="text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full">0</span>
+              </div>
+              <div id="col-ready" class="space-y-3 flex-1 overflow-y-auto max-h-[580px] pr-1">
+                <p class="text-xs text-slate-500 italic text-center py-8">Chưa có bài sẵn sàng</p>
+              </div>
+            </div>
+
+            <!-- 4. Đã xuất bản (published) -->
+            <div class="bg-slate-950/60 border border-purple-500/20 rounded-2xl p-3.5 flex flex-col min-h-[460px]">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-3 px-1">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-purple-400 ring-4 ring-purple-400/20"></span>
+                  <span class="text-xs font-bold uppercase tracking-wider text-purple-300">📢 4. Đã Xuất Bản</span>
+                </div>
+                <span id="badge-count-published" class="text-xs font-bold bg-purple-500/10 text-purple-400 border border-purple-500/30 px-2 py-0.5 rounded-full">0</span>
+              </div>
+              <div id="col-published" class="space-y-3 flex-1 overflow-y-auto max-h-[580px] pr-1">
+                <p class="text-xs text-slate-500 italic text-center py-8">Chưa có bài đã đăng</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- TAB 6: CALENDAR -->
@@ -1058,74 +1198,334 @@
         </div>
       </section>
 
-      <!-- TAB 7: ANALYTICS -->
-      <section id="tab-analytics" class="tab-pane hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            <i class="fa-solid fa-chart-line text-emerald-400"></i>
-            Báo cáo Hiệu quả & Dashboard
-          </h2>
-          <p class="text-sm text-slate-400 mt-1">Đo lường các chỉ số vàng: MER, ROAS, CAC, LTV và tiến độ doanh thu thực tế.</p>
+      <!-- TAB: LEAD HUB & MINI CRM -->
+      <section id="tab-leads" class="tab-pane hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+              <i class="fa-solid fa-address-book text-amber-400"></i>
+              Lead Hub & Quản Lý Phễu Chuyển Đổi (Mini CRM)
+            </h2>
+            <p class="text-sm text-slate-400 mt-1">Quản lý tập trung khách hàng tiềm năng đa kênh (Facebook Ads, TikTok, Landing Page, Zalo) và theo dõi tiến độ chốt đơn.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="openLeadModal()" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-amber-500/25 transition flex items-center gap-1.5">
+              <i class="fa-solid fa-user-plus"></i>
+              <span>+ Thêm Lead Mới</span>
+            </button>
+            <button onclick="exportLeadsCSV()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5" title="Xuất dữ liệu ra file Excel / CSV (UTF-8)">
+              <i class="fa-solid fa-file-csv text-emerald-400"></i>
+              <span>Xuất CSV</span>
+            </button>
+            <button onclick="openLeadEmbedModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs px-3.5 py-2.5 rounded-xl transition flex items-center gap-1.5" title="Mã nhúng HTML form thu lead hoặc Webhook Ingest cho Ladipage/Elementor">
+              <i class="fa-solid fa-code text-sky-400"></i>
+              <span>Mã Nhúng Form</span>
+            </button>
+          </div>
         </div>
 
-        <!-- Metric Cards -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Doanh Thu Ghi Nhận</span>
-            <div id="stat-revenue" class="text-2xl font-bold text-white mt-1">0 đ</div>
-            <span class="text-[11px] text-emerald-400 flex items-center gap-1 mt-1">
-              <i class="fa-solid fa-arrow-trend-up"></i> Tăng trưởng thực tế
+        <!-- CRM KPI Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3.5">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Tổng Số Leads</span>
+            <div id="crm-stat-total" class="text-xl sm:text-2xl font-bold text-white mt-1">0</div>
+            <span class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
+              <i class="fa-solid fa-users text-sky-400"></i> Toàn bộ phễu
+            </span>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Đang Tư Vấn</span>
+            <div id="crm-stat-consulting" class="text-xl sm:text-2xl font-bold text-sky-400 mt-1">0</div>
+            <span class="text-[10px] text-sky-400 flex items-center gap-1 mt-0.5">
+              <i class="fa-solid fa-phone-volume"></i> Đang theo sát
+            </span>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Đã Chốt Đơn</span>
+            <div id="crm-stat-won" class="text-xl sm:text-2xl font-bold text-emerald-400 mt-1">0</div>
+            <span class="text-[10px] text-emerald-400 flex items-center gap-1 mt-0.5">
+              <i class="fa-solid fa-circle-check"></i> Chuyển đổi thành công
+            </span>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Tỉ Lệ Chốt (Win Rate)</span>
+            <div id="crm-stat-winrate" class="text-xl sm:text-2xl font-bold text-amber-400 mt-1">0%</div>
+            <span class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
+              <i class="fa-solid fa-chart-pie text-amber-400"></i> Hiệu suất tư vấn
+            </span>
+          </div>
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 col-span-2 lg:col-span-1">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Tổng Doanh Số Chốt</span>
+            <div id="crm-stat-won-value" class="text-xl sm:text-2xl font-bold text-emerald-300 mt-1">0 đ</div>
+            <span class="text-[10px] text-emerald-400 flex items-center gap-1 mt-0.5">
+              <i class="fa-solid fa-sack-dollar"></i> Giá trị thực thu
+            </span>
+          </div>
+        </div>
+
+        <!-- Search & Filter Bar -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="relative w-full sm:w-80">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" id="crm-search-input" oninput="filterLeadsDebounced()" class="w-full bg-slate-800 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500" placeholder="Tìm theo tên, SĐT, Email, sản phẩm...">
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto">
+            <select id="crm-channel-filter" onchange="loadLeads()" class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 w-full sm:w-auto">
+              <option value="all">Tất cả nguồn tiếp thị</option>
+              <option value="Facebook">Facebook Ads</option>
+              <option value="TikTok">TikTok Video / Shop</option>
+              <option value="Website">Website / Landing Page</option>
+              <option value="Zalo">Zalo OA / Chat</option>
+              <option value="Direct">Trực tiếp / Giới thiệu</option>
+            </select>
+            <button onclick="loadLeads()" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 transition" title="Làm mới danh sách">
+              <i class="fa-solid fa-arrows-rotate text-xs"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4-Column Pipeline Kanban -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <!-- Col 1: Mới nhận (new) -->
+          <div class="bg-slate-950/60 border border-amber-500/20 rounded-2xl p-3.5 flex flex-col min-h-[500px]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-3 px-1">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-400 ring-4 ring-amber-400/20 animate-pulse"></span>
+                <span class="text-xs font-bold uppercase tracking-wider text-amber-300">🆕 1. Mới Nhận</span>
+              </div>
+              <span id="lead-col-count-new" class="text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full">0</span>
+            </div>
+            <div id="lead-col-new" class="space-y-3 flex-1 overflow-y-auto max-h-[620px] pr-1">
+              <p class="text-xs text-slate-500 italic text-center py-8">Chưa có lead mới</p>
+            </div>
+          </div>
+
+          <!-- Col 2: Đang tư vấn (consulting) -->
+          <div class="bg-slate-950/60 border border-sky-500/20 rounded-2xl p-3.5 flex flex-col min-h-[500px]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-3 px-1">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-sky-400 ring-4 ring-sky-400/20"></span>
+                <span class="text-xs font-bold uppercase tracking-wider text-sky-300">📞 2. Đang Tư Vấn</span>
+              </div>
+              <span id="lead-col-count-consulting" class="text-xs font-bold bg-sky-500/10 text-sky-400 border border-sky-500/30 px-2 py-0.5 rounded-full">0</span>
+            </div>
+            <div id="lead-col-consulting" class="space-y-3 flex-1 overflow-y-auto max-h-[620px] pr-1">
+              <p class="text-xs text-slate-500 italic text-center py-8">Chưa có khách đang tư vấn</p>
+            </div>
+          </div>
+
+          <!-- Col 3: Đã chốt thành công (won) -->
+          <div class="bg-slate-950/60 border border-emerald-500/20 rounded-2xl p-3.5 flex flex-col min-h-[500px]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-3 px-1">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 ring-4 ring-emerald-400/20"></span>
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-300">💰 3. Đã Chốt Đơn</span>
+              </div>
+              <span id="lead-col-count-won" class="text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full">0</span>
+            </div>
+            <div id="lead-col-won" class="space-y-3 flex-1 overflow-y-auto max-h-[620px] pr-1">
+              <p class="text-xs text-slate-500 italic text-center py-8">Chưa có đơn chốt thành công</p>
+            </div>
+          </div>
+
+          <!-- Col 4: Hủy / Chăm sóc lại (lost) -->
+          <div class="bg-slate-950/60 border border-slate-700/40 rounded-2xl p-3.5 flex flex-col min-h-[500px]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800/80 mb-3 px-1">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-slate-400 ring-4 ring-slate-400/20"></span>
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-300">❌ 4. Chăm Sóc Lại</span>
+              </div>
+              <span id="lead-col-count-lost" class="text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700 px-2 py-0.5 rounded-full">0</span>
+            </div>
+            <div id="lead-col-lost" class="space-y-3 flex-1 overflow-y-auto max-h-[620px] pr-1">
+              <p class="text-xs text-slate-500 italic text-center py-8">Chưa có thẻ cần chăm sóc lại</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 7: ANALYTICS & DASHBOARD -->
+      <section id="tab-analytics" class="tab-pane hidden space-y-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-line text-emerald-400"></i>
+              Báo Cáo Hiệu Quả & Dashboard Trực Quan
+            </h2>
+            <p class="text-sm text-slate-400 mt-1">Đo lường các chỉ số tài chính vàng: Doanh thu, Chi phí Ads, Lợi nhuận ròng, MER, ROAS, CAC và CPL.</p>
+          </div>
+          <button onclick="loadAnalytics()" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-semibold px-4 py-2.5 rounded-xl transition flex items-center gap-2">
+            <i class="fa-solid fa-arrows-rotate text-emerald-400"></i>
+            <span>Làm Mới Số Liệu</span>
+          </button>
+        </div>
+
+        <!-- 6 Metric Cards Row -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Doanh Thu Ghi Nhận</span>
+            <div id="stat-revenue" class="text-xl font-bold text-white mt-1">0 đ</div>
+            <span class="text-[10px] text-emerald-400 flex items-center gap-1 mt-0.5">
+              <i class="fa-solid fa-arrow-trend-up"></i> Thực thu
             </span>
           </div>
 
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Chi Phí Tiếp Thị</span>
-            <div id="stat-spend" class="text-2xl font-bold text-white mt-1">0 đ</div>
-            <span class="text-[11px] text-sky-400 flex items-center gap-1 mt-1">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Chi Phí Tiếp Thị</span>
+            <div id="stat-spend" class="text-xl font-bold text-white mt-1">0 đ</div>
+            <span class="text-[10px] text-sky-400 flex items-center gap-1 mt-0.5">
               <i class="fa-solid fa-bullseye"></i> Ngân sách đã chi
             </span>
           </div>
 
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Hiệu Quả Tổng (MER)</span>
-            <div id="stat-mer" class="text-2xl font-bold text-emerald-400 mt-1">0.0x</div>
-            <span class="text-[11px] text-slate-400 mt-1">Doanh thu / Chi phí</span>
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Lợi Nhuận Ròng</span>
+            <div id="stat-profit" class="text-xl font-bold text-emerald-400 mt-1">0 đ</div>
+            <span class="text-[10px] text-emerald-400 flex items-center gap-1 mt-0.5">
+              <i class="fa-solid fa-wallet"></i> Doanh thu - Ads
+            </span>
           </div>
 
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
-            <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Chi Phí Thu Nạp (CAC)</span>
-            <div id="stat-cac" class="text-2xl font-bold text-indigo-400 mt-1">0 đ</div>
-            <span class="text-[11px] text-slate-400 mt-1">Chi phí / Khách mới</span>
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Hiệu Quả MER / ROAS</span>
+            <div id="stat-mer" class="text-xl font-bold text-amber-400 mt-1">0.0x</div>
+            <span class="text-[10px] text-slate-400 mt-0.5">Hệ số nhân doanh số</span>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Chi Phí Khách Mới (CAC)</span>
+            <div id="stat-cac" class="text-xl font-bold text-indigo-400 mt-1">0 đ</div>
+            <span class="text-[10px] text-slate-400 mt-0.5">Chi phí / Đơn hàng</span>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+            <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Chi Phí / Lead (CPL)</span>
+            <div id="stat-cpl" class="text-xl font-bold text-teal-400 mt-1">0 đ</div>
+            <span class="text-[10px] text-slate-400 mt-0.5">Chi phí / Liên hệ mới</span>
           </div>
         </div>
 
-        <!-- Quick Entry Form -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-          <h3 class="text-sm font-bold text-slate-200 mb-4 flex items-center gap-2">
-            <i class="fa-solid fa-plus-circle text-sky-400"></i>
-            Nhập Nhanh Số Liệu Ngày Hôm Nay
-          </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Ngày (YYYY-MM-DD)</label>
-              <input type="date" id="metric-date" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white">
+        <!-- Interactive Visual Charts Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <!-- Main Financial Trend Chart -->
+          <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+                  <i class="fa-solid fa-chart-area"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-bold text-white">Xu Hướng Tài Chính & Tăng Trưởng</h3>
+                  <p class="text-[11px] text-slate-400">Doanh thu, Chi phí tiếp thị và Lợi nhuận ròng qua các ngày</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 text-[11px]">
+                <span class="flex items-center gap-1.5 text-emerald-400 font-semibold">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span> Doanh Thu
+                </span>
+                <span class="flex items-center gap-1.5 text-sky-400 font-semibold">
+                  <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span> Tiền Ads
+                </span>
+                <span class="flex items-center gap-1.5 text-purple-400 font-semibold">
+                  <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span> Lợi Nhuận
+                </span>
+              </div>
             </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Tiền Ads Đã Tiêu (VNĐ)</label>
-              <input type="number" id="metric-spend" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white" placeholder="0">
+            <div class="h-64 sm:h-72 w-full relative">
+              <canvas id="chart-financial-trend"></canvas>
             </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Doanh Số Bán Hàng (VNĐ)</label>
-              <input type="number" id="metric-rev" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white" placeholder="0">
+          </div>
+
+          <!-- Channel & Leads Breakdown Chart -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 flex flex-col justify-between">
+            <div class="flex items-center gap-2.5 border-b border-slate-800 pb-3">
+              <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm">
+                <i class="fa-solid fa-chart-pie"></i>
+              </div>
+              <div>
+                <h3 class="text-sm font-bold text-white">Phân Bổ Kênh Tiếp Thị</h3>
+                <p class="text-[11px] text-slate-400">Tỉ trọng đơn hàng & tương tác</p>
+              </div>
             </div>
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-400 mb-1">Số Đơn Hàng Mới</label>
-              <input type="number" id="metric-orders" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white" placeholder="0">
+            <div class="h-52 w-full flex items-center justify-center relative py-2">
+              <canvas id="chart-channel-breakdown"></canvas>
             </div>
-            <div class="flex items-end">
-              <button onclick="recordDailyMetric()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs py-2 rounded-lg transition">
-                Ghi Nhận
+            <div class="pt-3 border-t border-slate-800/80 text-[11px] text-slate-400 flex justify-between">
+              <span>Đa kênh cân bằng</span>
+              <span id="chart-lead-rate" class="text-emerald-400 font-semibold">ROAS Tối Ưu</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Entry Form & History Table -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <!-- Quick Entry Form -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+            <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <i class="fa-solid fa-plus-circle text-sky-400"></i>
+              <span>Nhập Số Liệu Ngày Hôm Nay</span>
+            </h3>
+            <div class="space-y-3 text-xs">
+              <div>
+                <label class="block text-slate-400 mb-1 font-semibold">Ngày (YYYY-MM-DD)</label>
+                <input type="date" id="metric-date" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white">
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1 font-semibold">Tiền Ads Đã Tiêu (VNĐ)</label>
+                <input type="number" id="metric-spend" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white" placeholder="Ví dụ: 1500000">
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1 font-semibold">Doanh Số Bán Hàng (VNĐ)</label>
+                <input type="number" id="metric-rev" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white" placeholder="Ví dụ: 7800000">
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-slate-400 mb-1 font-semibold">Số Đơn Hàng Mới</label>
+                  <input type="number" id="metric-orders" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white" placeholder="0">
+                </div>
+                <div>
+                  <label class="block text-slate-400 mb-1 font-semibold">Số Leads Mới</label>
+                  <input type="number" id="metric-leads" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white" placeholder="0">
+                </div>
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1 font-semibold">Ghi chú chiến dịch (tùy chọn)</label>
+                <input type="text" id="metric-notes" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white" placeholder="Ví dụ: Chạy vít camp video TikTok...">
+              </div>
+              <button onclick="recordDailyMetric()" class="w-full bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white font-bold py-2.5 rounded-xl transition shadow shadow-sky-600/25 mt-2">
+                Ghi Nhận Số Liệu Ngay
               </button>
+            </div>
+          </div>
+
+          <!-- History Table -->
+          <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-clock-rotate-left text-teal-400"></i>
+                <span>Lịch Sử Ghi Nhận Hiệu Suất Hằng Ngày</span>
+              </h3>
+              <span id="metric-history-count" class="text-xs text-slate-400 font-medium">0 bản ghi</span>
+            </div>
+            <div class="overflow-x-auto max-h-[340px]">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-800/60 text-slate-400 uppercase font-semibold sticky top-0">
+                  <tr>
+                    <th class="py-2.5 px-3">Ngày</th>
+                    <th class="py-2.5 px-3">Tiền Ads</th>
+                    <th class="py-2.5 px-3">Doanh Số</th>
+                    <th class="py-2.5 px-3">Lợi Nhuận</th>
+                    <th class="py-2.5 px-3 text-center">Đơn</th>
+                    <th class="py-2.5 px-3 text-center">Leads</th>
+                    <th class="py-2.5 px-3 text-center">ROAS</th>
+                  </tr>
+                </thead>
+                <tbody id="metric-history-table-body" class="divide-y divide-slate-800/80 text-slate-300">
+                  <tr>
+                    <td colspan="7" class="py-8 text-center text-slate-500 italic">Chưa có bản ghi hiệu suất nào</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -1595,6 +1995,251 @@
     </div>
   </div>
 
+  <!-- MODAL 1: THÊM / SỬA LEAD CRM -->
+  <div id="modal-lead-form" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden animate-in fade-in duration-150">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl w-full max-w-xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900/90">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-base">
+            <i class="fa-solid fa-user-plus"></i>
+          </div>
+          <div>
+            <h3 id="lead-modal-title" class="text-sm font-bold text-white">Thêm Khách Hàng Tiềm Năng Mới</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Lưu thông tin khách hàng vào phễu chăm sóc và chốt đơn</p>
+          </div>
+        </div>
+        <button onclick="closeLeadModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 overflow-y-auto flex-1 text-xs">
+        <input type="hidden" id="lead-form-id" value="">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Họ và tên khách hàng *</label>
+            <input type="text" id="lead-form-name" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500" placeholder="Ví dụ: Chị Lan, Anh Nam...">
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Số điện thoại *</label>
+            <input type="tel" id="lead-form-phone" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500" placeholder="09xxxxxxxx">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Email</label>
+            <input type="email" id="lead-form-email" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500" placeholder="khachhang@gmail.com">
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Kênh tiếp thị</label>
+            <select id="lead-form-channel" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500">
+              <option value="Facebook">Facebook Ads / Fanpage</option>
+              <option value="TikTok">TikTok Video / Shop</option>
+              <option value="Website">Website / Landing Page</option>
+              <option value="Zalo">Zalo OA / Chat</option>
+              <option value="Direct">Trực tiếp / Khách quen</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Sản phẩm / Dịch vụ quan tâm</label>
+            <input type="text" id="lead-form-product" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500" placeholder="Gói dịch vụ hoặc tên sản phẩm...">
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Giá trị đơn dự kiến (VNĐ)</label>
+            <input type="number" id="lead-form-value" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500" placeholder="0">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Trạng thái phễu</label>
+            <select id="lead-form-status" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500">
+              <option value="new">🆕 Mới nhận (Chưa liên hệ)</option>
+              <option value="consulting">📞 Đang tư vấn & báo giá</option>
+              <option value="won">💰 Đã chốt thành công</option>
+              <option value="lost">❌ Hủy / Nuôi dưỡng lại sau</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Nguồn chi tiết</label>
+            <input type="text" id="lead-form-source" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500" placeholder="Ví dụ: Form Landing Page, Camp Tháng 10...">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Ghi chú nhu cầu & nhật ký tư vấn</label>
+          <textarea id="lead-form-notes" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500" placeholder="Nhu cầu cụ thể của khách, thời gian hẹn gọi lại, ưu đãi đã báo..."></textarea>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-slate-800 flex justify-end gap-2 bg-slate-900/90">
+        <button onclick="closeLeadModal()" class="px-4 py-2 rounded-xl text-xs text-slate-300 hover:bg-slate-800 transition">Hủy bỏ</button>
+        <button onclick="saveLeadForm()" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold text-xs px-5 py-2 rounded-xl transition shadow">
+          Lưu Thông Tin
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: MÃ NHÚNG FORM & WEBHOOK INGEST -->
+  <div id="modal-lead-embed" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden animate-in fade-in duration-150">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl w-full max-w-2xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900/90">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-base">
+            <i class="fa-solid fa-code"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">Mã Nhúng Form & Webhook Ingest Tự Động</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Thu lead tự động từ Landing Page, Elementor, Ladipage hoặc Website</p>
+          </div>
+        </div>
+        <button onclick="closeLeadEmbedModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 overflow-y-auto flex-1 text-xs">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1.5 flex items-center justify-between">
+            <span>1. Webhook Endpoint URL (Cho Ladipage / Make / Zapier):</span>
+            <button onclick="copyToClipboard(document.getElementById('embed-webhook-url').value)" class="text-sky-400 hover:text-sky-300">
+              <i class="fa-solid fa-copy"></i> Sao chép
+            </button>
+          </label>
+          <input type="text" id="embed-webhook-url" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-teal-300 font-mono text-[11px]">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1.5 flex items-center justify-between">
+            <span>2. Mã HTML Form Thu Lead Sẵn Sàng (Dán vào Website):</span>
+            <button onclick="copyToClipboard(document.getElementById('embed-html-snippet').value)" class="text-sky-400 hover:text-sky-300">
+              <i class="fa-solid fa-copy"></i> Sao chép HTML
+            </button>
+          </label>
+          <textarea id="embed-html-snippet" readonly rows="8" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-300 font-mono text-[11px]"></textarea>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-slate-800 flex justify-end bg-slate-900/90">
+        <button onclick="closeLeadEmbedModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-5 py-2 rounded-xl text-xs font-semibold transition">
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: THÊM THẺ NỘI DUNG NHANH VÀO KANBAN -->
+  <div id="modal-quick-content" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden animate-in fade-in duration-150">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl w-full max-w-lg max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900/90">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center text-base">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">Thêm Thẻ Nội Dung Nhanh</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Tạo nhanh ý tưởng bài viết hoặc video vào bảng Kanban</p>
+          </div>
+        </div>
+        <button onclick="closeQuickContentModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 overflow-y-auto flex-1 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Kênh tiếp thị</label>
+            <select id="quick-channel" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-teal-500">
+              <option value="TikTok">TikTok / Reels</option>
+              <option value="Facebook">Facebook Fanpage</option>
+              <option value="SEO">Website SEO</option>
+              <option value="Email">Email Nurture</option>
+              <option value="Ads">Quảng cáo Ads</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Cột Kanban ban đầu</label>
+            <select id="quick-status" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-teal-500">
+              <option value="ideas">💡 1. Ý Tưởng Mới</option>
+              <option value="drafting">✍️ 2. Đang Soạn Thảo</option>
+              <option value="ready">🚀 3. Sẵn Sàng Xuất Bản</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Chủ đề bài viết / video *</label>
+          <input type="text" id="quick-topic" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-teal-500" placeholder="Ví dụ: Bí quyết chọn nguyên liệu sạch không bị ép giá...">
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Nội dung tóm tắt / Dàn ý sơ bộ</label>
+          <textarea id="quick-body" rows="3" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-teal-500" placeholder="Các ý chính cần có trong bài hoặc góc quay video..."></textarea>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Lời kêu gọi hành động (CTA)</label>
+          <input type="text" id="quick-cta" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-teal-500" placeholder="Ví dụ: Nhắn tin cho shop ngay để nhận ưu đãi 20%...">
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-slate-800 flex justify-end gap-2 bg-slate-900/90">
+        <button onclick="closeQuickContentModal()" class="px-4 py-2 rounded-xl text-xs text-slate-300 hover:bg-slate-800 transition">Hủy bỏ</button>
+        <button onclick="submitQuickContent()" class="bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white font-bold text-xs px-5 py-2 rounded-xl transition shadow">
+          Tạo Thẻ Ngay
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: CẤU HÌNH WEBHOOK XUẤT BẢN TỰ ĐỘNG -->
+  <div id="modal-webhook-config" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden animate-in fade-in duration-150">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl w-full max-w-lg max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900/90">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-base">
+            <i class="fa-solid fa-satellite-dish"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">Cấu Hình Webhook Xuất Bản Tự Động</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Kết nối Make.com, Zapier, Telegram Bot hoặc Zalo OA</p>
+          </div>
+        </div>
+        <button onclick="closeWebhookConfigModal()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 overflow-y-auto flex-1 text-xs">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1.5">Webhook Endpoint URL:</label>
+          <input type="url" id="inp-content-webhook-url" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white font-mono text-xs focus:outline-none focus:border-purple-500" placeholder="https://hook.eu1.make.com/... hoặc https://hooks.zapier.com/...">
+          <p class="text-[11px] text-slate-400 mt-1">Khi bạn bấm nút "Đẩy Webhook" trên bất kỳ thẻ Kanban nào, bài viết sẽ được gửi lập tức tới URL này kèm kịch bản video và prompt ảnh.</p>
+        </div>
+
+        <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 space-y-1.5 text-slate-300">
+          <span class="font-bold text-purple-400 block mb-1">Cấu trúc dữ liệu gửi qua Webhook (JSON):</span>
+          <code class="text-[10px] text-teal-300 block font-mono">
+            { "event": "content.published", "channel": "TikTok", "topic": "...", "body": "...", "video_script": "...", "cta": "..." }
+          </code>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-slate-800 flex justify-end gap-2 bg-slate-900/90">
+        <button onclick="closeWebhookConfigModal()" class="px-4 py-2 rounded-xl text-xs text-slate-300 hover:bg-slate-800 transition">Đóng</button>
+        <button onclick="saveWebhookConfig()" class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold text-xs px-5 py-2 rounded-xl transition shadow">
+          Lưu Cấu Hình
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST NOTIFICATION -->
   <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl text-xs flex items-center gap-3 transition-all duration-300 transform translate-y-20 opacity-0 z-50">
     <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-sm"></i>
@@ -1694,6 +2339,8 @@
       if (tabId === 'tab-competitors') loadDiscoveredCompetitors();
       if (tabId === 'tab-calendar') loadCalendar();
       if (tabId === 'tab-catalyst') loadLatestCatalyst();
+      if (tabId === 'tab-content') loadKanbanContent();
+      if (tabId === 'tab-leads') loadLeads();
       if (tabId === 'tab-analytics') loadAnalytics();
     }
 
@@ -2797,18 +3444,312 @@
       });
     }
 
-    async function loadContentHistory() {
+    // --- KANBAN CONTENT BOARD SYSTEM ---
+    let allKanbanCards = [];
+
+    async function loadKanbanContent() {
       try {
         const res = await fetch('/api/content/history');
-        const items = await res.json();
-        if (items && items.length > 0 && !lastRawContent) {
-          lastRawContent = items[0].body;
+        const data = await res.json();
+        allKanbanCards = data.items || [];
+        renderKanbanBoard(allKanbanCards);
+        
+        // Populate preview box if empty
+        if (allKanbanCards.length > 0 && !lastRawContent) {
+          const first = allKanbanCards[0];
+          lastRawContent = first.body;
           const output = document.getElementById('content-output');
           const badge = document.getElementById('content-output-badge');
-          if (output) output.innerHTML = marked.parse(items[0].body);
-          if (badge) badge.innerText = `Kênh: ${items[0].channel} | ${items[0].topic}`;
+          if (output) output.innerHTML = marked.parse(first.body);
+          if (badge) badge.innerText = `Kênh: ${first.channel} | ${first.topic}`;
         }
-      } catch(e) {}
+      } catch (err) {
+        console.error('Lỗi tải danh sách nội dung Kanban:', err);
+      }
+    }
+
+    async function loadContentHistory() {
+      await loadKanbanContent();
+    }
+
+    function renderKanbanBoard(cards) {
+      const colIdeas = document.getElementById('col-ideas');
+      const colDrafting = document.getElementById('col-drafting');
+      const colReady = document.getElementById('col-ready');
+      const colPublished = document.getElementById('col-published');
+      if (!colIdeas || !colDrafting || !colReady || !colPublished) return;
+
+      colIdeas.innerHTML = '';
+      colDrafting.innerHTML = '';
+      colReady.innerHTML = '';
+      colPublished.innerHTML = '';
+
+      let cIdeas = 0, cDrafting = 0, cReady = 0, cPublished = 0;
+
+      const getChannelBadge = (ch) => {
+        const c = (ch || '').toLowerCase();
+        if (c.includes('tiktok') || c.includes('reels')) {
+          return '<span class="bg-slate-800 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[10px] font-bold flex items-center gap-1"><i class="fa-brands fa-tiktok text-rose-400"></i> TikTok</span>';
+        }
+        if (c.includes('facebook')) {
+          return '<span class="bg-blue-950/60 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded text-[10px] font-bold flex items-center gap-1"><i class="fa-brands fa-facebook text-blue-400"></i> Facebook</span>';
+        }
+        if (c.includes('seo') || c.includes('blog') || c.includes('website')) {
+          return '<span class="bg-emerald-950/60 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold flex items-center gap-1"><i class="fa-solid fa-globe text-emerald-400"></i> Website SEO</span>';
+        }
+        if (c.includes('email')) {
+          return '<span class="bg-purple-950/60 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded text-[10px] font-bold flex items-center gap-1"><i class="fa-solid fa-envelope text-purple-400"></i> Email</span>';
+        }
+        return '<span class="bg-amber-950/60 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded text-[10px] font-bold flex items-center gap-1"><i class="fa-solid fa-bullhorn text-amber-400"></i> Quảng Cáo</span>';
+      };
+
+      cards.forEach(card => {
+        let st = (card.status || 'draft').toLowerCase();
+        if (st === 'draft') st = 'drafting';
+        if (st !== 'ideas' && st !== 'drafting' && st !== 'ready' && st !== 'published') {
+          st = 'drafting';
+        }
+
+        if (st === 'ideas') cIdeas++;
+        else if (st === 'drafting') cDrafting++;
+        else if (st === 'ready') cReady++;
+        else if (st === 'published') cPublished++;
+
+        const cardEl = document.createElement('div');
+        cardEl.className = 'bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-3 space-y-2.5 transition shadow-sm group';
+        
+        // Body excerpt
+        const cleanBody = (card.body || '').replace(/[#*`_]/g, '').trim();
+        const excerpt = cleanBody.length > 95 ? cleanBody.substring(0, 95) + '...' : cleanBody;
+
+        cardEl.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            ${getChannelBadge(card.channel)}
+            <div class="flex items-center gap-1 text-[11px] text-slate-400">
+              <span class="text-[10px] text-slate-500">#${card.id}</span>
+              <button onclick="deleteContentCard(${card.id})" class="text-slate-500 hover:text-rose-400 p-1 transition" title="Xóa thẻ này">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-bold text-white line-clamp-2 hover:text-sky-300 cursor-pointer" onclick="openPackageModalWithItem(${card.id})">
+              ${card.topic || 'Nội dung chưa đặt tên'}
+            </h4>
+            <p class="text-[11px] text-slate-400 mt-1 line-clamp-2">${excerpt || 'Bấm để soạn thảo nội dung chi tiết...'}</p>
+          </div>
+
+          <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px]">
+            <!-- Status Navigation Controls -->
+            <div class="flex items-center gap-1">
+              ${st !== 'ideas' ? `
+                <button onclick="advanceContentStatus(${card.id}, '${st === 'published' ? 'ready' : (st === 'ready' ? 'drafting' : 'ideas')}')" class="px-1.5 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[10px] transition" title="Lùi lại 1 bước">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+              ` : ''}
+
+              ${st !== 'published' ? `
+                <button onclick="advanceContentStatus(${card.id}, '${st === 'ideas' ? 'drafting' : (st === 'drafting' ? 'ready' : 'published')}')" class="px-2 py-0.5 bg-teal-600/30 hover:bg-teal-600/50 text-teal-300 border border-teal-500/30 rounded text-[10px] font-semibold transition flex items-center gap-1" title="Chuyển sang bước tiếp">
+                  <span>Tiến</span> <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                </button>
+              ` : ''}
+            </div>
+
+            <div class="flex items-center gap-1">
+              <button onclick="openPackageModalWithItem(${card.id})" class="text-slate-400 hover:text-teal-300 p-1 text-[11px] transition" title="Xem chi tiết trọn gói">
+                <i class="fa-solid fa-eye"></i>
+              </button>
+              <button onclick="publishContentWebhook(${card.id}, this)" class="bg-indigo-600/30 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-500/40 px-2 py-0.5 rounded text-[10px] font-bold transition flex items-center gap-1" title="Bắn Webhook (Make/Zapier/Telegram)">
+                <i class="fa-solid fa-satellite-dish text-[10px]"></i>
+                <span>Push</span>
+              </button>
+            </div>
+          </div>
+        `;
+
+        if (st === 'ideas') colIdeas.appendChild(cardEl);
+        else if (st === 'drafting') colDrafting.appendChild(cardEl);
+        else if (st === 'ready') colReady.appendChild(cardEl);
+        else if (st === 'published') colPublished.appendChild(cardEl);
+      });
+
+      // Update counters
+      const bIdeas = document.getElementById('badge-count-ideas');
+      const bDrafting = document.getElementById('badge-count-drafting');
+      const bReady = document.getElementById('badge-count-ready');
+      const bPublished = document.getElementById('badge-count-published');
+      const bTotal = document.getElementById('kanban-total-badge');
+
+      if (bIdeas) bIdeas.innerText = cIdeas;
+      if (bDrafting) bDrafting.innerText = cDrafting;
+      if (bReady) bReady.innerText = cReady;
+      if (bPublished) bPublished.innerText = cPublished;
+      if (bTotal) bTotal.innerText = `${cards.length} Bài`;
+
+      // Empty states if 0
+      if (cIdeas === 0) colIdeas.innerHTML = '<p class="text-xs text-slate-500 italic text-center py-8">Chưa có thẻ ý tưởng mới</p>';
+      if (cDrafting === 0) colDrafting.innerHTML = '<p class="text-xs text-slate-500 italic text-center py-8">Chưa có bài đang soạn</p>';
+      if (cReady === 0) colReady.innerHTML = '<p class="text-xs text-slate-500 italic text-center py-8">Chưa có bài sẵn sàng</p>';
+      if (cPublished === 0) colPublished.innerHTML = '<p class="text-xs text-slate-500 italic text-center py-8">Chưa có bài đã đăng</p>';
+    }
+
+    function filterKanbanBoard() {
+      const filter = document.getElementById('kanban-filter-channel')?.value || 'all';
+      if (filter === 'all') {
+        renderKanbanBoard(allKanbanCards);
+      } else {
+        const filtered = allKanbanCards.filter(c => (c.channel || '').toLowerCase().includes(filter.toLowerCase()));
+        renderKanbanBoard(filtered);
+      }
+    }
+
+    async function advanceContentStatus(id, newStatus) {
+      try {
+        const res = await fetch(`/api/content/${id}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast(`Đã chuyển thẻ sang trạng thái '${newStatus}'!`);
+          await loadKanbanContent();
+        } else {
+          showToast(data.detail || 'Lỗi cập nhật trạng thái', false);
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối khi cập nhật', false);
+      }
+    }
+
+    async function deleteContentCard(id) {
+      if (!confirm('Bạn có chắc chắn muốn xóa bài viết này khỏi bảng Kanban không?')) return;
+      try {
+        const res = await fetch(`/api/content/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          showToast('Đã xóa bài viết thành công!');
+          await loadKanbanContent();
+        } else {
+          showToast('Lỗi khi xóa bài viết', false);
+        }
+      } catch (e) {
+        showToast('Lỗi kết nối khi xóa', false);
+      }
+    }
+
+    async function publishContentWebhook(id, btn) {
+      const origHtml = btn ? btn.innerHTML : '';
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-xs"></i>';
+      try {
+        const res = await fetch(`/api/content/${id}/publish-webhook`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({})
+        });
+        const data = await res.json();
+        if (res.ok) {
+          showToast(`🚀 ${data.message || 'Đã xuất bản thành công!'}`);
+          await loadKanbanContent();
+        } else {
+          showToast(data.detail || 'Lỗi xuất bản Webhook', false);
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối xuất bản Webhook', false);
+      } finally {
+        if (btn) btn.innerHTML = origHtml;
+      }
+    }
+
+    function openPackageModalWithItem(itemOrId) {
+      let item = typeof itemOrId === 'object' ? itemOrId : allKanbanCards.find(c => c.id === itemOrId);
+      if (!item) return;
+      currentPackageData = {
+        topic: item.topic,
+        channel: item.channel,
+        body: item.body,
+        cta: item.cta,
+        video_script: item.video_script || `KỊCH BẢN VIDEO DỌC TIKTOK/REELS (9:16)\nChủ đề: ${item.topic}\n\n[0-3s Hook]: Bạn có biết sai lầm khiến đa số doanh nghiệp thất thoát khách hàng là gì không?\n[4-20s Body]: ${item.body.substring(0, 160)}...\n[21-30s CTA]: ${item.cta || 'Bình luận bên dưới hoặc bấm liên kết để nhận tư vấn ngay!'}`,
+        image_prompt: item.image_prompt || `Commercial photography for ${item.topic}, Vietnamese market context, high details, cinematic lighting, 8k resolution, shot on 35mm lens --ar 16:9`
+      };
+      openPackageModal(currentPackageData);
+    }
+
+    // Quick Content Modal Handlers
+    function openQuickContentModal() {
+      const m = document.getElementById('modal-quick-content');
+      if (m) m.classList.remove('hidden');
+    }
+    function closeQuickContentModal() {
+      const m = document.getElementById('modal-quick-content');
+      if (m) m.classList.add('hidden');
+    }
+    async function submitQuickContent() {
+      const channel = document.getElementById('quick-channel').value;
+      const status = document.getElementById('quick-status').value;
+      const topic = document.getElementById('quick-topic').value.trim();
+      const body = document.getElementById('quick-body').value.trim();
+      const cta = document.getElementById('quick-cta').value.trim();
+
+      if (!topic) {
+        alert('Vui lòng nhập chủ đề bài viết!');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/content/quick-create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ channel, status, topic, body, cta })
+        });
+        if (res.ok) {
+          showToast('Đã thêm thẻ nội dung mới vào bảng Kanban!');
+          closeQuickContentModal();
+          document.getElementById('quick-topic').value = '';
+          document.getElementById('quick-body').value = '';
+          document.getElementById('quick-cta').value = '';
+          await loadKanbanContent();
+        } else {
+          showToast('Lỗi khi tạo thẻ mới', false);
+        }
+      } catch (e) {
+        showToast('Lỗi kết nối khi tạo thẻ', false);
+      }
+    }
+
+    // Webhook Settings Modal Handlers
+    async function openWebhookConfigModal() {
+      const m = document.getElementById('modal-webhook-config');
+      if (m) m.classList.remove('hidden');
+      try {
+        const res = await fetch('/api/admin/webhook/config');
+        const data = await res.json();
+        if (data.content_webhook_url) {
+          document.getElementById('inp-content-webhook-url').value = data.content_webhook_url;
+        }
+      } catch(e){}
+    }
+    function closeWebhookConfigModal() {
+      const m = document.getElementById('modal-webhook-config');
+      if (m) m.classList.add('hidden');
+    }
+    async function saveWebhookConfig() {
+      const url = document.getElementById('inp-content-webhook-url').value.trim();
+      try {
+        const res = await fetch('/api/admin/webhook/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content_webhook_url: url })
+        });
+        if (res.ok) {
+          showToast('Đã lưu cấu hình Webhook URL thành công!');
+          closeWebhookConfigModal();
+        } else {
+          showToast('Lỗi lưu cấu hình Webhook', false);
+        }
+      } catch(e) {
+        showToast('Lỗi kết nối khi lưu Webhook', false);
+      }
     }
 
     // Calendar
@@ -3133,19 +4074,555 @@
       });
     }
 
-    // Analytics
+    // --- LEAD HUB & MINI CRM SYSTEM ---
+    let allLeads = [];
+    let leadSearchTimer = null;
+
+    async function loadLeads() {
+      const search = document.getElementById('crm-search-input')?.value.trim() || '';
+      const channel = document.getElementById('crm-channel-filter')?.value || 'all';
+
+      try {
+        // 1. Fetch Stats
+        const statsRes = await fetch('/api/leads/stats');
+        const statsData = await statsRes.json();
+        if (statsData.stats) {
+          const s = statsData.stats;
+          document.getElementById('crm-stat-total').innerText = s.total_leads || 0;
+          document.getElementById('crm-stat-consulting').innerText = s.consulting_count || 0;
+          document.getElementById('crm-stat-won').innerText = s.won_count || 0;
+          document.getElementById('crm-stat-winrate').innerText = `${s.win_rate || 0}%`;
+          document.getElementById('crm-stat-won-value').innerText = `${Number(s.total_won_value || 0).toLocaleString()} đ`;
+        }
+
+        // 2. Fetch Leads List
+        let url = `/api/leads?search=${encodeURIComponent(search)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        let leads = data.leads || [];
+
+        if (channel !== 'all') {
+          leads = leads.filter(l => (l.channel || '').toLowerCase().includes(channel.toLowerCase()));
+        }
+
+        allLeads = leads;
+        renderLeadsKanban(allLeads);
+      } catch (err) {
+        console.error('Lỗi tải danh sách Leads CRM:', err);
+      }
+    }
+
+    function filterLeadsDebounced() {
+      clearTimeout(leadSearchTimer);
+      leadSearchTimer = setTimeout(loadLeads, 300);
+    }
+
+    function renderLeadsKanban(leads) {
+      const colNew = document.getElementById('lead-col-new');
+      const colConsulting = document.getElementById('lead-col-consulting');
+      const colWon = document.getElementById('lead-col-won');
+      const colLost = document.getElementById('lead-col-lost');
+      if (!colNew || !colConsulting || !colWon || !colLost) return;
+
+      colNew.innerHTML = '';
+      colConsulting.innerHTML = '';
+      colWon.innerHTML = '';
+      colLost.innerHTML = '';
+
+      let cNew = 0, cConsulting = 0, cWon = 0, cLost = 0;
+
+      leads.forEach(lead => {
+        const st = (lead.status || 'new').toLowerCase();
+        if (st === 'new') cNew++;
+        else if (st === 'consulting') cConsulting++;
+        else if (st === 'won') cWon++;
+        else if (st === 'lost') cLost++;
+
+        const card = document.createElement('div');
+        card.className = 'bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl p-3.5 space-y-2.5 transition shadow-sm';
+        
+        const dealValFormatted = lead.deal_value ? `${Number(lead.deal_value).toLocaleString()} đ` : 'Chưa định giá';
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-white flex items-center gap-1.5">
+              <i class="fa-solid fa-user-circle text-amber-400 text-sm"></i>
+              ${lead.full_name || 'Khách hàng'}
+            </span>
+            <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full border border-slate-700">
+              ${lead.channel || 'Direct'}
+            </span>
+          </div>
+
+          <div class="space-y-1 text-[11px] text-slate-300">
+            ${lead.phone ? `
+              <div class="flex items-center gap-1.5 text-sky-400">
+                <i class="fa-solid fa-phone text-[10px]"></i>
+                <a href="tel:${lead.phone}" class="hover:underline font-mono font-semibold">${lead.phone}</a>
+              </div>
+            ` : ''}
+            ${lead.email ? `
+              <div class="flex items-center gap-1.5 text-slate-400 truncate">
+                <i class="fa-solid fa-envelope text-[10px]"></i>
+                <a href="mailto:${lead.email}" class="hover:underline">${lead.email}</a>
+              </div>
+            ` : ''}
+            ${lead.product_interest ? `
+              <div class="text-[11px] text-amber-300 font-medium">
+                🎯 ${lead.product_interest}
+              </div>
+            ` : ''}
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-[10px] text-slate-400">Giá trị đơn:</span>
+              <span class="font-bold text-emerald-400 font-mono">${dealValFormatted}</span>
+            </div>
+            ${lead.notes ? `
+              <p class="text-[10px] text-slate-400 italic bg-slate-950/50 p-1.5 rounded border border-slate-800 line-clamp-2">
+                "${lead.notes}"
+              </p>
+            ` : ''}
+          </div>
+
+          <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[10px]">
+            <div class="flex items-center gap-1">
+              ${st === 'new' ? `
+                <button onclick="advanceLeadStatus(${lead.id}, 'consulting')" class="bg-sky-600/30 hover:bg-sky-600 text-sky-300 hover:text-white border border-sky-500/30 px-2 py-1 rounded font-semibold transition">
+                  Tư Vấn
+                </button>
+                <button onclick="advanceLeadStatus(${lead.id}, 'lost')" class="bg-slate-800 hover:bg-rose-900/40 text-slate-400 hover:text-rose-300 px-1.5 py-1 rounded transition">
+                  Hủy
+                </button>
+              ` : ''}
+              ${st === 'consulting' ? `
+                <button onclick="advanceLeadStatus(${lead.id}, 'won')" class="bg-emerald-600/30 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/30 px-2 py-1 rounded font-bold transition flex items-center gap-1">
+                  <i class="fa-solid fa-check"></i> Chốt
+                </button>
+                <button onclick="advanceLeadStatus(${lead.id}, 'lost')" class="bg-slate-800 hover:bg-rose-900/40 text-slate-400 hover:text-rose-300 px-1.5 py-1 rounded transition">
+                  Hủy
+                </button>
+                <button onclick="advanceLeadStatus(${lead.id}, 'new')" class="text-slate-500 hover:text-slate-300 p-1" title="Quay lại Mới">
+                  <i class="fa-solid fa-arrow-rotate-left"></i>
+                </button>
+              ` : ''}
+              ${st === 'won' ? `
+                <button onclick="advanceLeadStatus(${lead.id}, 'consulting')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded transition">
+                  Chăm sóc lại
+                </button>
+              ` : ''}
+              ${st === 'lost' ? `
+                <button onclick="advanceLeadStatus(${lead.id}, 'new')" class="bg-amber-600/30 hover:bg-amber-600 text-amber-300 hover:text-white px-2 py-1 rounded font-semibold transition">
+                  Kích hoạt lại
+                </button>
+              ` : ''}
+            </div>
+
+            <div class="flex items-center gap-1">
+              <button onclick="editLeadModal(${lead.id})" class="text-slate-400 hover:text-sky-300 p-1" title="Chỉnh sửa">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button onclick="deleteLeadItem(${lead.id})" class="text-slate-500 hover:text-rose-400 p-1" title="Xóa lead">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+        `;
+
+        if (st === 'new') colNew.appendChild(card);
+        else if (st === 'consulting') colConsulting.appendChild(card);
+        else if (st === 'won') colWon.appendChild(card);
+        else if (st === 'lost') colLost.appendChild(card);
+      });
+
+      document.getElementById('lead-col-count-new').innerText = cNew;
+      document.getElementById('lead-col-count-consulting').innerText = cConsulting;
+      document.getElementById('lead-col-count-won').innerText = cWon;
+      document.getElementById('lead-col-count-lost').innerText = cLost;
+
+      if (cNew === 0) colNew.innerHTML = '<p class="text-xs text-slate-500 italic text-center py-8">Chưa có lead mới</p>';
+      if (cConsulting === 0) colConsulting.innerHTML = '<p class="text-xs text-slate-500 italic text-center py-8">Chưa có khách đang tư vấn</p>';
+      if (cWon === 0) colWon.innerHTML = '<p class="text-xs text-slate-500 italic text-center py-8">Chưa có đơn chốt thành công</p>';
+      if (cLost === 0) colLost.innerHTML = '<p class="text-xs text-slate-500 italic text-center py-8">Chưa có thẻ cần chăm sóc lại</p>';
+    }
+
+    async function advanceLeadStatus(id, newStatus) {
+      try {
+        const res = await fetch(`/api/leads/${id}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        if (res.ok) {
+          showToast(`Đã chuyển trạng thái lead sang '${newStatus}'!`);
+          await loadLeads();
+        } else {
+          showToast('Lỗi cập nhật trạng thái lead', false);
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối khi cập nhật lead', false);
+      }
+    }
+
+    function openLeadModal(lead = null) {
+      const m = document.getElementById('modal-lead-form');
+      if (!m) return;
+      m.classList.remove('hidden');
+
+      if (lead) {
+        document.getElementById('lead-modal-title').innerText = 'Chỉnh Sửa Thông Tin Khách Hàng';
+        document.getElementById('lead-form-id').value = lead.id;
+        document.getElementById('lead-form-name').value = lead.full_name || '';
+        document.getElementById('lead-form-phone').value = lead.phone || '';
+        document.getElementById('lead-form-email').value = lead.email || '';
+        document.getElementById('lead-form-channel').value = lead.channel || 'Facebook';
+        document.getElementById('lead-form-source').value = lead.source || '';
+        document.getElementById('lead-form-product').value = lead.product_interest || '';
+        document.getElementById('lead-form-value').value = lead.deal_value || '';
+        document.getElementById('lead-form-status').value = lead.status || 'new';
+        document.getElementById('lead-form-notes').value = lead.notes || '';
+      } else {
+        document.getElementById('lead-modal-title').innerText = 'Thêm Khách Hàng Tiềm Năng Mới';
+        document.getElementById('lead-form-id').value = '';
+        document.getElementById('lead-form-name').value = '';
+        document.getElementById('lead-form-phone').value = '';
+        document.getElementById('lead-form-email').value = '';
+        document.getElementById('lead-form-channel').value = 'Facebook';
+        document.getElementById('lead-form-source').value = 'Website / Form';
+        document.getElementById('lead-form-product').value = '';
+        document.getElementById('lead-form-value').value = '';
+        document.getElementById('lead-form-status').value = 'new';
+        document.getElementById('lead-form-notes').value = '';
+      }
+    }
+
+    function closeLeadModal() {
+      const m = document.getElementById('modal-lead-form');
+      if (m) m.classList.add('hidden');
+    }
+
+    function editLeadModal(id) {
+      const target = allLeads.find(l => l.id === id);
+      if (target) openLeadModal(target);
+    }
+
+    async function saveLeadForm() {
+      const id = document.getElementById('lead-form-id').value;
+      const full_name = document.getElementById('lead-form-name').value.trim();
+      const phone = document.getElementById('lead-form-phone').value.trim();
+      const email = document.getElementById('lead-form-email').value.trim();
+      const channel = document.getElementById('lead-form-channel').value;
+      const source = document.getElementById('lead-form-source').value.trim();
+      const product_interest = document.getElementById('lead-form-product').value.trim();
+      const deal_value = parseFloat(document.getElementById('lead-form-value').value) || 0;
+      const status = document.getElementById('lead-form-status').value;
+      const notes = document.getElementById('lead-form-notes').value.trim();
+
+      if (!full_name) {
+        alert('Vui lòng nhập họ và tên khách hàng!');
+        return;
+      }
+
+      const payload = { full_name, phone, email, channel, source, product_interest, deal_value, status, notes };
+
+      try {
+        let res;
+        if (id) {
+          res = await fetch(`/api/leads/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } else {
+          res = await fetch('/api/leads', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        }
+
+        if (res.ok) {
+          showToast(id ? 'Đã cập nhật thông tin khách hàng!' : 'Đã thêm khách hàng tiềm năng mới!');
+          closeLeadModal();
+          await loadLeads();
+        } else {
+          showToast('Lỗi lưu thông tin khách hàng', false);
+        }
+      } catch (err) {
+        showToast('Lỗi kết nối khi lưu khách hàng', false);
+      }
+    }
+
+    async function deleteLeadItem(id) {
+      if (!confirm('Bạn có chắc chắn muốn xóa khách hàng này khỏi danh sách?')) return;
+      try {
+        const res = await fetch(`/api/leads/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          showToast('Đã xóa khách hàng thành công!');
+          await loadLeads();
+        } else {
+          showToast('Lỗi khi xóa khách hàng', false);
+        }
+      } catch (e) {
+        showToast('Lỗi kết nối khi xóa', false);
+      }
+    }
+
+    function exportLeadsCSV() {
+      window.location.href = '/api/leads/export-csv';
+      showToast('Đang tải xuống file CSV khách hàng...');
+    }
+
+    function openLeadEmbedModal() {
+      const m = document.getElementById('modal-lead-embed');
+      if (!m) return;
+      m.classList.remove('hidden');
+
+      const origin = window.location.origin || 'http://localhost:8000';
+      const webhookUrl = `${origin}/api/leads/webhook-ingest`;
+      document.getElementById('embed-webhook-url').value = webhookUrl;
+
+      const user = checkAuthStatus();
+      const email = user?.email || 'default@marketing-os.local';
+
+      const snippet = `<!-- FORM THU LEAD TỰ ĐỘNG - MARKETING OS MINI CRM -->
+<form action="${webhookUrl}" method="POST" style="max-width:400px;font-family:sans-serif;padding:20px;border:1px solid #e2e8f0;border-radius:12px;">
+  <input type="hidden" name="user_email" value="${email}">
+  <input type="hidden" name="source" value="Website Landing Page">
+  <div style="margin-bottom:12px;">
+    <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Họ và Tên *</label>
+    <input type="text" name="full_name" required style="width:100%;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;box-sizing:border-box;">
+  </div>
+  <div style="margin-bottom:12px;">
+    <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Số Điện Thoại *</label>
+    <input type="tel" name="phone" required style="width:100%;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;box-sizing:border-box;">
+  </div>
+  <div style="margin-bottom:16px;">
+    <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Nhu Cầu / Sản Phẩm Quan Tâm</label>
+    <input type="text" name="product_interest" style="width:100%;padding:8px 12px;border:1px solid #cbd5e1;border-radius:8px;box-sizing:border-box;">
+  </div>
+  <button type="submit" style="width:100%;background:#0ea5e9;color:#fff;font-weight:700;padding:10px;border:none;border-radius:8px;cursor:pointer;">
+    Gửi Yêu Cầu Tư Vấn Ngay
+  </button>
+</form>`;
+      document.getElementById('embed-html-snippet').value = snippet;
+    }
+
+    function closeLeadEmbedModal() {
+      const m = document.getElementById('modal-lead-embed');
+      if (m) m.classList.add('hidden');
+    }
+
+    // --- INTERACTIVE VISUAL DASHBOARD & FINANCIAL CHARTS ---
+    let financialTrendChart = null;
+    let channelBreakdownChart = null;
+
     async function loadAnalytics() {
       try {
         const res = await fetch('/api/analytics/summary');
         const data = await res.json();
-        const t = data.totals;
+        const t = data.totals || {};
+        const rev = t.revenue || 0;
+        const spend = t.spend || 0;
+        const profit = rev - spend;
+        const mer = t.mer || 0;
+        const cac = t.cac || 0;
+        const cpl = t.cpl || 0;
 
-        document.getElementById('stat-revenue').innerText = `${Number(t.revenue).toLocaleString()} đ`;
-        document.getElementById('stat-spend').innerText = `${Number(t.spend).toLocaleString()} đ`;
-        document.getElementById('stat-mer').innerText = `${t.mer}x`;
-        document.getElementById('stat-cac').innerText = `${Number(t.cac).toLocaleString()} đ`;
+        document.getElementById('stat-revenue').innerText = `${Number(rev).toLocaleString()} đ`;
+        document.getElementById('stat-spend').innerText = `${Number(spend).toLocaleString()} đ`;
+        const pEl = document.getElementById('stat-profit');
+        if (pEl) {
+          pEl.innerText = `${profit >= 0 ? '+' : ''}${Number(profit).toLocaleString()} đ`;
+          pEl.className = `text-xl font-bold mt-1 ${profit >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+        }
+        document.getElementById('stat-mer').innerText = `${mer}x`;
+        document.getElementById('stat-cac').innerText = `${Number(cac).toLocaleString()} đ`;
+        const cplEl = document.getElementById('stat-cpl');
+        if (cplEl) cplEl.innerText = `${Number(cpl).toLocaleString()} đ`;
+
+        // Render History Table
+        const history = data.history || [];
+        const tbody = document.getElementById('metric-history-table-body');
+        const countBadge = document.getElementById('metric-history-count');
+        if (countBadge) countBadge.innerText = `${history.length} ngày ghi nhận`;
+
+        if (tbody) {
+          if (history.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-slate-500 italic">Chưa có số liệu thực tế. Nhập vào ô bên trái để xem biểu đồ tăng trưởng!</td></tr>';
+          } else {
+            tbody.innerHTML = history.map(item => {
+              const itemProfit = (item.revenue || 0) - (item.ad_spend || 0);
+              const itemRoas = item.ad_spend > 0 ? ((item.revenue || 0) / item.ad_spend).toFixed(1) : (item.revenue > 0 ? '∞' : '0.0');
+              return `
+                <tr class="hover:bg-slate-800/40 transition">
+                  <td class="py-2.5 px-3 font-mono font-medium text-white">${item.date}</td>
+                  <td class="py-2.5 px-3 text-sky-400 font-mono">${Number(item.ad_spend || 0).toLocaleString()} đ</td>
+                  <td class="py-2.5 px-3 text-emerald-300 font-mono font-semibold">${Number(item.revenue || 0).toLocaleString()} đ</td>
+                  <td class="py-2.5 px-3 font-mono font-bold ${itemProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+                    ${itemProfit >= 0 ? '+' : ''}${Number(itemProfit).toLocaleString()} đ
+                  </td>
+                  <td class="py-2.5 px-3 text-center text-white font-semibold">${item.orders_count || 0}</td>
+                  <td class="py-2.5 px-3 text-center text-teal-300 font-semibold">${item.leads_count || 0}</td>
+                  <td class="py-2.5 px-3 text-center text-amber-400 font-bold">${itemRoas}x</td>
+                </tr>
+              `;
+            }).join('');
+          }
+        }
+
+        // Render / Update Chart.js Visual Charts
+        renderVisualCharts(history, t);
+
       } catch (err) {
-        console.error('Lỗi tải analytics:', err);
+        console.error('Lỗi tải analytics & render biểu đồ:', err);
+      }
+    }
+
+    function renderVisualCharts(history, totals) {
+      if (typeof Chart === 'undefined') return;
+
+      let labels = [];
+      let spendData = [];
+      let revData = [];
+      let profitData = [];
+
+      if (history && history.length >= 2) {
+        history.forEach(h => {
+          labels.push(h.date ? h.date.substring(5) : '');
+          spendData.push(h.ad_spend || 0);
+          revData.push(h.revenue || 0);
+          profitData.push((h.revenue || 0) - (h.ad_spend || 0));
+        });
+      } else {
+        const baseSpend = totals.spend > 0 ? totals.spend / 7 : 800000;
+        const baseRev = totals.revenue > 0 ? totals.revenue / 7 : 3200000;
+        labels = ['T-6', 'T-5', 'T-4', 'T-3', 'T-2', 'T-1', 'Hôm nay'];
+        spendData = [baseSpend * 0.7, baseSpend * 0.8, baseSpend * 0.9, baseSpend * 1.1, baseSpend * 0.95, baseSpend * 1.05, totals.spend > 0 ? totals.spend : baseSpend];
+        revData = [baseRev * 0.6, baseRev * 0.75, baseRev * 0.9, baseRev * 1.15, baseRev * 1.05, baseRev * 1.25, totals.revenue > 0 ? totals.revenue : baseRev];
+        profitData = revData.map((r, i) => r - spendData[i]);
+      }
+
+      // 1. Financial Trend Chart
+      const trendCanvas = document.getElementById('chart-financial-trend');
+      if (trendCanvas) {
+        const ctx = trendCanvas.getContext('2d');
+        if (financialTrendChart) financialTrendChart.destroy();
+
+        financialTrendChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'Doanh Thu (VNĐ)',
+                data: revData,
+                borderColor: '#10b981',
+                backgroundColor: 'rgba(16, 185, 129, 0.12)',
+                fill: true,
+                tension: 0.35,
+                borderWidth: 2.5,
+                pointBackgroundColor: '#10b981',
+                pointRadius: 4
+              },
+              {
+                label: 'Chi Phí Ads (VNĐ)',
+                data: spendData,
+                borderColor: '#0ea5e9',
+                backgroundColor: 'rgba(14, 165, 233, 0.08)',
+                fill: true,
+                tension: 0.35,
+                borderWidth: 2,
+                pointBackgroundColor: '#0ea5e9',
+                pointRadius: 3
+              },
+              {
+                label: 'Lợi Nhuận Ròng (VNĐ)',
+                data: profitData,
+                borderColor: '#a855f7',
+                borderDash: [4, 4],
+                backgroundColor: 'transparent',
+                fill: false,
+                tension: 0.35,
+                borderWidth: 2,
+                pointBackgroundColor: '#a855f7',
+                pointRadius: 3
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#0f172a',
+                borderColor: '#334155',
+                borderWidth: 1,
+                titleColor: '#e2e8f0',
+                bodyColor: '#cbd5e1',
+                padding: 10,
+                callbacks: {
+                  label: function(context) {
+                    return `${context.dataset.label}: ${Number(context.parsed.y).toLocaleString()} đ`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                ticks: { color: '#94a3b8', font: { size: 10 } }
+              },
+              y: {
+                grid: { color: 'rgba(51, 65, 85, 0.3)' },
+                ticks: {
+                  color: '#94a3b8',
+                  font: { size: 10 },
+                  callback: function(value) {
+                    if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
+                    if (value >= 1000) return (value / 1000).toFixed(0) + 'k';
+                    return value;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // 2. Channel Distribution Chart
+      const channelCanvas = document.getElementById('chart-channel-breakdown');
+      if (channelCanvas) {
+        const ctx2 = channelCanvas.getContext('2d');
+        if (channelBreakdownChart) channelBreakdownChart.destroy();
+
+        channelBreakdownChart = new Chart(ctx2, {
+          type: 'doughnut',
+          data: {
+            labels: ['Facebook Ads', 'TikTok Video', 'Website SEO', 'Zalo / Direct'],
+            datasets: [{
+              data: [45, 30, 15, 10],
+              backgroundColor: ['#3b82f6', '#f43f5e', '#10b981', '#f59e0b'],
+              borderColor: '#0f172a',
+              borderWidth: 3
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#cbd5e1',
+                  boxWidth: 10,
+                  font: { size: 10 },
+                  padding: 12
+                }
+              }
+            },
+            cutout: '68%'
+          }
+        });
       }
     }
 
@@ -3154,23 +4631,165 @@
       const spend = parseFloat(document.getElementById('metric-spend').value) || 0;
       const rev = parseFloat(document.getElementById('metric-rev').value) || 0;
       const orders = parseInt(document.getElementById('metric-orders').value) || 0;
+      const leads = parseInt(document.getElementById('metric-leads')?.value) || 0;
+      const notes = document.getElementById('metric-notes')?.value.trim() || '';
 
       try {
-        await fetch('/api/analytics/record', {
+        const res = await fetch('/api/analytics/record', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             date,
             ad_spend: spend,
             revenue: rev,
-            orders_count: orders
+            orders_count: orders,
+            leads_count: leads,
+            notes: notes
           })
         });
-        showToast('Đã lưu chỉ số ngày!');
-        loadAnalytics();
+        if (res.ok) {
+          showToast('Đã ghi nhận số liệu ngày thành công!');
+          document.getElementById('metric-spend').value = '';
+          document.getElementById('metric-rev').value = '';
+          document.getElementById('metric-orders').value = '';
+          if (document.getElementById('metric-leads')) document.getElementById('metric-leads').value = '';
+          if (document.getElementById('metric-notes')) document.getElementById('metric-notes').value = '';
+          await loadAnalytics();
+        } else {
+          showToast('Lỗi ghi nhận số liệu', false);
+        }
       } catch (err) {
-        showToast('Lỗi ghi nhận số liệu', false);
+        showToast('Lỗi kết nối khi ghi số liệu', false);
       }
+    }
+
+    // --- AEO / GEO SCHEMA GENERATOR SYSTEM ---
+    async function generateAEOSchemaUI() {
+      const container = document.getElementById('aeo-result-container');
+      const btn = document.getElementById('btn-gen-aeo');
+      const origHtml = btn ? btn.innerHTML : '';
+      if (btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-sky-400"></i> <span>AI đang tạo Schema...</span>';
+
+      container.innerHTML = '<div class="text-center py-8"><i class="fa-solid fa-circle-notch fa-spin text-3xl text-indigo-400 mb-2"></i><p class="text-xs text-slate-300">Đang tạo Schema JSON-LD và Answers-First tối ưu tìm kiếm AI...</p></div>';
+
+      try {
+        const res = await fetch('/api/strategy/aeo-schema');
+        const data = await res.json();
+        if (!res.ok || data.status !== 'success') {
+          container.innerHTML = '<p class="text-xs text-rose-400 text-center py-4">Lỗi khi tạo Schema AEO. Vui lòng kiểm tra lại cấu hình hồ sơ.</p>';
+          return;
+        }
+
+        const schemas = data.schemas || {};
+        const orgJson = JSON.stringify(schemas.organization_jsonld, null, 2);
+        const prodJson = JSON.stringify(schemas.product_jsonld, null, 2);
+        const faqJson = JSON.stringify(schemas.faq_jsonld, null, 2);
+        const combinedScript = `<script type="application/ld+json">\n${orgJson}\n<\/script>\n\n<script type="application/ld+json">\n${prodJson}\n<\/script>\n\n<script type="application/ld+json">\n${faqJson}\n<\/script>`;
+
+        const faqs = data.faq_items || [];
+        const faqsHtml = faqs.map((f, i) => `
+          <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 space-y-1.5">
+            <h5 class="text-xs font-bold text-sky-300 flex items-center gap-1.5">
+              <span class="w-4 h-4 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center text-[10px] shrink-0 font-mono">${i + 1}</span>
+              ${f.question}
+            </h5>
+            <p class="text-xs text-slate-300 leading-relaxed pl-5">${f.answer}</p>
+          </div>
+        `).join('');
+
+        container.innerHTML = `
+          <!-- Result Tabs -->
+          <div class="flex gap-2 border-b border-slate-800 pb-2">
+            <button onclick="switchAeoTab('aeo-tab-jsonld')" id="btn-aeo-jsonld" class="aeo-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
+              1. Mã JSON-LD Schema.org
+            </button>
+            <button onclick="switchAeoTab('aeo-tab-answers')" id="btn-aeo-answers" class="aeo-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white">
+              2. Bộ Câu Hỏi Trực Tiếp (Answer-First)
+            </button>
+            <button onclick="switchAeoTab('aeo-tab-guide')" id="btn-aeo-guide" class="aeo-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white">
+              3. Hướng Dẫn Tích Hợp Thẻ &lt;head&gt;
+            </button>
+          </div>
+
+          <!-- Tab 1: JSON-LD -->
+          <div id="aeo-tab-jsonld" class="space-y-2">
+            <div class="flex justify-between items-center text-xs text-slate-400">
+              <span>Bao gồm Organization, Product/Service và FAQPage Schema:</span>
+              <button onclick="copyToClipboard(document.getElementById('aeo-code-block').innerText)" class="text-sky-400 hover:text-sky-300 font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-copy"></i> Sao chép toàn bộ mã JSON-LD
+              </button>
+            </div>
+            <pre id="aeo-code-block" class="bg-slate-950 border border-slate-800 rounded-xl p-4 text-[11px] font-mono text-emerald-300 overflow-x-auto max-h-80">${escapeHtml(combinedScript)}</pre>
+          </div>
+
+          <!-- Tab 2: Answer-First FAQs -->
+          <div id="aeo-tab-answers" class="hidden space-y-3">
+            <div class="flex justify-between items-center text-xs text-slate-400 mb-1">
+              <span>Tối ưu cho Gemini, ChatGPT và Perplexity trích dẫn trực tiếp:</span>
+              <button onclick="copyToClipboard(document.getElementById('aeo-direct-text').innerText)" class="text-sky-400 hover:text-sky-300 font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-copy"></i> Sao chép đoạn tóm tắt
+              </button>
+            </div>
+            <div id="aeo-direct-text" class="bg-indigo-950/30 border border-indigo-500/30 rounded-xl p-3.5 text-xs text-slate-200">
+              ${marked.parse(data.aeo_direct_answer || '')}
+            </div>
+            <div class="space-y-2 pt-2">
+              <span class="text-xs font-bold text-slate-300 uppercase tracking-wider block">Các câu hỏi Q&A chuẩn Semantic:</span>
+              ${faqsHtml}
+            </div>
+          </div>
+
+          <!-- Tab 3: Integration Guide -->
+          <div id="aeo-tab-guide" class="hidden bg-slate-950/60 border border-slate-800 rounded-xl p-4 space-y-3 text-xs text-slate-300">
+            <h4 class="font-bold text-white text-sm">Cách dán mã vào Website của bạn:</h4>
+            <ol class="list-decimal pl-5 space-y-2 text-slate-300">
+              <li><strong>WordPress:</strong> Cài plugin <em>"Insert Headers and Footers"</em> (hoặc WPCode) ➔ Dán đoạn mã ở Tab 1 vào ô <code>Scripts in Header</code> ➔ Bấm Save.</li>
+              <li><strong>Ladipage:</strong> Mở trang Landing Page ➔ Vào <strong>Thiết lập trang</strong> ➔ <strong>Mã Javascript/CSS</strong> ➔ Dán vào ô <strong>Header</strong> ➔ Xuất bản trang.</li>
+              <li><strong>Custom Website (HTML/Next.js/Nuxt):</strong> Dán trực tiếp vào bên trong thẻ <code>&lt;head&gt;...&lt;/head&gt;</code> của trang chủ.</li>
+              <li><strong>Kiểm tra xác thực:</strong> Truy cập công cụ chính thức <a href="https://validator.schema.org/" target="_blank" class="text-sky-400 underline font-semibold">Schema.org Validator</a> hoặc <a href="https://search.google.com/test/rich-results" target="_blank" class="text-sky-400 underline font-semibold">Google Rich Results Test</a> để kiểm tra thẻ xanh 100%.</li>
+            </ol>
+          </div>
+        `;
+
+        showToast('🎉 Đã tạo thành công bộ cấu trúc dữ liệu AEO Schema JSON-LD!');
+
+      } catch (err) {
+        container.innerHTML = `<p class="text-xs text-rose-400 text-center py-4">Lỗi: ${err.message}</p>`;
+      } finally {
+        if (btn) btn.innerHTML = origHtml;
+      }
+    }
+
+    function switchAeoTab(tabId) {
+      ['aeo-tab-jsonld', 'aeo-tab-answers', 'aeo-tab-guide'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+      const target = document.getElementById(tabId);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.aeo-tab-btn').forEach(btn => {
+        btn.classList.remove('bg-indigo-500/20', 'text-indigo-300', 'border', 'border-indigo-500/40');
+        btn.classList.add('text-slate-400');
+      });
+      const activeBtn = document.getElementById(tabId.replace('aeo-tab-', 'btn-aeo-'));
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-400');
+        activeBtn.classList.add('bg-indigo-500/20', 'text-indigo-300', 'border', 'border-indigo-500/40');
+      }
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    function copyToClipboard(text) {
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Đã sao chép vào bộ nhớ tạm (Clipboard)!');
+      }).catch(() => {
+        alert('Đã chọn văn bản để sao chép.');
+      });
     }
 
     // --- GMAIL AUTHENTICATION & ACCESS CONTROL ---
@@ -3326,6 +4945,7 @@
         await loadDiscoveredCompetitors();
         await loadCalendar();
         await loadContentHistory();
+        await loadLeads();
         await loadLatestCatalyst();
         await loadAutoPilotStatus();
         switchTab('tab-profile');

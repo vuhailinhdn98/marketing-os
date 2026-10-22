@@ -196,6 +196,28 @@ def init_app_db():
     );
     """)
 
+    # 11. Bảng lưu trữ Khách hàng tiềm năng & Phễu Mini CRM (Lead Records)
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS lead_records (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_email TEXT NOT NULL DEFAULT 'default@marketing-os.local',
+        full_name TEXT NOT NULL,
+        phone TEXT DEFAULT '',
+        email TEXT DEFAULT '',
+        source TEXT DEFAULT 'Website / Form',
+        channel TEXT DEFAULT 'Direct',
+        product_interest TEXT DEFAULT '',
+        status TEXT DEFAULT 'new', -- 'new', 'consulting', 'won', 'lost'
+        deal_value REAL DEFAULT 0,
+        notes TEXT DEFAULT '',
+        utm_source TEXT DEFAULT '',
+        utm_campaign TEXT DEFAULT '',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+    cur.execute("CREATE INDEX IF NOT EXISTS idx_leads_user ON lead_records(user_email);")
+
     # Nâng cấp các cột nếu DB đã tồn tại
     cols = [
         ("app_users", "login_count", "INTEGER DEFAULT 1"),
@@ -203,10 +225,13 @@ def init_app_db():
         ("app_users", "user_agent", "TEXT DEFAULT ''"),
         ("research_records", "user_email", "TEXT DEFAULT 'default@marketing-os.local'"),
         ("content_items", "user_email", "TEXT DEFAULT 'default@marketing-os.local'"),
+        ("content_items", "published_webhook", "INTEGER DEFAULT 0"),
+        ("content_items", "webhook_published_at", "TIMESTAMP"),
         ("performance_metrics", "user_email", "TEXT DEFAULT 'default@marketing-os.local'"),
         ("calendar_schedules", "user_email", "TEXT DEFAULT 'default@marketing-os.local'"),
         ("automation_logs", "user_email", "TEXT DEFAULT 'default@marketing-os.local'"),
         ("discovered_competitors", "user_email", "TEXT DEFAULT 'default@marketing-os.local'"),
+        ("lead_records", "user_email", "TEXT DEFAULT 'default@marketing-os.local'"),
     ]
     for table, col, def_val in cols:
         try:
@@ -755,10 +780,206 @@ def get_content_items(user_email: str = "default@marketing-os.local") -> list:
     email_norm = normalize_email(user_email)
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM content_items WHERE LOWER(user_email) = ? ORDER BY id DESC LIMIT 50", (email_norm,))
+    cur.execute("SELECT * FROM content_items WHERE LOWER(user_email) = ? ORDER BY id DESC LIMIT 100", (email_norm,))
     rows = [dict(r) for r in cur.fetchall()]
     conn.close()
     return rows
+
+def update_content_item_status(item_id: int, new_status: str, user_email: str = "default@marketing-os.local") -> bool:
+    init_app_db()
+    email_norm = normalize_email(user_email)
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+    UPDATE content_items
+    SET status = ?
+    WHERE id = ? AND LOWER(user_email) = ?
+    """, (new_status, item_id, email_norm))
+    updated = cur.rowcount > 0
+    conn.commit()
+    conn.close()
+    return updated
+
+def delete_content_item(item_id: int, user_email: str = "default@marketing-os.local") -> bool:
+    init_app_db()
+    email_norm = normalize_email(user_email)
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM content_items WHERE id = ? AND LOWER(user_email) = ?", (item_id, email_norm))
+    deleted = cur.rowcount > 0
+    conn.commit()
+    conn.close()
+    return deleted
+
+def mark_content_webhook_published(item_id: int, user_email: str = "default@marketing-os.local") -> bool:
+    init_app_db()
+    email_norm = normalize_email(user_email)
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+    UPDATE content_items
+    SET status = 'published', published_webhook = 1, webhook_published_at = CURRENT_TIMESTAMP
+    WHERE id = ? AND LOWER(user_email) = ?
+    """, (item_id, email_norm))
+    updated = cur.rowcount > 0
+    conn.commit()
+    conn.close()
+    return updated
+
+# --- Multi-Tenant Lead Records & Mini CRM ---
+def create_lead(lead_data: dict, user_email: str = "default@marketing-os.local") -> dict:
+    init_app_db()
+    email_norm = normalize_email(user_email)
+    conn = get_connection()
+    cur = conn.cursor()
+    full_name = (lead_data.get("full_name") or "").strip() or "Khách hàng mới"
+    phone = (lead_data.get("phone") or "").strip()
+    email = (lead_data.get("email") or "").strip()
+    source = (lead_data.get("source") or "Website / Form").strip()
+    channel = (lead_data.get("channel") or "Direct").strip()
+    product_interest = (lead_data.get("product_interest") or "").strip()
+    status = (lead_data.get("status") or "new").strip().lower()
+    if status not in ["new", "consulting", "won", "lost"]:
+        status = "new"
+    try:
+        deal_value = float(lead_data.get("deal_value") or 0)
+    except (ValueError, TypeError):
+        deal_value = 0.0
+    notes = (lead_data.get("notes") or "").strip()
+    utm_source = (lead_data.get("utm_source") or "").strip()
+    utm_campaign = (lead_data.get("utm_campaign") or "").strip()
+
+    cur.execute("""
+    INSERT INTO lead_records (
+        user_email, full_name, phone, email, source, channel,
+        product_interest, status, deal_value, notes, utm_source, utm_campaign
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        email_norm, full_name, phone, email, source, channel,
+        product_interest, status, deal_value, notes, utm_source, utm_campaign
+    ))
+    conn.commit()
+    lead_id = cur.lastrowid
+    
+    cur.execute("SELECT * FROM lead_records WHERE id = ?", (lead_id,))
+    row = dict(cur.fetchone())
+    conn.close()
+    return row
+
+def get_leads(user_email: str = "default@marketing-os.local", status: str = None, search: str = "") -> list:
+    init_app_db()
+    email_norm = normalize_email(user_email)
+    conn = get_connection()
+    cur = conn.cursor()
+    
+    query = "SELECT * FROM lead_records WHERE LOWER(user_email) = ?"
+    params = [email_norm]
+    
+    if status and status.strip() and status != "all":
+        query += " AND status = ?"
+        params.append(status.strip().lower())
+        
+    if search and search.strip():
+        term = f"%{search.strip().lower()}%"
+        query += " AND (LOWER(full_name) LIKE ? OR LOWER(phone) LIKE ? OR LOWER(email) LIKE ? OR LOWER(product_interest) LIKE ?)"
+        params.extend([term, term, term, term])
+        
+    query += " ORDER BY id DESC"
+    cur.execute(query, params)
+    rows = [dict(r) for r in cur.fetchall()]
+    conn.close()
+    return rows
+
+def update_lead_status(lead_id: int, status: str, user_email: str = "default@marketing-os.local") -> bool:
+    init_app_db()
+    email_norm = normalize_email(user_email)
+    st = status.strip().lower()
+    if st not in ["new", "consulting", "won", "lost"]:
+        return False
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+    UPDATE lead_records
+    SET status = ?, updated_at = CURRENT_TIMESTAMP
+    WHERE id = ? AND LOWER(user_email) = ?
+    """, (st, lead_id, email_norm))
+    updated = cur.rowcount > 0
+    conn.commit()
+    conn.close()
+    return updated
+
+def update_lead(lead_id: int, lead_data: dict, user_email: str = "default@marketing-os.local") -> bool:
+    init_app_db()
+    email_norm = normalize_email(user_email)
+    conn = get_connection()
+    cur = conn.cursor()
+    
+    fields = []
+    values = []
+    for k in ["full_name", "phone", "email", "source", "channel", "product_interest", "status", "deal_value", "notes", "utm_source", "utm_campaign"]:
+        if k in lead_data:
+            fields.append(f"{k} = ?")
+            values.append(lead_data[k])
+            
+    if not fields:
+        conn.close()
+        return False
+        
+    fields.append("updated_at = CURRENT_TIMESTAMP")
+    values.extend([lead_id, email_norm])
+    sql = f"UPDATE lead_records SET {', '.join(fields)} WHERE id = ? AND LOWER(user_email) = ?"
+    cur.execute(sql, values)
+    updated = cur.rowcount > 0
+    conn.commit()
+    conn.close()
+    return updated
+
+def delete_lead(lead_id: int, user_email: str = "default@marketing-os.local") -> bool:
+    init_app_db()
+    email_norm = normalize_email(user_email)
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM lead_records WHERE id = ? AND LOWER(user_email) = ?", (lead_id, email_norm))
+    deleted = cur.rowcount > 0
+    conn.commit()
+    conn.close()
+    return deleted
+
+def get_lead_stats(user_email: str = "default@marketing-os.local") -> dict:
+    init_app_db()
+    email_norm = normalize_email(user_email)
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+    SELECT 
+        COUNT(*) as total_leads,
+        SUM(CASE WHEN status = 'new' THEN 1 ELSE 0 END) as new_count,
+        SUM(CASE WHEN status = 'consulting' THEN 1 ELSE 0 END) as consulting_count,
+        SUM(CASE WHEN status = 'won' THEN 1 ELSE 0 END) as won_count,
+        SUM(CASE WHEN status = 'lost' THEN 1 ELSE 0 END) as lost_count,
+        SUM(CASE WHEN status = 'won' THEN deal_value ELSE 0 END) as total_won_value,
+        SUM(deal_value) as total_pipeline_value
+    FROM lead_records
+    WHERE LOWER(user_email) = ?
+    """, (email_norm,))
+    row = dict(cur.fetchone() or {})
+    conn.close()
+    
+    total = row.get("total_leads") or 0
+    won = row.get("won_count") or 0
+    win_rate = round((won / total * 100), 1) if total > 0 else 0.0
+    
+    return {
+        "total_leads": total,
+        "new_count": row.get("new_count") or 0,
+        "consulting_count": row.get("consulting_count") or 0,
+        "won_count": won,
+        "lost_count": row.get("lost_count") or 0,
+        "win_rate": win_rate,
+        "total_won_value": round(row.get("total_won_value") or 0, 0),
+        "total_pipeline_value": round(row.get("total_pipeline_value") or 0, 0)
+    }
 
 # --- Multi-Tenant Analytics ---
 def get_analytics_summary(user_email: str = "default@marketing-os.local") -> dict:
@@ -848,6 +1069,7 @@ def reset_database_clean(user_email: str = "default@marketing-os.local"):
     cur.execute("DELETE FROM automation_logs WHERE LOWER(user_email) = ?", (email_norm,))
     cur.execute("DELETE FROM discovered_competitors WHERE LOWER(user_email) = ?", (email_norm,))
     cur.execute("DELETE FROM performance_metrics WHERE LOWER(user_email) = ?", (email_norm,))
+    cur.execute("DELETE FROM lead_records WHERE LOWER(user_email) = ?", (email_norm,))
     
     cur.execute("""
     UPDATE user_profiles SET

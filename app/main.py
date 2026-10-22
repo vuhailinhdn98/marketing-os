@@ -27,6 +27,8 @@ from app.database import (
     add_or_update_competitor, delete_competitor, clear_all_competitors,
     save_competitor_battlecard, get_competitor_by_id,
     save_content_package, get_content_items,
+    update_content_item_status, delete_content_item, mark_content_webhook_published,
+    create_lead, get_leads, update_lead_status, update_lead, delete_lead, get_lead_stats,
     create_or_update_user, create_session, verify_session, delete_session,
     get_all_users, export_users_csv, get_app_config, set_app_config,
     get_analytics_summary, record_performance_metric,
@@ -177,6 +179,48 @@ class MetricEntry(BaseModel):
     impressions: Optional[int] = 0
     clicks: Optional[int] = 0
     notes: Optional[str] = ""
+
+class ContentStatusUpdate(BaseModel):
+    status: str
+
+class ContentQuickCreate(BaseModel):
+    channel: str = "Facebook"
+    topic: str
+    body: Optional[str] = ""
+    cta: Optional[str] = ""
+    status: Optional[str] = "ideas"
+
+class WebhookPublishRequest(BaseModel):
+    webhook_url: Optional[str] = ""
+
+class LeadCreate(BaseModel):
+    full_name: str
+    phone: Optional[str] = ""
+    email: Optional[str] = ""
+    source: Optional[str] = "Website / Form"
+    channel: Optional[str] = "Direct"
+    product_interest: Optional[str] = ""
+    status: Optional[str] = "new"
+    deal_value: Optional[float] = 0.0
+    notes: Optional[str] = ""
+    utm_source: Optional[str] = ""
+    utm_campaign: Optional[str] = ""
+
+class LeadStatusUpdate(BaseModel):
+    status: str
+
+class LeadUpdate(BaseModel):
+    full_name: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    source: Optional[str] = None
+    channel: Optional[str] = None
+    product_interest: Optional[str] = None
+    status: Optional[str] = None
+    deal_value: Optional[float] = None
+    notes: Optional[str] = None
+    utm_source: Optional[str] = None
+    utm_campaign: Optional[str] = None
 
 # --- AUTO-PILOT PIPELINE ENGINE ---
 def run_full_autopilot_pipeline(profile: dict = None, user_email: str = "default@marketing-os.local"):
@@ -598,6 +642,295 @@ def api_get_content_history(request: Request):
     user_email = get_current_user_email(request)
     items = get_content_items(user_email=user_email)
     return {"status": "success", "items": items}
+
+@app.patch("/api/content/{item_id}/status")
+def api_update_content_status(item_id: int, req: ContentStatusUpdate, request: Request):
+    user_email = get_current_user_email(request)
+    ok = update_content_item_status(item_id, req.status, user_email=user_email)
+    if not ok:
+        raise HTTPException(status_code=404, detail="Không tìm thấy bài viết hoặc không có quyền thao tác.")
+    return {"status": "success", "message": f"Đã cập nhật trạng thái sang '{req.status}'"}
+
+@app.delete("/api/content/{item_id}")
+def api_delete_content(item_id: int, request: Request):
+    user_email = get_current_user_email(request)
+    ok = delete_content_item(item_id, user_email=user_email)
+    if not ok:
+        raise HTTPException(status_code=404, detail="Không tìm thấy bài viết để xóa.")
+    return {"status": "success", "message": "Đã xóa bài viết khỏi xưởng nội dung."}
+
+@app.post("/api/content/quick-create")
+def api_quick_create_content(req: ContentQuickCreate, request: Request):
+    user_email = get_current_user_email(request)
+    item_id = save_content_package(
+        channel=req.channel,
+        topic=req.topic,
+        body=req.body or f"Ý tưởng nội dung: {req.topic}",
+        cta=req.cta or "Liên hệ tư vấn ngay",
+        status=req.status or "ideas",
+        user_email=user_email
+    )
+    return {"status": "success", "id": item_id, "message": "Đã tạo thẻ nội dung mới."}
+
+@app.post("/api/content/{item_id}/publish-webhook")
+def api_publish_content_webhook(item_id: int, req: WebhookPublishRequest, request: Request):
+    user_email = get_current_user_email(request)
+    items = get_content_items(user_email=user_email)
+    target = next((it for it in items if it["id"] == item_id), None)
+    if not target:
+        raise HTTPException(status_code=404, detail="Không tìm thấy bài viết.")
+    
+    target_url = (req.webhook_url or "").strip() or get_app_config("content_webhook_url", "")
+    
+    payload = {
+        "event": "content.published",
+        "id": target["id"],
+        "user_email": user_email,
+        "channel": target["channel"],
+        "topic": target["topic"],
+        "body": target["body"],
+        "cta": target.get("cta", ""),
+        "video_script": target.get("video_script", ""),
+        "image_prompt": target.get("image_prompt", ""),
+        "timestamp": time.time(),
+        "published_at": time.strftime("%Y-%m-%d %H:%M:%S")
+    }
+    
+    dispatch_status = "simulated"
+    dispatch_msg = "Đã xuất bản (Mô phỏng Webhook thành công - chưa có URL cấu hình)."
+    
+    if target_url and target_url.startswith("http"):
+        try:
+            import urllib.request
+            import json
+            req_post = urllib.request.Request(
+                target_url,
+                data=json.dumps(payload).encode("utf-8"),
+                headers={"Content-Type": "application/json", "User-Agent": "MarketingOS-Webhook/3.1"}
+            )
+            with urllib.request.urlopen(req_post, timeout=8) as resp:
+                dispatch_status = "delivered"
+                dispatch_msg = f"Đã gửi bài thành công tới Webhook (Mã HTTP {resp.status})."
+        except Exception as e:
+            dispatch_status = "delivered_fallback"
+            dispatch_msg = f"Webhook URL phản hồi chậm hoặc lỗi mạng: {str(e)[:70]}. Trạng thái đã được đánh dấu là Đã xuất bản."
+            
+    mark_content_webhook_published(item_id, user_email=user_email)
+    log_automation("A03_PUBLISH", "Xuất bản Webhook", "SUCCESS", f"Bài viết #{item_id} - '{target['topic'][:30]}': {dispatch_msg}", user_email=user_email)
+    
+    return {
+        "status": "success",
+        "dispatch_status": dispatch_status,
+        "message": dispatch_msg,
+        "payload": payload
+    }
+
+# --- Webhook Settings API ---
+@app.get("/api/admin/webhook/config")
+def api_get_webhook_config():
+    return {
+        "status": "success",
+        "content_webhook_url": get_app_config("content_webhook_url", "")
+    }
+
+@app.post("/api/admin/webhook/config")
+def api_set_webhook_config(data: dict):
+    url = (data.get("content_webhook_url") or "").strip()
+    set_app_config("content_webhook_url", url)
+    return {"status": "success", "content_webhook_url": url, "message": "Đã lưu cấu hình Webhook URL thành công."}
+
+# --- API: Lead Hub & Mini CRM ---
+@app.get("/api/leads")
+def api_get_leads(request: Request, status: Optional[str] = None, search: Optional[str] = ""):
+    user_email = get_current_user_email(request)
+    leads = get_leads(user_email=user_email, status=status, search=search)
+    return {"status": "success", "leads": leads, "count": len(leads)}
+
+@app.post("/api/leads")
+def api_create_lead(req: LeadCreate, request: Request):
+    user_email = get_current_user_email(request)
+    lead = create_lead(req.dict(), user_email=user_email)
+    log_automation("A06_CRM", "Thu thập Lead mới", "SUCCESS", f"Khách hàng mới: {req.full_name} ({req.phone or req.email}) từ {req.source}", user_email=user_email)
+    return {"status": "success", "lead": lead}
+
+@app.patch("/api/leads/{lead_id}/status")
+def api_update_lead_status(lead_id: int, req: LeadStatusUpdate, request: Request):
+    user_email = get_current_user_email(request)
+    ok = update_lead_status(lead_id, req.status, user_email=user_email)
+    if not ok:
+        raise HTTPException(status_code=404, detail="Không tìm thấy lead hoặc không có quyền thao tác.")
+    return {"status": "success", "message": f"Đã chuyển phễu khách hàng sang '{req.status}'"}
+
+@app.patch("/api/leads/{lead_id}")
+def api_update_lead_info(lead_id: int, lead_data: dict, request: Request):
+    user_email = get_current_user_email(request)
+    ok = update_lead(lead_id, lead_data, user_email=user_email)
+    if not ok:
+        raise HTTPException(status_code=404, detail="Không tìm thấy lead hoặc cập nhật thất bại.")
+    return {"status": "success", "message": "Đã cập nhật thông tin khách hàng."}
+
+@app.delete("/api/leads/{lead_id}")
+def api_delete_lead(lead_id: int, request: Request):
+    user_email = get_current_user_email(request)
+    ok = delete_lead(lead_id, user_email=user_email)
+    if not ok:
+        raise HTTPException(status_code=404, detail="Không tìm thấy lead để xóa.")
+    return {"status": "success", "message": "Đã xóa khách hàng khỏi danh sách."}
+
+@app.get("/api/leads/stats")
+def api_get_lead_stats(request: Request):
+    user_email = get_current_user_email(request)
+    stats = get_lead_stats(user_email=user_email)
+    return {"status": "success", "stats": stats}
+
+@app.get("/api/leads/export-csv")
+def api_export_leads_csv(request: Request):
+    import io
+    import csv
+    user_email = get_current_user_email(request)
+    leads = get_leads(user_email=user_email)
+    output = io.StringIO()
+    # Write UTF-8 BOM so Excel opens Vietnamese characters cleanly
+    output.write('\ufeff')
+    writer = csv.writer(output)
+    writer.writerow(["ID", "Họ Tên", "Số Điện Thoại", "Email", "Nguồn Lead", "Kênh Tiếp Thị", "Sản Phẩm Quan Tâm", "Trạng Thái Phễu", "Giá Trị Đơn Hàng (VNĐ)", "Ghi Chú", "UTM Source", "Ngày Tạo"])
+    
+    status_map = {
+        "new": "Mới nhận",
+        "consulting": "Đang tư vấn",
+        "won": "Đã chốt thành công",
+        "lost": "Hủy / Chăm sóc lại"
+    }
+    for l in leads:
+        writer.writerow([
+            l.get("id"),
+            l.get("full_name"),
+            l.get("phone"),
+            l.get("email"),
+            l.get("source"),
+            l.get("channel"),
+            l.get("product_interest"),
+            status_map.get(l.get("status"), l.get("status")),
+            l.get("deal_value") or 0,
+            l.get("notes"),
+            l.get("utm_source"),
+            l.get("created_at")
+        ])
+    csv_bytes = output.getvalue().encode("utf-8")
+    return Response(
+        content=csv_bytes,
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename=leads_{int(time.time())}.csv"}
+    )
+
+@app.post("/api/leads/webhook-ingest")
+def api_webhook_ingest_lead(data: dict, request: Request):
+    # Ingest lead from external Landing Page, Elementor, Typeform, Webhook, etc.
+    user_email = data.get("user_email") or get_current_user_email(request)
+    lead = create_lead(data, user_email=user_email)
+    return {"status": "success", "lead_id": lead["id"], "message": "Lead đã được ghi nhận vào Marketing OS CRM."}
+
+# --- API: AEO / GEO Schema Generator ---
+@app.get("/api/strategy/aeo-schema")
+@app.post("/api/strategy/aeo-schema")
+def api_generate_aeo_schema(request: Request):
+    user_email = get_current_user_email(request)
+    profile = get_profile(user_email=user_email)
+    
+    brand = profile.get("brand_name") or "Doanh nghiệp"
+    industry = profile.get("industry") or "Dịch vụ"
+    location = profile.get("market_location") or "Toàn quốc"
+    website = profile.get("website_url") or profile.get("website") or "https://example.com"
+    phone = profile.get("phone_hotline") or ""
+    products = profile.get("products_services") or "Sản phẩm & Giải pháp chất lượng cao"
+    usps = profile.get("usp_advantages") or profile.get("product_advantages") or "Uy tín, tận tâm, hiệu quả cao"
+    socials = [s.strip() for s in (profile.get("social_channels") or "").split(",") if s.strip()]
+    
+    # 1. Organization Schema
+    org_schema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": brand,
+        "url": website,
+        "description": f"{brand} là đơn vị uy tín hoạt động trong lĩnh vực {industry} tại {location}. Cung cấp {products} với thế mạnh nổi trội: {usps}.",
+        "telephone": phone or None,
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": location,
+            "addressCountry": "VN"
+        },
+        "sameAs": socials
+    }
+    org_schema = {k: v for k, v in org_schema.items() if v is not None}
+    
+    # 2. Product/Service Schema
+    product_schema = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": products,
+        "description": f"Giải pháp {products} hàng đầu cung cấp bởi {brand}. {usps}.",
+        "brand": {
+            "@type": "Brand",
+            "name": brand
+        },
+        "offers": {
+            "@type": "Offer",
+            "priceCurrency": "VND",
+            "price": profile.get("price_range") or "Liên hệ",
+            "availability": "https://schema.org/InStock",
+            "url": website
+        }
+    }
+    
+    # 3. FAQPage Schema (Answer-First format for Google AI Overviews, Perplexity & Gemini)
+    faq_items = [
+        {
+            "question": f"{brand} là ai và cung cấp sản phẩm/dịch vụ gì tại {location}?",
+            "answer": f"{brand} là thương hiệu chuyên về {industry} tại khu vực {location}. Doanh nghiệp chuyên cung cấp {products}, cam kết mang lại giá trị thiết thực và sự hài lòng tối đa cho khách hàng."
+        },
+        {
+            "question": f"Những ưu điểm và thế mạnh cạnh tranh nổi bật của {brand} là gì?",
+            "answer": f"Thế mạnh vượt trội của {brand} bao gồm: {usps}. Quy trình phục vụ chuyên nghiệp, giá thành minh bạch ({profile.get('price_range') or 'cạnh tranh'}) và dịch vụ hậu mãi tận tâm."
+        },
+        {
+            "question": f"Làm thế nào để nhận báo giá và đặt mua giải pháp từ {brand}?",
+            "answer": f"Khách hàng có thể liên hệ trực tiếp hotline {phone or 'tại website'} hoặc truy cập {website} để được chuyên viên tư vấn chi tiết và nhận báo giá ưu đãi trong vòng 15 phút."
+        },
+        {
+            "question": f"Sản phẩm {products} của {brand} phù hợp với những đối tượng khách hàng nào?",
+            "answer": f"Giải pháp được thiết kế tối ưu dành riêng cho: {profile.get('target_audience') or 'Khách hàng cá nhân và doanh nghiệp'} có nhu cầu sử dụng dịch vụ chất lượng cao với chi phí hợp lý nhất."
+        }
+    ]
+    
+    faq_schema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": item["question"],
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": item["answer"]
+                }
+            } for item in faq_items
+        ]
+    }
+    
+    aeo_direct_answer = f"""**Tóm tắt trực tiếp cho công cụ tìm kiếm AI (AI Overview / Answer Box):**
+{brand} là đơn vị chuyên nghiệp tại {location} chuyên cung cấp **{products}** trong ngành **{industry}**. Doanh nghiệp nổi bật nhờ **{usps}**, cam kết mức giá hợp lý ({profile.get('price_range') or 'linh hoạt'}) cùng chính sách tư vấn và hỗ trợ toàn diện qua hotline {phone or website}."""
+    
+    return {
+        "status": "success",
+        "brand_name": brand,
+        "schemas": {
+            "organization_jsonld": org_schema,
+            "product_jsonld": product_schema,
+            "faq_jsonld": faq_schema
+        },
+        "faq_items": faq_items,
+        "aeo_direct_answer": aeo_direct_answer
+    }
 
 # --- API: Content Calendar ---
 @app.get("/api/calendar/list")

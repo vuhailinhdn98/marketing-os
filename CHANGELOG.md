@@ -1,5 +1,11 @@
 # Nhật ký thay đổi
 
+## 4.0.2 — 23/10/2026
+
+- Gemini quá tải (503/500): tự thử lại cùng model 2 lần (chờ 2–5 giây) trước khi chuyển model.
+- Lỗi 429: đọc chi tiết Gemini trả về để phân biệt giới hạn theo phút (chờ đúng thời gian Gemini đề nghị rồi thử lại), hết hạn mức trong ngày, hoặc key không có hạn mức cho model đó (thường cần bật billing) — không còn báo chung chung “hết hạn mức”.
+- Khi mọi model đều lỗi, thông báo liệt kê lý do của từng model (vd `gemini-3.5-flash: đang quá tải (503); gemini-2.5-flash: vượt giới hạn số lượt/phút`).
+
 ## 4.0.1 — 22/10/2026
 
 - “Kiểm tra kết nối” thử tạo một nội dung thật rất nhỏ và hiện nguyên văn lý do Gemini từ chối (billing, vùng, quota, model) thay vì chỉ kiểm danh sách model.

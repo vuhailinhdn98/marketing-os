@@ -22,7 +22,7 @@ router = APIRouter(prefix="/api", tags=["core"])
 def system_status(user: CurrentUser = Depends(require_user)) -> Dict[str, Any]:
     ai = runner.ai_settings(user.email)
     server_key = bool(config.settings.server_gemini_key) and (user.is_admin or config.settings.share_server_key)
-    return {"version": "4.0.1", "ephemeral_storage": config.settings.ephemeral_storage_risk,
+    return {"version": "4.0.2", "ephemeral_storage": config.settings.ephemeral_storage_risk,
             "ai": {**ai, "server_key_available": server_key}, "web_fetch": config.settings.allow_web_fetch,
             "google_login": bool(config.settings.google_client_id)}
 

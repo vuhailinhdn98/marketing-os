@@ -15,6 +15,7 @@ import base64
 import hashlib
 import json
 import logging
+import random
 import re
 import threading
 import time
@@ -36,11 +37,15 @@ _EXCLUDE_TEXT = ("image", "tts", "audio", "live", "embedding", "robotics", "comp
 
 
 class LLMError(Exception):
-    def __init__(self, message: str, code: str = "error", retry_next_model: bool = False):
+    def __init__(self, message: str, code: str = "error", retry_next_model: bool = False, *,
+                 retry_after: Optional[float] = None, quota_kind: str = "", short: str = ""):
         super().__init__(message)
         self.message = message
         self.code = code
         self.retry_next_model = retry_next_model
+        self.retry_after = retry_after   # giây Gemini đề nghị chờ (RetryInfo)
+        self.quota_kind = quota_kind     # minute | day | zero | unknown (chỉ với lỗi 429)
+        self.short = short or message    # mô tả ngắn để gộp lỗi nhiều model
 
 
 @dataclass
@@ -98,21 +103,78 @@ def _raise_for(resp: requests.Response) -> None:
     if resp.status_code == 404:
         raise LLMError(f"Model không tồn tại hoặc không còn hỗ trợ.{detail}", "model_not_found", retry_next_model=True)
     if resp.status_code == 429:
-        raise LLMError("Đã hết hạn mức (quota) của model này; hệ thống thử model khác." + detail, "quota", retry_next_model=True)
+        kind, retry_after = _quota_details(err)
+        short = {"minute": "vượt giới hạn số lượt/phút", "day": "hết hạn mức trong ngày",
+                 "zero": "key không có hạn mức cho model này (thường cần bật billing)"}.get(kind, "bị giới hạn tốc độ (429)")
+        if "search" in low or "grounding" in low:
+            short += " của tìm kiếm Google"
+        raise LLMError(f"Gemini báo {short}.{detail}", "quota", retry_next_model=True,
+                       retry_after=retry_after, quota_kind=kind, short=short)
     if resp.status_code >= 500:
-        raise LLMError(f"Máy chủ Gemini lỗi tạm thời (HTTP {resp.status_code}).{detail}", "server", retry_next_model=True)
+        short = "đang quá tải (503)" if resp.status_code == 503 else f"lỗi máy chủ (HTTP {resp.status_code})"
+        raise LLMError(f"Máy chủ Gemini {short}, thường tự hết sau ít phút.{detail}", "server", retry_next_model=True,
+                       short=short)
     if resp.status_code == 400 and status == "FAILED_PRECONDITION":
         raise LLMError("Gemini từ chối yêu cầu (thường do vùng/billing của dự án)." + detail, "forbidden")
     raise LLMError(f"Yêu cầu bị từ chối (HTTP {resp.status_code}).{detail}", "bad_request")
 
 
+def _quota_details(err: Dict[str, Any]) -> Tuple[str, Optional[float]]:
+    """Đọc QuotaFailure/RetryInfo trong lỗi 429 để biết là giới hạn theo phút, theo ngày hay hạn mức 0."""
+    retry_after: Optional[float] = None
+    ids: List[str] = []
+    for d in err.get("details") or []:
+        if not isinstance(d, dict):
+            continue
+        typ = str(d.get("@type", ""))
+        if typ.endswith("RetryInfo"):
+            m = re.match(r"^\s*([\d.]+)s\s*$", str(d.get("retryDelay", "")))
+            if m:
+                retry_after = float(m.group(1))
+        elif typ.endswith("QuotaFailure"):
+            for v in d.get("violations") or []:
+                ids.append(f"{v.get('quotaId', '')} {v.get('quotaMetric', '')}".lower())
+    text = " ".join(ids) + " " + str(err.get("message", "")).lower()
+    if "limit: 0" in text or "limit:0" in text:
+        return "zero", retry_after
+    if "perday" in text or "per_day" in text or "per day" in text:
+        return "day", retry_after
+    if "perminute" in text or "per_minute" in text or "per minute" in text or retry_after is not None:
+        return "minute", retry_after
+    return "unknown", retry_after
+
+
+SERVER_RETRIES = 2          # lỗi 5xx (thường 503 quá tải): thử lại cùng model
+MAX_QUOTA_WAIT = 30.0       # chỉ chờ khi Gemini đề nghị chờ ngắn (giới hạn theo phút)
+_sleep = time.sleep         # tách ra để test không phải chờ thật
+
+
 def _post(api_key: str, path: str, body: Dict[str, Any], timeout: float = 240) -> Dict[str, Any]:
-    try:
-        resp = requests.post(f"{API_BASE}/{path}", headers=_headers(api_key), json=body, timeout=(10, timeout))
-    except requests.RequestException as exc:
-        raise LLMError(f"Không kết nối được Gemini API: {exc.__class__.__name__}", "network", retry_next_model=True) from exc
-    _raise_for(resp)
-    return resp.json()
+    """Gọi API; tự thử lại khi Gemini quá tải (5xx) hoặc vượt giới hạn/phút có đề nghị thời gian chờ."""
+    server_tries = quota_tries = 0
+    while True:
+        try:
+            resp = requests.post(f"{API_BASE}/{path}", headers=_headers(api_key), json=body, timeout=(10, timeout))
+        except requests.RequestException as exc:
+            raise LLMError(f"Không kết nối được Gemini API: {exc.__class__.__name__}", "network", retry_next_model=True,
+                           short="mất kết nối") from exc
+        try:
+            _raise_for(resp)
+            return resp.json()
+        except LLMError as exc:
+            if exc.code == "server" and server_tries < SERVER_RETRIES:
+                server_tries += 1
+                wait = 2.0 * server_tries + random.random()
+                log.info("Gemini %s on %s, retry in %.1fs", exc.short, path, wait)
+                _sleep(wait)
+                continue
+            if (exc.code == "quota" and quota_tries < 1 and exc.quota_kind in ("minute", "unknown")
+                    and exc.retry_after is not None and exc.retry_after <= MAX_QUOTA_WAIT):
+                quota_tries += 1
+                log.info("Gemini rate limit on %s, waiting %.1fs", path, exc.retry_after)
+                _sleep(exc.retry_after + 0.5)
+                continue
+            raise
 
 
 # ---------------------------------------------------------------------------
@@ -273,17 +335,33 @@ def _grounding(meta: Dict[str, Any]) -> Tuple[List[Dict[str, str]], List[str]]:
     return sources, list(meta.get("webSearchQueries") or [])
 
 
+FALLBACK_BUDGET = 200.0     # giây tối đa cho việc thử lần lượt các model
+
+
 def _call_with_fallback(api_key: str, models: List[str], body_for: Any) -> Tuple[str, Dict[str, Any]]:
-    last: Optional[LLMError] = None
+    """Thử lần lượt các model; nếu tất cả đều lỗi, báo lý do của TỪNG model để biết chính xác vì sao."""
+    failures: List[Tuple[str, LLMError]] = []
+    started = time.time()
     for model in models:
+        if failures and time.time() - started > FALLBACK_BUDGET:
+            break
         try:
             return model, _post(api_key, f"models/{model}:generateContent", body_for(model))
         except LLMError as exc:
-            last = exc
             if not exc.retry_next_model:
                 raise
-            log.info("model %s failed (%s), trying next", model, exc.code)
-    raise last or LLMError("Không có model nào khả dụng.", "no_model")
+            failures.append((model, exc))
+            log.warning("model %s failed (%s: %s), trying next", model, exc.code, exc.short)
+    if not failures:
+        raise LLMError("Không có model nào khả dụng.", "no_model")
+    if len(failures) == 1:
+        raise failures[0][1]
+    codes = {e.code for _, e in failures}
+    code = codes.pop() if len(codes) == 1 else "unavailable"
+    summary = "; ".join(f"{m}: {e.short}" for m, e in failures)
+    hint = {"quota": " Kiểm tra hạn mức tại aistudio.google.com/usage hoặc chọn model khác trong Cài đặt.",
+            "server": " Gemini đang quá tải, thử lại sau vài phút."}.get(code, "")
+    raise LLMError(f"Đã thử {len(failures)} model nhưng đều lỗi — {summary}.{hint}", code)
 
 
 def parse_json_text(text: str) -> Any:

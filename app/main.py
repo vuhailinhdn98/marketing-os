@@ -28,7 +28,7 @@ from app.services.media import MediaError
 
 logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO"), format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
-APP_VERSION = "4.0.1"
+APP_VERSION = "4.0.2"
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 @asynccontextmanager

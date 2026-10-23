@@ -107,6 +107,9 @@ def check(output: Any, *, kind: str = "internal", context: Optional[Dict[str, An
         s_low = _norm(sentence)
         if DISCOUNT_RE.search(s_low):
             s_low = DISCOUNT_RE.sub("", s_low)
+        MATERIAL_RE = re.compile(r"(100\s*%\s*(cotton|tự nhiên|thủ công|nguyên chất|chính hãng|lụa|len|gỗ|da thật|bạc|sợi tre)|(cotton|tự nhiên|thủ công|nguyên chất|chính hãng)\s+100\s*%)", re.I)
+        if MATERIAL_RE.search(s_low):
+            s_low = MATERIAL_RE.sub("", s_low)
         m = STAT_RE.search(s_low)
         if not m:
             continue

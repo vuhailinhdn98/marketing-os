@@ -31,7 +31,7 @@ MODEL_CACHE_TTL = 3600
 _model_cache: Dict[str, Tuple[float, List[Dict[str, Any]]]] = {}
 _cache_lock = threading.Lock()
 
-DEFAULT_TEXT_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
+DEFAULT_TEXT_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.0-flash-lite", "gemini-1.5-pro"]
 _EXCLUDE_TEXT = ("image", "tts", "audio", "live", "embedding", "robotics", "computer-use", "learnlm",
                  "gemma", "aqa", "veo", "imagen", "lyria", "omni", "thinking-exp")
 
@@ -254,7 +254,17 @@ def rank_text_models(models: List[Dict[str, Any]], preferred: str = "") -> List[
     def score(name: str) -> Tuple:
         stable = 0 if ("preview" in name or "exp" in name) else 1
         alias = 0 if "latest" in name else 1
-        ga_priority = 2 if "2.0-flash" in name and "lite" not in name else (1 if "1.5-flash" in name else 0)
+        # Ưu tiên các model có hạn mức miễn phí dồi dào và ổn định nhất (2.0-flash, 1.5-flash) lên đầu
+        if "2.0-flash" in name and "lite" not in name:
+            ga_priority = 4
+        elif "1.5-flash" in name and "8b" not in name:
+            ga_priority = 3
+        elif "2.0-flash-lite" in name or "1.5-flash-8b" in name:
+            ga_priority = 2
+        elif "1.5-pro" in name or "2.0-pro" in name:
+            ga_priority = 1
+        else:
+            ga_priority = 0
         if "flash-lite" in name:
             family = 2
         elif "flash" in name:
@@ -263,7 +273,7 @@ def rank_text_models(models: List[Dict[str, Any]], preferred: str = "") -> List[
             family = 1
         else:
             family = 0
-        return (alias, stable, ga_priority, family, _version(name))
+        return (ga_priority, stable, alias, family, _version(name))
 
     ordered = sorted(set(names), key=score, reverse=True)
     if preferred and preferred in ordered:
@@ -283,7 +293,7 @@ def pick_models(api_key: str, preferred: str = "", kind: str = "text") -> List[s
         ranked = rank_text_models(models, preferred)
         if not ranked:
             ranked = ([preferred] if preferred else []) + [m for m in DEFAULT_TEXT_MODELS if m != preferred]
-        return ranked[:4]
+        return ranked[:10]
     if kind == "image":
         names = [_short(m.get("name", "")) for m in models
                  if "image" in m.get("name", "") and "generateContent" in (m.get("supportedGenerationMethods") or [])
@@ -589,20 +599,46 @@ def generate_image(api_key: str, prompt: str, aspect_ratio: str = "1:1") -> Tupl
             gen["imageConfig"] = {"aspectRatio": aspect_ratio}
         return {"contents": [{"role": "user", "parts": [{"text": prompt}]}], "generationConfig": gen}
 
+    gemini_exc: Optional[LLMError] = None
+    if models:
+        try:
+            try:
+                model, payload = _call_with_fallback(api_key, models, body_for)
+            except LLMError as exc:
+                if exc.code == "bad_request":
+                    with_config["on"] = False
+                    model, payload = _call_with_fallback(api_key, models, body_for)
+                else:
+                    raise
+            _, _, parts = _extract(payload)
+            for part in parts:
+                inline = part.get("inlineData") or part.get("inline_data")
+                if inline and inline.get("data"):
+                    mime = inline.get("mimeType") or inline.get("mime_type") or "image/png"
+                    return base64.b64decode(inline["data"]), mime, model
+        except LLMError as exc:
+            gemini_exc = exc
+            log.warning("Gemini image failed (%s: %s), trying fallback", exc.code, exc.message)
+    else:
+        gemini_exc = LLMError("API key không có model ảnh.", "no_model")
+
+    # Dự phòng qua engine tạo ảnh AI mở Pollinations (Flux / SDXL) khi Gemini image không có hạn mức (limit: 0) hoặc chưa bật billing
     try:
-        model, payload = _call_with_fallback(api_key, models, body_for)
-    except LLMError as exc:
-        if exc.code != "bad_request":
-            raise
-        with_config["on"] = False
-        model, payload = _call_with_fallback(api_key, models, body_for)
-    _, _, parts = _extract(payload)
-    for part in parts:
-        inline = part.get("inlineData") or part.get("inline_data")
-        if inline and inline.get("data"):
-            mime = inline.get("mimeType") or inline.get("mime_type") or "image/png"
-            return base64.b64decode(inline["data"]), mime, model
-    raise LLMError("Model không trả về ảnh (có thể prompt bị từ chối).", "empty")
+        import urllib.parse
+        ratio_dims = {
+            "1:1": (1024, 1024), "4:5": (896, 1120), "9:16": (768, 1344),
+            "16:9": (1344, 768), "3:4": (864, 1152), "4:3": (1152, 864)
+        }
+        w, h = ratio_dims.get(aspect_ratio, (1024, 1024))
+        p_url = f"https://image.pollinations.ai/prompt/{urllib.parse.quote(prompt)}?width={w}&height={h}&nologo=true"
+        resp = requests.get(p_url, timeout=(10, 45))
+        if resp.status_code == 200 and resp.content and resp.content[:4] in (b"\x89PNG", b"\xff\xd8\xff\xe0", b"\xff\xd8\xff\xe1", b"RIFF"):
+            ctype = resp.headers.get("Content-Type", "image/jpeg").split(";")[0]
+            return resp.content, ctype, "pollinations-ai"
+    except Exception as e_poll:
+        log.warning("Fallback image generation error: %s", e_poll)
+
+    raise gemini_exc or LLMError("Không thể tạo ảnh.", "error")
 
 
 def start_video(api_key: str, prompt: str, aspect_ratio: str = "16:9") -> Tuple[str, str]:

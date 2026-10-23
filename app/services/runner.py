@@ -163,6 +163,25 @@ def _sources_block(sources: List[Dict[str, str]]) -> str:
     return "DANH SÁCH NGUỒN:\n" + "\n".join(f"[{i}] {s.get('title') or ''} — {s.get('url')}" for i, s in enumerate(sources, 1))
 
 
+
+def _clean_search_query(task: Task, inputs: Dict[str, Any], ctx: Dict[str, Any]) -> str:
+    brand = ctx.get("brand") or {}
+    product = (ctx.get("product") or {}).get("one_liner", "")
+    loc = inputs.get("location", "")
+    if task.id == "competitor_discovery":
+        crit = inputs.get("criteria", "")
+        base = crit or product or brand.get("industry", "") or "doanh nghiệp"
+        return f"{base} {loc}".strip()
+    if task.id == "competitor_dossier":
+        comp = inputs.get("competitor_name", "")
+        ind = brand.get("industry", "")
+        return f"{comp} {ind}".strip()
+    if task.id == "market_research":
+        obj = inputs.get("objective", "")
+        ind = brand.get("industry", "")
+        return f"{obj} {ind} {loc}".strip()
+    return f"{inputs.get('query') or loc or ''}".strip()
+
 def _research_prompt(task: Task, inputs: Dict[str, Any], ctx: Dict[str, Any]) -> str:
     brand = ctx.get("brand") or {}
     product = (ctx.get("product") or {}).get("one_liner", "")
@@ -221,7 +240,7 @@ def run_task(email: str, is_admin: bool, task_id: str, raw_inputs: Dict[str, Any
             sources: List[Dict[str, str]] = []
             queries: List[str] = []
             grounded_text = ""
-            query = _research_prompt(task, inputs, ctx).split("\n", 1)[0]
+            query = _clean_search_query(task, inputs, ctx)
             try:
                 from app.netsafe import web_search
                 web_results, _ = web_search(query, max_results=5)
@@ -259,6 +278,17 @@ def run_task(email: str, is_admin: bool, task_id: str, raw_inputs: Dict[str, Any
         result.grounded = True
         result.sources = ex.get("sources", [])
         result.search_queries = [task.title]
+    # Nếu key cá nhân hết quota trong ngày (429), thử dùng key máy chủ (nếu có cấu hình)
+    if not result.ok and result.error_code in ("quota", "unavailable") and key_source == "user":
+        server_key = config.settings.server_gemini_key
+        if server_key and server_key != key:
+            log.info("User key exhausted quota, falling back to server Gemini key")
+            server_res = llm.generate_json(server_key, system=system, prompt=base_prompt, schema=task.schema,
+                                           preferred_model=model_pref, temperature=task.temperature)
+            if server_res.ok:
+                result = server_res
+                key_source = "server_fallback"
+
     prov = result.provenance(task=task_id, key_source=key_source, context_version=ctx.get("version"), sections=task.sections)
     if not result.ok:
         return {"status": "not_generated", "provenance": prov}

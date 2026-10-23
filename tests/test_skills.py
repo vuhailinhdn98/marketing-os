@@ -412,3 +412,18 @@ def test_grounded_quota_falls_back_to_web_search(client, ready, fake, monkeypatc
     assert res["status"] == "ok"
     assert res["output"]["competitors"][0]["name"] == "Đối thủ A"
     assert res["provenance"]["grounded"] is True
+
+
+def test_media_image_fallback_on_gemini_quota_error(client, ready, fake, monkeypatch):
+    fake.fail_first = [
+        llm.LLMError("key không có hạn mức cho model này (thường cần bật billing)", "quota", retry_next_model=True, quota_kind="zero")
+    ]
+    class MockResp:
+        status_code = 200
+        content = b"\x89PNGfake_pollinations_data"
+        headers = {"Content-Type": "image/png"}
+    monkeypatch.setattr(llm.requests, "get", lambda url, timeout=None: MockResp())
+
+    job = client.post("/api/media/image", json={"prompt": "một cô gái ngồi uống cà phê ở góc phố ven đường", "aspect_ratio": "1:1"},
+                      headers=ready).json()["job"]
+    assert job["status"] == "done" and job["model"] == "pollinations-ai"

@@ -427,3 +427,43 @@ def test_media_image_fallback_on_gemini_quota_error(client, ready, fake, monkeyp
     job = client.post("/api/media/image", json={"prompt": "một cô gái ngồi uống cà phê ở góc phố ven đường", "aspect_ratio": "1:1"},
                       headers=ready).json()["job"]
     assert job["status"] == "done" and job["model"] == "pollinations-ai"
+
+
+def test_product_advantages_in_context(client, ready):
+    from app import context as ctx_mod
+    r = client.patch("/api/context", json={"patch": {"product.advantages": ["Nguyên liệu hữu cơ", "Giao hàng 15p"]}}, headers=ready).json()
+    assert r["context"]["product"]["advantages"] == ["Nguyên liệu hữu cơ", "Giao hàng 15p"]
+    rendered = ctx_mod.render_for_prompt(r["context"])
+    assert "Ưu điểm nổi bật của sản phẩm" in rendered
+    assert "Nguyên liệu hữu cơ" in rendered
+
+
+def test_competitor_dossier_with_social_and_phone(client, ready, fake):
+    def override(data, prompt):
+        data["positioning"] = "Quán cà phê truyền thống"
+        data["products"] = ["Cà phê phin"]
+        return data
+    fake.overrides["Hồ sơ đối thủ"] = override
+    res = client.post("/api/skills/competitor_dossier/run", json={"inputs": {
+        "competitor_name": "Quán Cà Phê X",
+        "website": "https://caphex.vn",
+        "social": "facebook.com/caphex",
+        "phone": "0901234567",
+        "notes": "Quán đông khách sáng"
+    }}, headers=ready).json()
+    assert res["status"] == "ok"
+    # Lưu vào database đối thủ
+    client.post(f"/api/skills/runs/{res['run_id']}/to-competitors", headers=ready)
+    comps = client.get("/api/competitors", headers=ready).json()["competitors"]
+    target = next((c for c in comps if c["name"] == "Quán Cà Phê X"), None)
+    assert target is not None
+    assert target["phone"] == "0901234567"
+    assert target["social"] == "facebook.com/caphex"
+    assert target["website"] == "https://caphex.vn"
+
+
+def test_login_unknown_email_helpful_message(client):
+    res = client.post("/api/auth/login", json={"email": "nonexistent_email_12345@gmail.com", "password": "Password123"})
+    assert res.status_code == 401
+    assert "chưa tồn tại" in res.json()["detail"].lower()
+

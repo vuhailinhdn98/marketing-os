@@ -22,6 +22,8 @@ FIELDS: List[Tuple[str, str, str, str, int, str]] = [
     ("brand.industry", "Ngành", "Bạn kinh doanh ngành gì?", "Ví dụ: Quán cà phê take-away", 1, "text"),
     ("product.one_liner", "Sản phẩm (1 câu)", "Sản phẩm/dịch vụ giúp khách làm được gì? Gói trong một câu.",
      "Ví dụ: Cà phê muối mang đi trong 3 phút cho dân văn phòng quanh Nguyễn Phước Lan", 1, "text"),
+    ("product.advantages", "Ưu điểm nổi bật của sản phẩm", "Những ưu điểm, tính năng, điểm vượt trội của sản phẩm/dịch vụ của bạn là gì?",
+     "Mỗi dòng một ưu điểm. Ví dụ: Nguyên liệu hữu cơ chứng nhận; giao hàng 15 phút", 1, "list"),
     ("product.shelf_keywords", "Từ khóa khách dùng để tìm", "Khách thường gõ/tìm bạn bằng những từ nào?",
      "Mỗi dòng một từ khóa, ví dụ: cà phê muối đà nẵng", 2, "list"),
     ("product.business_model", "Mô hình kinh doanh", "Bạn bán theo mô hình nào?", "B2C, D2C, B2B, bán sỉ…", 2, "text"),
@@ -156,6 +158,7 @@ def from_legacy_profile(p: Dict[str, Any]) -> Dict[str, Any]:
         ("brand_voice", "brand_voice.tone", "text"), ("phone_hotline", "brand.hotline", "text"),
         ("website_url", "brand.website", "text"), ("social_channels", "brand.social_links", "list"),
         ("usp_advantages", "differentiation.only_we_have", "text"), ("market_location", "market.location", "text"),
+        ("usp_advantages", "product.advantages", "list"),
     ]
     for key, path, kind in mapping:
         val = take(key)

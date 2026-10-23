@@ -72,16 +72,19 @@ def save_from_discovery(owner: str, competitors: List[Dict[str, Any]], sources: 
     return saved
 
 
-def save_dossier(owner: str, name: str, markdown: str, provenance: Dict[str, Any], website: str = "") -> Dict[str, Any]:
+def save_dossier(owner: str, name: str, markdown: str, provenance: Dict[str, Any], website: str = "", phone: str = "", social: str = "") -> Dict[str, Any]:
     owner = normalize_email(owner)
     existing = one("SELECT id FROM discovered_competitors WHERE user_email = ? AND LOWER(name) = LOWER(?)", (owner, name))
     if existing:
         comp_id = existing["id"]
-        execute("UPDATE discovered_competitors SET battlecard_content = ?, provenance_json = ?, website = COALESCE(NULLIF(?, ''), website), "
-                "scanned_at = CURRENT_TIMESTAMP WHERE id = ?", (markdown, dumps(provenance), website, comp_id))
+        execute("UPDATE discovered_competitors SET battlecard_content = ?, provenance_json = ?, "
+                "website = COALESCE(NULLIF(?, ''), website), phone = COALESCE(NULLIF(?, ''), phone), "
+                "social = COALESCE(NULLIF(?, ''), social), scanned_at = CURRENT_TIMESTAMP WHERE id = ?",
+                (markdown, dumps(provenance), website[:300], phone[:50], social[:300], comp_id))
     else:
-        comp_id = execute("INSERT INTO discovered_competitors (user_email, name, website, battlecard_content, provenance_json, is_manual, scanned_at) "
-                          "VALUES (?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)", (owner, name[:200], website[:300], markdown, dumps(provenance)))
+        comp_id = execute("INSERT INTO discovered_competitors (user_email, name, website, phone, social, battlecard_content, provenance_json, is_manual, scanned_at) "
+                          "VALUES (?, ?, ?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP)",
+                          (owner, name[:200], website[:300], phone[:50], social[:300], markdown, dumps(provenance)))
     return get_competitor(owner, comp_id)  # type: ignore[return-value]
 
 

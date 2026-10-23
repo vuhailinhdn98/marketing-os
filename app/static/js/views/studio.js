@@ -246,6 +246,9 @@
       case 'weekly_loop':
         a.push('<button type="button" class="btn-soft btn-sm" data-act="to-experiment"><i class="fa-solid fa-flask"></i> Tạo thử nghiệm tuần tới</button>');
         break;
+      case 'market_research':
+        a.push('<a href="#/studio/competitor_discovery" class="btn-soft btn-sm"><i class="fa-solid fa-users-viewfinder"></i> Tiếp tục: Rà soát đối thủ từ thị trường này</a>');
+        break;
       case 'competitor_discovery':
         a.push('<button type="button" class="btn-soft btn-sm" data-act="to-competitors"><i class="fa-solid fa-users-viewfinder"></i> Lưu vào danh sách đối thủ</button>');
         break;

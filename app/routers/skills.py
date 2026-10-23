@@ -135,7 +135,8 @@ def to_competitors(run_id: int, user: CurrentUser = Depends(require_user)) -> Di
         return {"saved": n}
     if r["task"] == "competitor_dossier":
         comp = competitors.save_dossier(user.email, r["inputs"].get("competitor_name", ""), r["markdown"], r["provenance"],
-                                        r["inputs"].get("website", ""))
+                                        website=r["inputs"].get("website", ""), phone=r["inputs"].get("phone", ""),
+                                        social=r["inputs"].get("social", ""))
         return {"competitor": comp}
     raise HTTPException(400, "Kết quả này không phải dữ liệu đối thủ.")
 

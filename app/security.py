@@ -191,7 +191,10 @@ def login(email: str, password: str, ip: str, user_agent: str) -> Tuple[dict, st
     email = normalize_email(email)
     check_rate_limit(email, ip)
     user = get_user(email)
-    if not user or not user.get("password_hash") or not verify_password(password, user["password_hash"]):
+    if not user:
+        record_failure(email, ip)
+        raise AuthError("Tài khoản chưa tồn tại. Vui lòng chuyển sang tab 'Tạo tài khoản' để đăng ký.", 401)
+    if not user.get("password_hash") or not verify_password(password, user["password_hash"]):
         record_failure(email, ip)
         raise AuthError("Email hoặc mật khẩu không đúng.", 401)
     clear_failures(email, ip)

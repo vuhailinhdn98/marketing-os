@@ -18,13 +18,13 @@ def _ua(request: Request) -> str:
     return request.headers.get("user-agent", "")[:300]
 
 
-def _sync_sheet(background: BackgroundTasks, user: dict) -> None:
+def _sync_sheet(background: BackgroundTasks, user: dict, ip: str = "", ua: str = "") -> None:
     url = get_app_config("GOOGLE_SHEET_WEBHOOK_URL", "")
     if url:
         from app.google_sheets import dispatch_login_to_google_sheet
         background.add_task(dispatch_login_to_google_sheet, url, {
             "email": user["email"], "name": user.get("name", ""), "login_count": user.get("login_count", 1),
-            "ip_address": "", "user_agent": "", "last_login": user.get("last_login", "")})
+            "ip_address": ip, "user_agent": ua, "last_login": user.get("last_login", "")})
 
 
 @router.get("/config")
@@ -35,24 +35,27 @@ def auth_config() -> Dict[str, Any]:
 
 @router.post("/register")
 def register(request: Request, background: BackgroundTasks, body: Dict[str, Any] = Body(...)) -> Dict[str, Any]:
-    security.check_rate_limit(str(body.get("email", "")), client_ip(request))
+    ip, ua = client_ip(request), _ua(request)
+    security.check_rate_limit(str(body.get("email", "")), ip)
     user = security.register(str(body.get("email", "")), str(body.get("password", "")), str(body.get("name", "")))
-    user, token = security.login(user["email"], str(body.get("password", "")), client_ip(request), _ua(request))
-    _sync_sheet(background, user)
+    user, token = security.login(user["email"], str(body.get("password", "")), ip, ua)
+    _sync_sheet(background, user, ip, ua)
     return {"token": token, "user": public_user(user)}
 
 
 @router.post("/login")
 def login(request: Request, background: BackgroundTasks, body: Dict[str, Any] = Body(...)) -> Dict[str, Any]:
-    user, token = security.login(str(body.get("email", "")), str(body.get("password", "")), client_ip(request), _ua(request))
-    _sync_sheet(background, user)
+    ip, ua = client_ip(request), _ua(request)
+    user, token = security.login(str(body.get("email", "")), str(body.get("password", "")), ip, ua)
+    _sync_sheet(background, user, ip, ua)
     return {"token": token, "user": public_user(user)}
 
 
 @router.post("/google")
 def login_google(request: Request, background: BackgroundTasks, body: Dict[str, Any] = Body(...)) -> Dict[str, Any]:
-    user, token = security.login_google(str(body.get("credential", "")), client_ip(request), _ua(request))
-    _sync_sheet(background, user)
+    ip, ua = client_ip(request), _ua(request)
+    user, token = security.login_google(str(body.get("credential", "")), ip, ua)
+    _sync_sheet(background, user, ip, ua)
     return {"token": token, "user": public_user(user)}
 
 

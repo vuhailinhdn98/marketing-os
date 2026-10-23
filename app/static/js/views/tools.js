@@ -61,7 +61,16 @@
       },
       dossier: (btn) => {
         const x = comps.find((k) => String(k.id) === btn.dataset.id);
-        App.state.prefill = { task: 'competitor_dossier', inputs: { competitor_name: x.name, website: x.website || '', notes: x.notes || '' } };
+        App.state.prefill = {
+          task: 'competitor_dossier',
+          inputs: {
+            competitor_name: x.name,
+            website: x.website || '',
+            social: x.social || '',
+            phone: x.phone || '',
+            notes: x.notes || '',
+          }
+        };
         App.go('studio', 'competitor_dossier');
       },
       legacy: (btn) => {
@@ -80,7 +89,9 @@
           <div class="flex flex-wrap gap-1.5 mt-1"><span class="chip chip-mute">${esc(x.competitor_type || 'Trực tiếp')}</span>${x.is_manual ? '<span class="chip chip-mute">Nhập tay</span>' : '<span class="chip chip-info">Từ tìm kiếm</span>'}${x.battlecard_content ? '<span class="chip chip-ok">Có battlecard</span>' : ''}</div></div>
         <button type="button" class="text-slate-500 hover:text-rose-400" data-act="del" data-id="${x.id}" aria-label="Xóa"><i class="fa-regular fa-trash-can"></i></button>
       </div>
-      ${x.website ? `<a class="text-xs text-sky-400 break-all block mt-2" href="${esc(/^https?:\/\//.test(x.website) ? x.website : 'https://' + x.website)}" target="_blank" rel="noopener noreferrer">${esc(x.website)}</a>` : ''}
+      ${x.website ? `<a class="text-xs text-sky-400 break-all block mt-2" href="${esc(/^https?:\/\//.test(x.website) ? x.website : 'https://' + x.website)}" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-globe"></i> ${esc(x.website)}</a>` : ''}
+      ${x.social ? `<a class="text-xs text-sky-400 break-all block mt-1" href="${esc(/^https?:\/\//.test(x.social) ? x.social : 'https://' + x.social)}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-facebook"></i> ${esc(x.social)}</a>` : ''}
+      ${x.phone ? `<div class="text-xs text-slate-300 mt-1"><i class="fa-solid fa-phone"></i> ${esc(x.phone)}</div>` : ''}
       ${x.core_products ? `<div class="text-xs text-slate-300 mt-1">Bán: ${esc(x.core_products)}</div>` : ''}
       ${x.price_segment ? `<div class="text-xs text-slate-400">Giá: ${esc(x.price_segment)}</div>` : ''}
       ${x.notes ? `<div class="text-xs text-slate-400 mt-1">${esc(x.notes)}</div>` : ''}
@@ -99,9 +110,10 @@
       <div><label class="lbl" for="cp-name">Tên đối thủ <span class="text-rose-400">*</span></label><input id="cp-name" name="name" class="inp"></div>
       <div class="grid sm:grid-cols-2 gap-3">
         <div><label class="lbl" for="cp-type">Loại</label><select id="cp-type" name="competitor_type" class="sel">${TYPES.map((t) => `<option>${t}</option>`).join('')}</select></div>
-        <div><label class="lbl" for="cp-web">Website/fanpage</label><input id="cp-web" name="website" class="inp"></div>
+        <div><label class="lbl" for="cp-web">Website/fanpage</label><input id="cp-web" name="website" class="inp" placeholder="https://..."></div>
+        <div><label class="lbl" for="cp-social">Mạng xã hội (fanpage, TikTok...)</label><input id="cp-social" name="social" class="inp" placeholder="facebook.com/... hoặc tiktok.com/@..."></div>
+        <div><label class="lbl" for="cp-phone">SĐT</label><input id="cp-phone" name="phone" class="inp" placeholder="0905..."></div>
         <div><label class="lbl" for="cp-price">Phân khúc giá</label><input id="cp-price" name="price_segment" class="inp" placeholder="25–45k/ly"></div>
-        <div><label class="lbl" for="cp-phone">SĐT</label><input id="cp-phone" name="phone" class="inp"></div>
       </div>
       <div><label class="lbl" for="cp-prod">Sản phẩm chính</label><input id="cp-prod" name="core_products" class="inp"></div>
       <div><label class="lbl" for="cp-notes">Ghi chú (điều bạn quan sát được)</label><textarea id="cp-notes" name="notes" class="txt" rows="3"></textarea></div>`;

@@ -191,11 +191,16 @@ def _research_prompt(task: Task, inputs: Dict[str, Any], ctx: Dict[str, Any]) ->
                 "Tìm: số liệu thị trường và khách hàng có nguồn (ghi năm), xu hướng gần đây, doanh nghiệp đang hoạt động trong khu vực, "
                 "mức giá tham khảo, quy định pháp lý liên quan. Ghi rõ nguồn cho từng con số. Không có số liệu thì nói không tìm thấy.")
     if task.id == "competitor_discovery":
-        return (f"Tìm các doanh nghiệp đang bán {product} ({brand.get('industry', '')}) tại {inputs.get('location')}. "
-                f"Tiêu chí: {inputs.get('criteria') or 'cùng nhóm khách'}. Liệt kê tên, website/fanpage, sản phẩm chính, mức giá nếu thấy. "
-                "Chỉ nêu doanh nghiệp có thật xuất hiện trong kết quả tìm kiếm.")
+        return (f"Tìm tất cả các doanh nghiệp đang bán {product} ({brand.get('industry', '')}) tại {inputs.get('location')}. "
+                f"Tiêu chí: {inputs.get('criteria') or 'cùng nhóm khách'}. Liệt kê đầy đủ mọi đối thủ cạnh tranh có thật tìm thấy được (có bao nhiêu liệt kê bấy nhiêu, không tự giới hạn 3-4 bên): tên, website/fanpage, sản phẩm chính, mức giá nếu thấy. "
+                "Chỉ nêu doanh nghiệp có thật xuất hiện trong kết quả tìm kiếm, không bịa đặt đối thủ.")
     if task.id == "competitor_dossier":
-        return (f"Tìm thông tin về {inputs.get('competitor_name')} ({inputs.get('website') or 'chưa có website'}), ngành {brand.get('industry', '')}: "
+        extra_info = []
+        if inputs.get('website'): extra_info.append(f"website: {inputs['website']}")
+        if inputs.get('social'): extra_info.append(f"mạng xã hội: {inputs['social']}")
+        if inputs.get('phone'): extra_info.append(f"SĐT: {inputs['phone']}")
+        info_str = f" ({', '.join(extra_info)})" if extra_info else ""
+        return (f"Tìm thông tin về {inputs.get('competitor_name')}{info_str}, ngành {brand.get('industry', '')}: "
                 "định vị, sản phẩm, giá, kênh bán, đánh giá và phàn nàn của khách (ghi rõ nguồn từng ý).")
     return f"Tìm thông tin liên quan: {inputs}"
 

@@ -8,7 +8,7 @@ from typing import Any, Callable, Dict, List
 
 from app import vn_calendar
 from app.context import get_path
-from app.database import normalize_email, rows
+from app.database import loads, normalize_email, one, rows
 from app.netsafe import FetchError, extract_site_info, normalize_url, safe_fetch
 from app.services import analytics, leads
 
@@ -132,12 +132,32 @@ def known_competitors(owner: str, ctx: Dict[str, Any]) -> List[str]:
 
 def load_discovery(owner: str, inputs: Dict[str, Any], ctx: Dict[str, Any]) -> Dict[str, Any]:
     known = known_competitors(owner, ctx)
-    return {"prompt_text": "ĐỐI THỦ CHỦ DOANH NGHIỆP ĐÃ BIẾT: " + (", ".join(known) if known else "chưa có"), "known_competitors": known}
+    parts = []
+    if known:
+        parts.append("ĐỐI THỦ CHỦ DOANH NGHIỆP ĐÃ BIẾT HOẶC ĐÃ LƯU: " + ", ".join(known) + ". Hãy đối chiếu các đối thủ này và rà soát thêm mọi đối thủ cạnh tranh khác trên thị trường.")
+    else:
+        parts.append("ĐỐI THỦ CHỦ DOANH NGHIỆP ĐÃ BIẾT: Chưa có (hãy rà soát toàn diện trên thị trường).")
+    last_market_run = one("SELECT output_json FROM skill_runs WHERE user_email = ? AND task = 'market_research' AND status = 'ok' ORDER BY id DESC LIMIT 1", (normalize_email(owner),))
+    if last_market_run and last_market_run.get("output_json"):
+        try:
+            m_out = loads(last_market_run["output_json"], {})
+            trends = m_out.get("trends") or []
+            market_loc = (ctx.get("market") or {}).get("location") or inputs.get("location") or ""
+            trend_str = "; ".join([t.get("trend", "") for t in trends[:3] if isinstance(t, dict)])
+            if trend_str:
+                parts.append(f"BỐI CẢNH THỊ TRƯỜNG ĐÃ PHÂN TÍCH ({market_loc}): Xu hướng chính: {trend_str}. Rà soát các đối thủ phù hợp với bối cảnh thị trường này.")
+        except Exception:
+            pass
+    return {"prompt_text": "\n".join(parts), "known_competitors": known}
 
 
 def load_dossier(owner: str, inputs: Dict[str, Any], ctx: Dict[str, Any]) -> Dict[str, Any]:
     url = normalize_url(str(inputs.get("website") or ""))
     out: Dict[str, Any] = {"prompt_text": "", "site": None}
+    if inputs.get("social"):
+        out["prompt_text"] += f"MẠNG XÃ HỘI ĐỐI THỦ: {inputs['social']}\n"
+    if inputs.get("phone"):
+        out["prompt_text"] += f"SỐ ĐIỆN THOẠI ĐỐI THỦ: {inputs['phone']}\n"
     if inputs.get("notes"):
         out["prompt_text"] += f"CHỦ DOANH NGHIỆP GHI CHÚ VỀ ĐỐI THỦ: {inputs['notes']}\n"
     if url:

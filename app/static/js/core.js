@@ -186,10 +186,10 @@
     wrap.innerHTML = `<div class="modal ${wide ? 'sm:max-w-5xl' : ''}" role="dialog" aria-modal="true" aria-label="${esc(title)}">
       <div class="sticky top-0 bg-slate-900 border-b border-slate-800 px-5 py-3 flex items-center gap-3 z-10">
         <h3 class="font-bold flex-1 truncate">${esc(title)}</h3>
-        <button type="button" data-close class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
+        <button type="button" data-close class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-sm" aria-label="Đóng"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div class="p-5" data-body></div>
-      ${actions.length ? '<div class="px-5 pb-5 flex flex-wrap gap-2 justify-end" data-actions></div>' : ''}
+      <div class="p-5 flex-1" data-body></div>
+      ${actions.length ? '<div class="flex flex-wrap gap-2 justify-end" data-actions></div>' : ''}
     </div>`;
     const bodyEl = wrap.querySelector('[data-body]');
     if (typeof body === 'string') bodyEl.innerHTML = body; else if (body) bodyEl.appendChild(body);

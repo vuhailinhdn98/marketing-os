@@ -2,7 +2,7 @@
 <html lang="vi" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="color-scheme" content="dark">
   <title>Marketing OS</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230ea5e9'/%3E%3Cpath d='M16 44V20l16 14 16-14v24' stroke='white' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
@@ -74,12 +74,12 @@
 
     <div class="flex-1 min-w-0 flex flex-col">
       <header class="sticky top-0 z-30 bg-slate-950/90 backdrop-blur border-b border-slate-800 px-4 md:px-6 py-3 flex items-center gap-3">
-        <button type="button" class="md:hidden w-9 h-9 rounded-lg bg-slate-800 text-slate-200" data-global="drawer" aria-label="Mở menu"><i class="fa-solid fa-bars"></i></button>
+        <button type="button" class="md:hidden w-10 h-10 rounded-lg bg-slate-800 text-slate-200 flex items-center justify-center text-base" data-global="drawer" aria-label="Mở menu"><i class="fa-solid fa-bars"></i></button>
         <h2 id="view-title" class="font-bold text-base md:text-lg truncate flex-1">Tổng quan</h2>
         <span id="ai-badge" class="hidden sm:inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border"></span>
       </header>
       <div id="banner" class="hidden"></div>
-      <main id="view" class="flex-1 p-4 md:p-6 pb-24 md:pb-8 max-w-7xl w-full mx-auto"></main>
+      <main id="view" class="flex-1 p-4 md:p-6 pb-28 md:pb-8 max-w-7xl w-full mx-auto"></main>
     </div>
 
     <!-- Điều hướng di động -->
@@ -89,7 +89,7 @@
       <div class="absolute left-0 top-0 bottom-0 w-72 bg-slate-900 border-r border-slate-800 flex flex-col">
         <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
           <span class="font-bold">Marketing OS</span>
-          <button type="button" data-global="drawer-close" class="w-8 h-8 rounded-lg bg-slate-800" aria-label="Đóng menu"><i class="fa-solid fa-xmark"></i></button>
+          <button type="button" data-global="drawer-close" class="w-9 h-9 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center" aria-label="Đóng menu"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <nav id="drawer-nav" class="flex-1 overflow-y-auto p-3 space-y-0.5 text-sm"></nav>
         <button type="button" data-global="logout" class="m-3 btn-ghost justify-center"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>

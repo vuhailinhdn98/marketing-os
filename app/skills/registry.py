@@ -783,7 +783,7 @@ _add(Task(
     required_context=["brand.industry", "product.one_liner"],
     schema=O({"competitors": A(O({"name": S, "type": E("Trực tiếp", "Thứ cấp", "Gián tiếp"), "website": S, "what_they_sell": S,
                                    "price_info": S, "source_ids": A(I)}))}),
-    instructions="Chỉ liệt kê doanh nghiệp xuất hiện trong nguồn tìm kiếm. Không ghi điểm yếu. Không đủ nguồn thì trả danh sách ngắn.",
+    instructions="Tìm kiếm và liệt kê toàn bộ các đối thủ cạnh tranh có thật xuất hiện trong nguồn tìm kiếm tại khu vực (có bao nhiêu liệt kê bấy nhiêu, không tự giới hạn 3 hay 4 bên). Mỗi đối thủ phải có nguồn chứng minh. Không ghi điểm yếu. Không bịa đặt đối thủ.",
     grounded=True, extras="discovery", post=_post_discovery, temperature=0.2,
 ))
 
@@ -791,7 +791,13 @@ _add(Task(
     id="competitor_dossier", group="Chiến lược", module="Research", title="Hồ sơ đối thủ & battlecard trung thực",
     description="Điểm mạnh/yếu có nguồn, nơi mình thắng dựa trên khác biệt thật, kịch bản trả lời khi khách so sánh.",
     sections=["1", "5.4", "14"],
-    inputs=[inp("competitor_name", "Tên đối thủ", "text", True), inp("website", "Website", "text"), inp("notes", "Bạn biết gì về họ", "textarea")],
+    inputs=[
+        inp("competitor_name", "Tên đối thủ", "text", True),
+        inp("website", "Website", "text"),
+        inp("social", "Mạng xã hội (fanpage/TikTok)", "text"),
+        inp("phone", "Số điện thoại", "text"),
+        inp("notes", "Bạn biết gì về họ", "textarea"),
+    ],
     required_context=["product.one_liner", "differentiation.only_we_have"],
     schema=O({"positioning": S, "products": A(S), "price_info": POINT, "channels": A(S),
               "strengths": A(POINT), "weaknesses": A(POINT), "customer_complaints": A(POINT),

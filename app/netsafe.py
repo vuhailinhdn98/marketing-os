@@ -150,27 +150,97 @@ def extract_site_info(html: str) -> Dict[str, object]:
 
 
 def web_search(query: str, max_results: int = 5) -> Tuple[List[Dict[str, str]], Optional[str]]:
-    """Trả về (kết_quả, lỗi). Lỗi là None khi tìm kiếm chạy được (kể cả khi 0 kết quả)."""
+    """Trả về (kết_quả, lỗi). Lỗi là None khi tìm kiếm chạy được (kể cả khi 0 kết quả).
+    Sử dụng cơ chế đa tầng (Yandex qua ddgs -> Bing HTML -> DuckDuckGo) để đảm bảo không bị chặn
+    trên môi trường máy chủ đám mây (Render, Railway, VPS) hoặc địa chỉ IP trung tâm dữ liệu.
+    """
     query = re.sub(r"\s+", " ", (query or "")).strip()
     if not query:
         return [], "Câu tìm kiếm rỗng."
+
+    results: List[Dict[str, str]] = []
+    seen_urls: set = set()
+
+    # Tầng 1: Thử Yandex thông qua ddgs.engines.yandex (hỗ trợ tiếng Việt và IP máy chủ rất tốt, không bị 202/Cloudflare)
     try:
-        from ddgs import DDGS  # gói mới (đổi tên từ duckduckgo_search)
-    except ImportError:
+        from ddgs.engines.yandex import Yandex
+        y = Yandex()
+        raw_yandex = y.search(query) or []
+        for item in raw_yandex:
+            href = getattr(item, "href", "") or ""
+            if href and href not in seen_urls and not href.startswith("https://yandex.") and not href.startswith("http://yandex."):
+                seen_urls.add(href)
+                title = (getattr(item, "title", "") or "")[:200]
+                body = (getattr(item, "body", "") or "")[:400]
+                results.append({"title": title, "snippet": body, "url": href})
+                if len(results) >= max_results:
+                    return results, None
+    except Exception as exc:
+        log.debug("Yandex search error: %s", exc)
+
+    # Tầng 2: Thử Bing HTML search scraper (phục hồi URL thực từ redirect a1)
+    if len(results) < max_results:
         try:
-            from duckduckgo_search import DDGS  # type: ignore
+            import urllib.parse
+            import base64
+            from bs4 import BeautifulSoup
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+                "Accept-Language": "vi-VN,vi;q=0.9,en;q=0.8",
+            }
+            b_url = "https://www.bing.com/search?q=" + urllib.parse.quote(query)
+            resp = requests.get(b_url, headers=headers, timeout=6)
+            if resp.status_code == 200:
+                soup = BeautifulSoup(resp.text, "html.parser")
+                for li in soup.find_all("li", class_="b_algo"):
+                    h2 = li.find("h2")
+                    if not h2:
+                        continue
+                    a = h2.find("a")
+                    if not a or not a.get("href"):
+                        continue
+                    href = a["href"]
+                    if "/ck/a?!" in href and "&u=" in href:
+                        m = re.search(r"[?&]u=a1([a-zA-Z0-9_-]+)", href)
+                        if m:
+                            try:
+                                pad = m.group(1) + "=" * (-len(m.group(1)) % 4)
+                                href = base64.urlsafe_b64decode(pad).decode("utf-8", errors="ignore")
+                            except Exception:
+                                pass
+                    if href and href not in seen_urls and not href.startswith("https://www.bing."):
+                        seen_urls.add(href)
+                        p = li.find("p")
+                        snippet = p.get_text(" ", strip=True)[:400] if p else ""
+                        results.append({"title": h2.get_text(" ", strip=True)[:200], "snippet": snippet, "url": href})
+                        if len(results) >= max_results:
+                            break
+        except Exception as exc:
+            log.debug("Bing fallback search error: %s", exc)
+
+    # Tầng 3: Thử DuckDuckGo qua gói ddgs/duckduckgo_search tiêu chuẩn
+    if len(results) < max_results:
+        try:
+            from ddgs import DDGS
         except ImportError:
-            return [], "Chưa cài gói tìm kiếm `ddgs` (pip install ddgs)."
-    try:
-        with DDGS() as engine:
-            raw = list(engine.text(query, max_results=max_results, region="vn-vi"))
-    except Exception as exc:  # thư viện bên thứ ba ném nhiều loại lỗi
-        log.warning("web_search failed: %s", exc)
-        return [], f"Tìm kiếm web lỗi: {exc.__class__.__name__}"
-    results = []
-    for item in raw:
-        url = item.get("href") or item.get("url") or ""
-        if not url:
-            continue
-        results.append({"title": item.get("title", "")[:200], "snippet": item.get("body", "")[:400], "url": url})
-    return results, None
+            try:
+                from duckduckgo_search import DDGS  # type: ignore
+            except ImportError:
+                DDGS = None  # type: ignore
+        if DDGS is not None:
+            try:
+                with DDGS() as engine:
+                    raw = list(engine.text(query, max_results=max_results, region="vn-vi"))
+                    for item in raw:
+                        url = item.get("href") or item.get("url") or ""
+                        if url and url not in seen_urls:
+                            seen_urls.add(url)
+                            results.append({"title": item.get("title", "")[:200], "snippet": item.get("body", "")[:400], "url": url})
+                            if len(results) >= max_results:
+                                break
+            except Exception as exc:
+                log.debug("DDGS standard search error: %s", exc)
+
+    if results:
+        return results[:max_results], None
+    return [], "Không tìm thấy kết quả từ các công cụ tìm kiếm."

@@ -178,3 +178,82 @@ def test_password_policy_and_rate_limiting(client):
     r_blocked = client.post("/api/auth/login", json={"email": "brute_target@example.com", "password": "WrongPassword"})
     assert r_blocked.status_code == 429
     assert "thử lại sau 15 phút" in r_blocked.json()["detail"].lower()
+
+
+def test_web_search_multi_engine_and_resilience():
+    """Kiểm tra tìm kiếm web đa tầng: Không bao giờ trả lỗi rỗng hoặc crash với từ khóa thực tế."""
+    from app.netsafe import web_search
+    # Truy vấn rỗng
+    empty_res, err = web_search("")
+    assert empty_res == []
+    assert "rỗng" in err.lower()
+
+    # Truy vấn thực tế cho ngành chế tạo máy tại Đà Nẵng
+    res, err = web_search("máy uốn thép Đà Nẵng", max_results=3)
+    assert len(res) > 0
+    assert err is None
+    for item in res:
+        assert item["title"] != ""
+        assert item["url"].startswith("http")
+
+
+def test_clean_search_query_market_research_meta_stripping():
+    """Kiểm tra làm sạch câu truy vấn nghiên cứu: Bóc tách meta-prompt 'tìm hiểu ngành', lấy đúng từ khóa ngành + vị trí."""
+    from app.services.runner import _clean_search_query
+    from app.skills.registry import get_task
+
+    task = get_task("market_research")
+    ctx = {
+        "brand": {"industry": "chế tạo máy uốn thép"},
+        "product": {"one_liner": "máy uốn đai sắt tự động CNC"}
+    }
+    # Khi người dùng nhập meta-prompt "tìm hiểu ngành"
+    inputs = {"location": "đà nẵng", "objective": "tìm hiểu ngành"}
+    q = _clean_search_query(task, inputs, ctx)
+    assert "tìm hiểu ngành" not in q.lower()
+    assert "chế tạo máy uốn thép" in q.lower()
+    assert "đà nẵng" in q.lower()
+
+    # Khi người dùng nhập câu hỏi nghiên cứu cụ thể
+    inputs2 = {"location": "đà nẵng", "objective": "tiềm năng mở rộng xưởng cơ khí"}
+    q2 = _clean_search_query(task, inputs2, ctx)
+    assert "tiềm năng mở rộng xưởng cơ khí" in q2.lower()
+    assert "đà nẵng" in q2.lower()
+
+
+def test_generate_grounded_model_filtering():
+    """Kiểm tra generate_grounded: Tự động loại bỏ model không hỗ trợ search grounding (8b, lite) và ưu tiên 2.0-flash."""
+    from app import llm
+
+    call_models = []
+    def fake_post(api_key, path, body, timeout=120):
+        call_models.append(path)
+        return {
+            "candidates": [{
+                "content": {"parts": [{"text": "Báo cáo tìm kiếm"}]},
+                "groundingMetadata": {
+                    "groundingChunks": [{"web": {"uri": "https://example.com/source", "title": "Example"}}],
+                    "webSearchQueries": ["máy uốn thép"]
+                }
+            }]
+        }
+
+    # Giả lập danh sách model có cả 1.5-flash-8b, 2.0-flash-lite, 2.0-flash, 1.5-pro
+    old_post = llm._post
+    old_list = llm.list_models
+    try:
+        llm._post = fake_post
+        llm.list_models = lambda key, force=False: [
+            {"name": "models/gemini-1.5-flash-8b", "supportedGenerationMethods": ["generateContent"]},
+            {"name": "models/gemini-2.0-flash-lite", "supportedGenerationMethods": ["generateContent"]},
+            {"name": "models/gemini-2.0-flash", "supportedGenerationMethods": ["generateContent"]},
+            {"name": "models/gemini-1.5-pro", "supportedGenerationMethods": ["generateContent"]},
+        ]
+        res = llm.generate_grounded("test-key", system="sys", prompt="prompt", preferred_model="gemini-1.5-flash-8b")
+        assert res.ok is True
+        assert res.grounded is True
+        # Model được gọi đầu tiên phải là gemini-2.0-flash, KHÔNG PHẢI 8b hay lite
+        assert call_models[0] == "models/gemini-2.0-flash:generateContent"
+    finally:
+        llm._post = old_post
+        llm.list_models = old_list

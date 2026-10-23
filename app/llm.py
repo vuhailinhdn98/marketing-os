@@ -547,8 +547,22 @@ def generate_grounded(api_key: str, *, system: str, prompt: str, preferred_model
     except LLMError as exc:
         return LLMResult(ok=False, error=exc.message, error_code=exc.code)
 
+    # Google Search Grounding chỉ hỗ trợ trên các model đầy đủ (2.0-flash, 2.5-flash, 1.5-flash, 1.5-pro).
+    # Các model thu gọn (flash-8b, flash-lite) hay thinking-exp không hỗ trợ và sẽ trả HTTP 400.
+    grounding_models = [m for m in models if "8b" not in m and "lite" not in m and "thinking" not in m]
+    if not grounding_models:
+        grounding_models = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
+    if "gemini-2.0-flash" in grounding_models:
+        grounding_models.remove("gemini-2.0-flash")
+        grounding_models.insert(0, "gemini-2.0-flash")
+
+    use_legacy_tool = {"on": False}
+
     def body_for(_model: str) -> Dict[str, Any]:
-        tool = {"google_search": {}} if _version(_model) >= 2.0 or not _version(_model) else {"google_search_retrieval": {"dynamic_retrieval_config": {"mode": "MODE_DYNAMIC"}}}
+        if use_legacy_tool["on"]:
+            tool = {"google_search_retrieval": {"dynamic_retrieval_config": {"mode": "MODE_DYNAMIC"}}}
+        else:
+            tool = {"google_search": {}}
         gen: Dict[str, Any] = {"temperature": temperature, "maxOutputTokens": min(12288, output_limit(api_key, _model))}
         if "2.5" in _model or "thinking" in _model:
             gen["thinkingConfig"] = {"thinkingBudget": 0}
@@ -558,7 +572,14 @@ def generate_grounded(api_key: str, *, system: str, prompt: str, preferred_model
                 "generationConfig": gen}
 
     try:
-        model, payload = _call_with_fallback(api_key, models, body_for)
+        try:
+            model, payload = _call_with_fallback(api_key, grounding_models, body_for)
+        except LLMError as exc:
+            if exc.code == "bad_request" and not use_legacy_tool["on"]:
+                use_legacy_tool["on"] = True
+                model, payload = _call_with_fallback(api_key, grounding_models, body_for)
+            else:
+                raise
         text, meta, _ = _extract(payload)
         sources, queries = _grounding(meta)
         return LLMResult(ok=True, text=text, model=model, grounded=bool(sources), sources=sources, search_queries=queries)

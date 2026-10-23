@@ -62,8 +62,8 @@ BASE_ROLE = (
 )
 
 OUTPUT_RULES = """QUY TẮC BẮT BUỘC CHO MỌI ĐẦU RA:
-1. Chỉ dùng thông tin có trong HỒ SƠ BỐI CẢNH và DỮ LIỆU ĐẦU VÀO. Không bịa số liệu, khách hàng, review, testimonial, giải thưởng, cam kết, chính sách, đối thủ hay điểm yếu của đối thủ.
-2. Thiếu thông tin cần thiết: viết [THIẾU DỮ LIỆU] tại chỗ đó và liệt kê điều cần hỏi trong trường "missing_info".
+1. Trung thực và thực tế: Không bịa đặt cam kết, chính sách, giấy chứng nhận, giải thưởng hay review giả cho thương hiệu của người dùng. Với dữ liệu nghiên cứu thị trường và đối thủ: sử dụng nguồn tìm kiếm kết hợp tri thức ngành thực tế tại Việt Nam; ý suy luận ước tính phải gắn nhãn [Inference], ý chưa kiểm chứng gắn [Unverified].
+2. [THIẾU DỮ LIỆU] chỉ dùng khi thông tin bắt buộc về chính thương hiệu của người dùng hoàn toàn chưa có trong hồ sơ; KHÔNG dùng [THIẾU DỮ LIỆU] để thay thế cho phân tích thị trường, ước lượng quy mô hay khảo sát đối thủ cạnh tranh.
 3. Con số không có trong hồ sơ hoặc nguồn: gắn [Unverified]; suy luận của bạn: gắn [Inference]; dự đoán: gắn [Speculation].
 4. Không dùng khan hiếm/đếm ngược giả, không hù dọa, không quảng cáo trá hình, không tuyên bố chữa bệnh. Không đề xuất quét UID, mua data, gửi tin cho người chưa đồng ý.
 5. Mỗi đề xuất chiến thuật nêu: giai đoạn phễu/AARRR, cơ chế vì sao hiệu quả, chỉ số đo, điều kiện dừng nếu là thử nghiệm.

@@ -802,9 +802,13 @@ _add(Task(
         "swot": O({"strengths": A(POINT), "weaknesses": A(POINT), "opportunities": A(POINT), "threats": A(POINT)}),
         "gtm_4_weeks": A(O({"week": I, "actions": A(S), "kpi": S}), 4, 4),
     }),
-    instructions=("Chỉ dùng thông tin trong BÁO CÁO TÌM KIẾM và hồ sơ. source_ids trỏ tới số thứ tự trong DANH SÁCH NGUỒN. "
-                  "Không tự đưa con số TAM/SAM/SOM; nếu nguồn không có, nêu công thức bottom-up và dữ liệu cần thu thập. "
-                  "Điểm mạnh/yếu của doanh nghiệp chỉ lấy từ hồ sơ."),
+    instructions=(
+        "Phân tích thị trường chuyên sâu và thực tế cho ngành và khu vực được yêu cầu. "
+        "Nếu có BÁO CÁO TÌM KIẾM, ưu tiên trích dẫn dữ liệu và gán source_ids theo DANH SÁCH NGUỒN (gắn nhãn 'Có nguồn'). "
+        "Về quy mô thị trường: Đưa ra công thức Bottom-Up cụ thể và ước tính số liệu thực tế dựa trên dung lượng thị trường địa phương (gắn nhãn [Inference]). "
+        "Phân tích chi tiết toàn diện cả 7 khía cạnh (Chính trị – pháp lý, Kinh tế, Xã hội, Công nghệ, Cạnh tranh, Khách hàng, Xu hướng) với hiểu biết thị trường Việt Nam thực tế, không để trống hoặc chỉ trả về [THIẾU DỮ LIỆU]. "
+        "Điểm mạnh/yếu của doanh nghiệp gắn với hồ sơ bối cảnh."
+    ),
     grounded=True, post=_post_grounded_points, temperature=0.3,
 ))
 
@@ -816,7 +820,11 @@ _add(Task(
     required_context=["brand.industry", "product.one_liner"],
     schema=O({"competitors": A(O({"name": S, "type": E("Trực tiếp", "Thứ cấp", "Gián tiếp"), "website": S, "what_they_sell": S,
                                    "price_info": S, "source_ids": A(I)}))}),
-    instructions="Tìm kiếm và liệt kê toàn bộ các đối thủ cạnh tranh có thật trên thị trường tại khu vực được yêu cầu (có bao nhiêu liệt kê bấy nhiêu, không tự giới hạn 3 hay 4 bên). Bao gồm cả các đối thủ đã biết trong hồ sơ/dữ liệu và đối thủ mới từ kết quả tìm kiếm. Với mỗi đối thủ, gán source_ids theo số thứ tự trong DANH SÁCH NGUỒN. Không bịa đặt đối thủ.",
+    instructions=(
+        "Tìm kiếm và liệt kê toàn bộ các đối thủ cạnh tranh có thật trên thị trường tại khu vực được yêu cầu (có bao nhiêu liệt kê bấy nhiêu, không tự giới hạn 3 hay 4 bên; tối thiểu 4–10 đối thủ thuộc các nhóm: Trực tiếp, Thứ cấp, Gián tiếp). "
+        "Tận dụng tối đa các đối thủ tìm được từ BÁO CÁO TÌM KIẾM, các đối thủ đã biết trong hồ sơ, và các doanh nghiệp/thương hiệu cơ khí/máy móc/thiết bị có thật trên thị trường Việt Nam mà AI biết. "
+        "Với mỗi đối thủ, gán source_ids theo DANH SÁCH NGUỒN nếu có nguồn web; nếu là đối thủ từ tri thức ngành thì ghi rõ địa chỉ/website/sản phẩm thực tế. Tuyệt đối không để danh sách rỗng."
+    ),
     grounded=True, extras="discovery", post=_post_discovery, temperature=0.2,
 ))
 

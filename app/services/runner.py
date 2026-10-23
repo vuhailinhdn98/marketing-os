@@ -188,9 +188,25 @@ def _clean_search_query(task: Task, inputs: Dict[str, Any], ctx: Dict[str, Any])
         loc_val = (ctx.get("market") or {}).get("location") or ""
         return f"{comp} {ind} {loc_val}".strip()
     if task.id == "market_research":
+        import re
         obj = inputs.get("objective", "")
+        cleaned_obj = re.sub(r"^(tìm hiểu|nghiên cứu|khảo sát|đánh giá|phân tích)\s+(về\s+)?(ngành|thị trường|tiềm năng)\s*", "", obj, flags=re.I).strip()
         ind = brand.get("industry", "")
-        return f"{obj} {ind} {loc}".strip()
+        prod_words = [w for w in re.sub(r"[^\w\s]", " ", product).split() if len(w) > 1]
+        prod_kw = " ".join(prod_words[:4]) if prod_words else ""
+        parts = []
+        if cleaned_obj and len(cleaned_obj) > 3:
+            parts.append(cleaned_obj)
+        elif ind:
+            parts.append(ind)
+            if prod_kw and prod_kw.lower() not in (ind or "").lower():
+                parts.append(prod_kw)
+        elif prod_kw:
+            parts.append(prod_kw)
+        if loc and loc.lower() not in " ".join(parts).lower():
+            parts.append(loc)
+        q = " ".join(parts).strip()
+        return q or f"{ind} {loc}".strip()
     return f"{inputs.get('query') or loc or ''}".strip()
 
 def _research_prompt(task: Task, inputs: Dict[str, Any], ctx: Dict[str, Any]) -> str:
@@ -274,7 +290,14 @@ def run_task(email: str, is_admin: bool, task_id: str, raw_inputs: Dict[str, Any
                 base_prompt += (f"\n\nBÁO CÁO TÌM KIẾM WEB (thô):\n{grounded_text[:12000]}\n\n{_sources_block(sources)}\n"
                                 "Gắn source_ids theo số thứ tự trong DANH SÁCH NGUỒN. Ý nào không có nguồn thì tag [Unverified] hoặc [Inference].")
             else:
-                base_prompt += f"\n\n{_sources_block(sources)}\n"
+                base_prompt += (
+                    f"\n\n{_sources_block(sources)}\n"
+                    "LƯU Ý KHI CHƯA CÓ KẾT QUẢ TÌM KIẾM WEB TRỰC TIẾP:\n"
+                    "- Hãy sử dụng tri thức ngành và kinh nghiệm thị trường chuyên sâu của Fractional CMO về thị trường Việt Nam để phân tích toàn diện.\n"
+                    "- Với quy mô thị trường: Đưa ra công thức Bottom-Up cụ thể và ước tính số liệu thực tế dựa trên dung lượng thị trường địa phương (gắn nhãn [Inference]).\n"
+                    "- Với đối thủ cạnh tranh: Liệt kê các doanh nghiệp/thương hiệu máy móc/cơ khí/thiết bị có thật tại Việt Nam hoặc các phân khúc đối thủ tiêu biểu (gắn nhãn [Inference]).\n"
+                    "- Tuyệt đối KHÔNG trả về các cụm từ [THIẾU DỮ LIỆU] thay cho việc phân tích; hãy phân tích đầy đủ và chuyên nghiệp."
+                )
         else:
             sources = list(grounded_result.sources)
             site = ex.get("site")
@@ -286,8 +309,8 @@ def run_task(email: str, is_admin: bool, task_id: str, raw_inputs: Dict[str, Any
 
     if task.id == "competitor_discovery":
         base_prompt += ("\n\nLƯU Ý VỀ DANH SÁCH ĐỐI THỦ:\n"
-                        "- Liệt kê toàn bộ các đối thủ cạnh tranh có thật (có bao nhiêu liệt kê bấy nhiêu, không tự giới hạn 3 hay 4 bên).\n"
-                        "- Với mỗi đối thủ, bắt buộc gán source_ids là mảng số nguyên trỏ đến các số thứ tự trong DANH SÁCH NGUỒN (ví dụ [1] hoặc [1, 2]). Không để source_ids rỗng nếu thông tin lấy từ báo cáo tìm kiếm hoặc thị trường.")
+                        "- Liệt kê toàn bộ các đối thủ cạnh tranh có thật trên thị trường (có bao nhiêu liệt kê bấy nhiêu, không tự giới hạn 3 hay 4 bên; tối thiểu 4–8 đối thủ).\n"
+                        "- Với mỗi đối thủ, gán source_ids là mảng số nguyên trỏ đến các số thứ tự trong DANH SÁCH NGUỒN (ví dụ [1] hoặc [1, 2]) nếu có nguồn web. Nếu là đối thủ theo tri thức ngành thì ghi rõ thông tin sản phẩm và website/địa chỉ thực tế.")
 
     result = llm.generate_json(key, system=system, prompt=base_prompt, schema=task.schema,
                                preferred_model=model_pref, temperature=task.temperature)

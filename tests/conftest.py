@@ -6,11 +6,23 @@ import os
 import sys
 from pathlib import Path
 
-import pytest
-
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 os.environ.setdefault("DATA_DIR", str(ROOT / "data" / "runtime-test"))
+
+import pytest
+from tests.fake_gemini import FakeGemini
+
+FULL_CONTEXT = {
+    "brand.name": "Phê Ly", "brand.industry": "Quán cà phê take-away", "product.one_liner": "Cà phê muối mang đi trong 3 phút",
+    "product.price_points": [{"name": "Cà phê muối", "price_vnd": 29000}, {"name": "Bạc xỉu", "price_vnd": 25000}],
+    "unit_economics.avg_order_value_vnd": 45000, "unit_economics.gross_margin_pct": 60,
+    "customers.buyer": "Dân văn phòng quanh Nguyễn Phước Lan", "customers.jtbd": ["Tỉnh táo ca chiều"],
+    "problem.core": "Muốn cà phê ngon mà không phải ngồi lâu", "differentiation.only_we_have": "Muối tự làm từ kem phô mai",
+    "goals.business_goal": "Tăng từ 80 lên 150 ly/ngày trước 31/03/2027", "goals.primary_conversion": "Đặt món qua Zalo",
+    "channels_active": ["Facebook", "TikTok", "Zalo OA"], "market.location": "Hải Châu, Đà Nẵng",
+    "competitors.direct": ["Quán ABC"], "brand.address": "12 Nguyễn Phước Lan, Đà Nẵng", "brand.hotline": "0905000000",
+}
 
 
 @pytest.fixture(autouse=True)
@@ -47,3 +59,16 @@ def register(client, email="owner@example.com", password="Matkhau123", name=""):
 @pytest.fixture
 def auth(client):
     return register(client)
+
+
+@pytest.fixture
+def fake(monkeypatch):
+    return FakeGemini().install(monkeypatch)
+
+
+@pytest.fixture
+def ready(client, fake):
+    h = register(client)
+    assert client.patch("/api/context", json={"patch": FULL_CONTEXT, "note": "test"}, headers=h).status_code == 200
+    assert client.post("/api/settings/ai", json={"api_key": "AIzaSy" + "t" * 33}, headers=h).status_code == 200
+    return h

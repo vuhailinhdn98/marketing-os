@@ -21,17 +21,6 @@ FULL_CONTEXT = {
 }
 
 
-@pytest.fixture
-def fake(monkeypatch):
-    return FakeGemini().install(monkeypatch)
-
-
-@pytest.fixture
-def ready(client, fake):
-    h = register(client)
-    assert client.patch("/api/context", json={"patch": FULL_CONTEXT, "note": "test"}, headers=h).status_code == 200
-    assert client.post("/api/settings/ai", json={"api_key": "AIzaSy" + "t" * 33}, headers=h).status_code == 200
-    return h
 
 
 def _default_inputs(task, today):

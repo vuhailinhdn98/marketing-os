@@ -381,9 +381,28 @@ NEW_TABLES = [
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )""",
+    """CREATE TABLE IF NOT EXISTS humanize_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_email TEXT NOT NULL,
+        title TEXT DEFAULT '',
+        original_text TEXT NOT NULL,
+        humanized_text TEXT NOT NULL,
+        mode TEXT DEFAULT 'Tự nhiên',
+        tone TEXT DEFAULT 'Thân thiện',
+        audience TEXT DEFAULT 'Đại chúng',
+        strength TEXT DEFAULT 'Cao',
+        ai_before_pct REAL DEFAULT 95.0,
+        human_after_pct REAL DEFAULT 98.6,
+        detectors_json TEXT DEFAULT '{}',
+        metrics_json TEXT DEFAULT '{}',
+        radar_json TEXT DEFAULT '{}',
+        suggestions_json TEXT DEFAULT '[]',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )""",
 ]
 
 INDEXES = [
+    "CREATE INDEX IF NOT EXISTS idx_humanize_user ON humanize_history(user_email)",
     "CREATE INDEX IF NOT EXISTS idx_leads_user ON lead_records(user_email)",
     "CREATE INDEX IF NOT EXISTS idx_content_user ON content_items(user_email)",
     "CREATE INDEX IF NOT EXISTS idx_research_user ON research_records(user_email, category)",

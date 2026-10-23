@@ -18,7 +18,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.database import ensure_db
-from app.routers import admin, auth, content, core, growth, leads, skills
+from app.routers import admin, auth, content, core, growth, humanize, leads, skills
 from app.security import AuthError, purge_expired_sessions
 from app.services.analytics import DataError
 from app.services.competitors import CompetitorError
@@ -98,7 +98,7 @@ async def unexpected(_: Request, exc: Exception) -> JSONResponse:
     return _error(500, "Có lỗi không mong muốn ở máy chủ. Vui lòng thử lại; nếu lặp lại, xem nhật ký máy chủ.")
 
 
-for r in (auth.router, core.router, skills.router, content.router, leads.router, growth.router, admin.router):
+for r in (auth.router, core.router, skills.router, content.router, leads.router, growth.router, humanize.router, admin.router):
     app.include_router(r)
 
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")

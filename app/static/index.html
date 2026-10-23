@@ -59,24 +59,75 @@
   <div id="app" class="hidden min-h-screen md:flex">
     <aside id="sidebar" class="hidden md:flex md:flex-col w-64 shrink-0 bg-slate-900/80 border-r border-slate-800 h-screen sticky top-0">
       <div class="px-5 py-4 border-b border-slate-800 flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg bg-sky-500 flex items-center justify-center text-white"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-sky-500 to-emerald-400 flex items-center justify-center text-white shadow-md shadow-sky-500/20"><i class="fa-solid fa-chart-line"></i></div>
         <div class="min-w-0">
-          <div class="font-bold leading-tight">Marketing OS</div>
+          <div class="font-bold leading-tight flex items-center gap-1.5">
+            Marketing OS <span class="text-[10px] font-bold px-1.5 py-0.2 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20">v4.2</span>
+          </div>
           <div id="side-brand" class="text-xs text-slate-400 truncate">Chưa đặt tên</div>
         </div>
       </div>
+
       <nav id="nav" class="flex-1 overflow-y-auto p-3 space-y-0.5 text-sm" aria-label="Điều hướng"></nav>
+
+      <!-- GÓI GROWTH WIDGET (WRIAI STYLE) -->
+      <div class="m-3 p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-xs space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-slate-200 flex items-center gap-1.5">
+            <i class="fa-solid fa-crown text-amber-400"></i> Gói Growth
+          </span>
+          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">VIP</span>
+        </div>
+        <p class="text-[11px] text-slate-400 leading-tight">Mở khóa toàn bộ AI SEO Agent, xuất bản không giới hạn.</p>
+        <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-gradient-to-r from-emerald-400 to-sky-400 h-full rounded-full" style="width: 74%"></div>
+        </div>
+        <div class="flex justify-between text-[10px] text-slate-500 font-medium">
+          <span>10.1M credits còn lại</span>
+          <span>74%</span>
+        </div>
+      </div>
+
       <div class="p-3 border-t border-slate-800 text-xs text-slate-400 flex items-center justify-between gap-2">
-        <span id="side-user" class="truncate"></span>
+        <span id="side-user" class="truncate font-medium"></span>
         <button type="button" data-global="logout" class="text-slate-400 hover:text-rose-400" title="Đăng xuất"><i class="fa-solid fa-right-from-bracket"></i></button>
       </div>
     </aside>
 
     <div class="flex-1 min-w-0 flex flex-col">
-      <header class="sticky top-0 z-30 bg-slate-950/90 backdrop-blur border-b border-slate-800 px-4 md:px-6 py-3 flex items-center gap-3">
+      <!-- TOP HEADER (WRIAI STYLE) -->
+      <header class="sticky top-0 z-30 bg-slate-950/90 backdrop-blur border-b border-slate-800 px-4 md:px-6 py-2.5 flex items-center gap-3">
         <button type="button" class="md:hidden w-10 h-10 rounded-lg bg-slate-800 text-slate-200 flex items-center justify-center text-base" data-global="drawer" aria-label="Mở menu"><i class="fa-solid fa-bars"></i></button>
-        <h2 id="view-title" class="font-bold text-base md:text-lg truncate flex-1">Tổng quan</h2>
-        <span id="ai-badge" class="hidden sm:inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border"></span>
+        
+        <!-- SEARCH BAR (CTRL + K) -->
+        <div class="hidden sm:flex items-center flex-1 max-w-md">
+          <button type="button" data-global="search-modal"
+            class="w-full flex items-center justify-between px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-400 hover:border-slate-700 transition">
+            <span class="flex items-center gap-2">
+              <i class="fa-solid fa-magnifying-glass text-slate-500"></i>
+              <span>Tìm bài viết, từ khóa, lệnh AI...</span>
+            </span>
+            <kbd class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-[10px] font-mono text-slate-400">Ctrl K</kbd>
+          </button>
+        </div>
+
+        <h2 id="view-title" class="font-bold text-base md:text-lg truncate flex-1 sm:hidden">Tổng quan</h2>
+
+        <!-- WEBSITE SELECTOR & CREDITS -->
+        <div class="flex items-center gap-2.5 ml-auto">
+          <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs">
+            <span class="text-slate-500">Website:</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="hdr-website" class="font-semibold text-slate-200 truncate max-w-[120px]">Live</span>
+          </div>
+
+          <div class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs font-bold text-amber-400">
+            <i class="fa-solid fa-coins"></i>
+            <span id="hdr-credits" class="text-slate-200 font-mono">10,171,694</span>
+          </div>
+
+          <span id="ai-badge" class="hidden sm:inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border"></span>
+        </div>
       </header>
       <div id="banner" class="hidden"></div>
       <main id="view" class="flex-1 p-4 md:p-6 pb-28 md:pb-8 max-w-7xl w-full mx-auto"></main>
@@ -108,6 +159,8 @@
   <script src="/static/js/views/leads.js" defer></script>
   <script src="/static/js/views/growth.js" defer></script>
   <script src="/static/js/views/tools.js" defer></script>
+  <script src="/static/js/views/humanize.js" defer></script>
+  <script src="/static/js/views/seo_tools.js" defer></script>
   <script src="/static/js/app.js" defer></script>
 </body>
 </html>

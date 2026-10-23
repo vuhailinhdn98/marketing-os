@@ -268,24 +268,31 @@
 
   // ---------------------------------------------------------------- điều hướng
   App.NAV = [
-    { group: 'Bắt đầu' },
+    { group: 'TỔNG QUAN' },
     { id: 'home', label: 'Tổng quan', icon: 'fa-gauge-high' },
     { id: 'context', label: 'Hồ sơ bối cảnh', icon: 'fa-id-card' },
-    { group: 'Làm marketing' },
-    { id: 'studio', label: 'Skill Studio', icon: 'fa-wand-magic-sparkles' },
+
+    { group: 'CƠ HỘI SEO & THỊ TRƯỜNG' },
+    { id: 'seo_tools', label: 'AI Market Radar', icon: 'fa-radar', badge: 'AI' },
     { id: 'research', label: 'Nghiên cứu & Đối thủ', icon: 'fa-magnifying-glass-chart' },
-    { id: 'content', label: 'Kho nội dung', icon: 'fa-pen-nib' },
-    { id: 'calendar', label: 'Lịch nội dung', icon: 'fa-calendar-days' },
-    { id: 'media', label: 'Ảnh & Video', icon: 'fa-photo-film' },
-    { group: 'Khách & Số liệu' },
-    { id: 'leads', label: 'Khách hàng (CRM)', icon: 'fa-users' },
-    { id: 'growth', label: 'Growth Console', icon: 'fa-chart-pie' },
     { id: 'local', label: 'Local SEO & AI search', icon: 'fa-location-dot' },
+
+    { group: 'NỘI DUNG & SEO' },
+    { id: 'humanize', label: 'Viết lại & Humanize AI', icon: 'fa-wand-magic-sparkles', badge: 'Bypass 99%' },
+    { id: 'studio', label: 'Skill Studio AI', icon: 'fa-robot', badge: 'HOT' },
+    { id: 'content', label: 'Kho nội dung bài viết', icon: 'fa-pen-nib' },
+    { id: 'calendar', label: 'Kế hoạch nội dung', icon: 'fa-calendar-days' },
+    { id: 'media', label: 'Media: Ảnh & Video', icon: 'fa-photo-film' },
     { id: 'compliance', label: 'Kiểm duyệt nội dung', icon: 'fa-shield-halved' },
-    { group: 'Hệ thống' },
-    { id: 'settings', label: 'Cài đặt', icon: 'fa-gear' },
+
+    { group: 'KHÁCH HÀNG & TĂNG TRƯỞNG' },
+    { id: 'leads', label: 'Khách hàng (CRM 6 tầng)', icon: 'fa-users' },
+    { id: 'growth', label: 'Growth Console', icon: 'fa-chart-pie' },
+
+    { group: 'HỆ THỐNG' },
+    { id: 'settings', label: 'Cài đặt AI & Website', icon: 'fa-gear' },
   ];
-  App.BOTTOM = ['home', 'studio', 'content', 'leads', 'growth'];
+  App.BOTTOM = ['home', 'humanize', 'studio', 'content', 'leads'];
 
   App.parseHash = () => {
     const raw = (location.hash || '#/home').replace(/^#\/?/, '');
@@ -328,17 +335,96 @@
   };
 
   App.buildNav = () => {
-    const make = (n) => (n.group
-      ? `<div class="nav-group">${esc(n.group)}</div>`
-      : `<a href="#/${n.id}" data-nav="${n.id}" class="nav-item"><i class="fa-solid ${n.icon} w-4 text-center"></i><span>${esc(n.label)}</span></a>`);
+    const make = (n) => {
+      if (n.group) return `<div class="nav-group">${esc(n.group)}</div>`;
+      const b = n.badge
+        ? `<span class="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded ${n.badge.includes('99%') ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : n.badge === 'HOT' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-sky-500/10 text-sky-400 border border-sky-500/20'}">${esc(n.badge)}</span>`
+        : '';
+      return `<a href="#/${n.id}" data-nav="${n.id}" class="nav-item"><i class="fa-solid ${n.icon} w-4 text-center"></i><span class="truncate">${esc(n.label)}</span>${b}</a>`;
+    };
     const html = App.NAV.map(make).join('');
     document.getElementById('nav').innerHTML = html;
     document.getElementById('drawer-nav').innerHTML = html;
-    const short = { home: 'Tổng quan', studio: 'Studio', content: 'Nội dung', leads: 'Khách', growth: 'Số liệu' };
+    const short = { home: 'Tổng quan', humanize: 'Humanize', studio: 'Studio', content: 'Nội dung', leads: 'Khách' };
     document.getElementById('bottom-nav').innerHTML = App.BOTTOM.map((id) => {
       const n = App.NAV.find((x) => x.id === id);
       return `<a href="#/${id}" data-nav="${id}" class="bnav-item"><i class="fa-solid ${n.icon} text-base"></i><span class="truncate max-w-full">${esc(short[id] || n.label)}</span></a>`;
     }).join('');
+  };
+
+  App.showSearchPalette = () => {
+    const items = [
+      { id: 'humanize', title: 'Viết lại & Humanize AI', cat: 'Nội dung & SEO', icon: 'fa-wand-magic-sparkles', desc: 'Bypass 99% AI Detector, giữ nguyên từ khóa' },
+      { id: 'seo_tools', title: 'AI Market Radar & Cơ hội SEO', cat: 'Cơ hội SEO', icon: 'fa-radar', desc: 'Quét xu hướng tìm kiếm, phát hiện ăn thịt từ khóa' },
+      { id: 'studio', title: 'Skill Studio AI (18 Tác vụ)', cat: 'Nội dung & SEO', icon: 'fa-robot', desc: 'Nghiên cứu thị trường, bài viết, kịch bản, quảng cáo' },
+      { id: 'research', title: 'Nghiên cứu & Đối thủ cạnh tranh', cat: 'Chiến lược', icon: 'fa-magnifying-glass-chart', desc: 'Rà soát đối thủ có nguồn & dossier trung thực' },
+      { id: 'content', title: 'Kho bài viết & Quản lý nội dung', cat: 'Nội dung & SEO', icon: 'fa-pen-nib', desc: 'Biên tập, lưu trữ và xuất bản đa kênh' },
+      { id: 'calendar', title: 'Kế hoạch nội dung theo ngày thật', cat: 'Nội dung & SEO', icon: 'fa-calendar-days', desc: 'Lập lịch ngày thật và ngày lễ Việt Nam' },
+      { id: 'leads', title: 'Khách hàng CRM (6 tầng phễu)', cat: 'Tăng trưởng', icon: 'fa-users', desc: 'Quản lý lead, phễu chuyển đổi và doanh số' },
+      { id: 'growth', title: 'Growth Console & Chỉ số đo lường', cat: 'Tăng trưởng', icon: 'fa-chart-pie', desc: 'Theo dõi AARRR, CAC, LTV và phễu bán hàng' },
+      { id: 'compliance', title: 'Kiểm duyệt nội dung & Tuân thủ', cat: 'An toàn', icon: 'fa-shield-halved', desc: 'Chống quảng cáo láo, kiểm tra Luật 75/91' },
+      { id: 'settings', title: 'Cài đặt Gemini AI & Hệ thống', cat: 'Hệ thống', icon: 'fa-gear', desc: 'API key, model AI và cấu hình workspace' },
+    ];
+
+    const bodyHtml = `
+      <div class="space-y-3">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-500"></i>
+          <input id="palette-input" class="inp pl-10 py-2.5 text-sm" placeholder="Nhập tên tính năng, từ khóa hoặc lệnh AI (ví dụ: humanize, đối thủ, bài viết)..." autocomplete="off">
+        </div>
+        <div id="palette-list" class="max-h-80 overflow-y-auto space-y-1 divide-y divide-slate-800/40">
+          ${items.map((it) => `
+            <a href="#/${it.id}" class="palette-item block p-2.5 rounded-xl hover:bg-slate-800 transition flex items-center justify-between gap-3 text-xs" data-cat="${esc(it.cat)}">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-sky-400 text-sm"><i class="fa-solid ${it.icon}"></i></span>
+                <div>
+                  <div class="font-bold text-slate-200 text-sm">${esc(it.title)}</div>
+                  <div class="text-slate-400 text-[11px]">${esc(it.desc)}</div>
+                </div>
+              </div>
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-400">${esc(it.cat)}</span>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    const m = App.modal({
+      title: 'Tìm kiếm nhanh (Command Palette)',
+      body: bodyHtml,
+      wide: false,
+      onMount: (bodyEl, close) => {
+        const inp = bodyEl.querySelector('#palette-input');
+        const listEl = bodyEl.querySelector('#palette-list');
+        inp.focus();
+
+        inp.addEventListener('input', () => {
+          const q = inp.value.trim().toLowerCase();
+          const filtered = items.filter((it) => it.title.toLowerCase().includes(q) || it.desc.toLowerCase().includes(q) || it.cat.toLowerCase().includes(q));
+          if (!filtered.length) {
+            listEl.innerHTML = '<div class="p-4 text-center text-slate-500 text-xs">Không tìm thấy tính năng phù hợp.</div>';
+            return;
+          }
+          listEl.innerHTML = filtered.map((it) => `
+            <a href="#/${it.id}" class="palette-item block p-2.5 rounded-xl hover:bg-slate-800 transition flex items-center justify-between gap-3 text-xs" data-cat="${esc(it.cat)}">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-sky-400 text-sm"><i class="fa-solid ${it.icon}"></i></span>
+                <div>
+                  <div class="font-bold text-slate-200 text-sm">${esc(it.title)}</div>
+                  <div class="text-slate-400 text-[11px]">${esc(it.desc)}</div>
+                </div>
+              </div>
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-400">${esc(it.cat)}</span>
+            </a>
+          `).join('');
+        });
+
+        listEl.addEventListener('click', (e) => {
+          const a = e.target.closest('a');
+          if (a) close();
+        });
+      }
+    });
   };
 
   // ---------------------------------------------------------------- đăng nhập

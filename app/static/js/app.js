@@ -10,12 +10,20 @@
     if (act === 'logout') App.logout();
     if (act === 'drawer') document.getElementById('drawer').classList.remove('hidden');
     if (act === 'drawer-close') document.getElementById('drawer').classList.add('hidden');
+    if (act === 'search-modal') {
+      e.preventDefault();
+      if (typeof App.showSearchPalette === 'function') App.showSearchPalette();
+    }
   });
   document.getElementById('drawer-nav').addEventListener('click', (e) => {
     if (e.target.closest('a')) document.getElementById('drawer').classList.add('hidden');
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') document.getElementById('drawer').classList.add('hidden');
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      if (typeof App.showSearchPalette === 'function') App.showSearchPalette();
+    }
   });
 
   window.addEventListener('hashchange', () => App.render());

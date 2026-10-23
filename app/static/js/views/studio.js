@@ -247,7 +247,8 @@
         a.push('<button type="button" class="btn-soft btn-sm" data-act="to-experiment"><i class="fa-solid fa-flask"></i> Tạo thử nghiệm tuần tới</button>');
         break;
       case 'market_research':
-        a.push('<a href="#/studio/competitor_discovery" class="btn-soft btn-sm"><i class="fa-solid fa-users-viewfinder"></i> Tiếp tục: Rà soát đối thủ từ thị trường này</a>');
+        const mLoc = (run.inputs && run.inputs.location) || '';
+        a.push(`<button type="button" class="btn-soft btn-sm" data-act="to-comp-disc" data-loc="${esc(mLoc)}"><i class="fa-solid fa-users-viewfinder"></i> Tiếp tục: Rà soát đối thủ tại ${esc(mLoc || 'khu vực này')}</button>`);
         break;
       case 'competitor_discovery':
         a.push('<button type="button" class="btn-soft btn-sm" data-act="to-competitors"><i class="fa-solid fa-users-viewfinder"></i> Lưu vào danh sách đối thủ</button>');
@@ -327,6 +328,10 @@
         await App.post(`/api/skills/runs/${run.id}/to-experiment`);
         App.toast('Đã tạo thử nghiệm (trạng thái: Kế hoạch).');
         btn.outerHTML = '<a href="#/growth/experiments" class="btn-soft btn-sm"><i class="fa-solid fa-flask"></i> Mở danh sách thử nghiệm</a>';
+      },
+      'to-comp-disc': (btn) => {
+        App.state.prefill = { task: 'competitor_discovery', inputs: { location: btn.dataset.loc || '' } };
+        App.go('studio', 'competitor_discovery');
       },
       'to-competitors': async (btn) => {
         const r = await App.post(`/api/skills/runs/${run.id}/to-competitors`);

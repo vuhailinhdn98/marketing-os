@@ -57,6 +57,10 @@ def save_from_discovery(owner: str, competitors: List[Dict[str, Any]], sources: 
         if not name:
             continue
         evidence = [sources[i - 1] for i in c.get("source_ids") or [] if 1 <= i <= len(sources)]
+        if not evidence and sources:
+            evidence = [sources[0]]
+        elif not evidence and c.get("website"):
+            evidence = [{"title": f"Website đối thủ: {c['website']}", "url": c["website"]}]
         existing = one("SELECT id FROM discovered_competitors WHERE user_email = ? AND LOWER(name) = LOWER(?)", (owner, name))
         fields = (str(c.get("website") or "")[:300], c.get("type") if c.get("type") in TYPES else "Trực tiếp",
                   str(c.get("price_info") or "")[:200], str(c.get("what_they_sell") or "")[:500], dumps(evidence), location[:100])

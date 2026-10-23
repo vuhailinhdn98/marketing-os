@@ -143,6 +143,8 @@ def to_markdown(title: str, data: Dict[str, Any], provenance: Dict[str, Any]) ->
     lines.append("*" + " · ".join(meta) + "*")
     lines.append("")
     lines += _render(data, 2)
+    if "competitors" in data and not data["competitors"]:
+        lines += ["", "*Chưa tìm thấy đối thủ phù hợp tiêu chí tại khu vực đã chọn.*"]
     if data.get("missing_info"):
         lines += ["", "## Cần bổ sung"] + [f"- {x}" for x in data["missing_info"]]
     if data.get("lesson"):

@@ -373,13 +373,46 @@ def _post_grounded_points(data, inputs, ctx, extras):
 
 
 def _post_discovery(data, inputs, ctx, extras):
-    n_sources = len(extras.get("sources") or [])
+    sources = extras.get("sources") or []
+    n_sources = len(sources)
     known = [k.lower() for k in extras.get("known_competitors") or []]
     kept, dropped = [], 0
     for c in data.get("competitors") or []:
+        name = str(c.get("name") or "").strip()
+        if not name or len(name) < 2:
+            dropped += 1
+            continue
         ids = [i for i in (c.get("source_ids") or []) if isinstance(i, int) and 1 <= i <= n_sources]
-        c["source_ids"] = ids
-        if not n_sources or ids or str(c.get("name", "")).lower() in known:
+
+        # 1. Nếu chưa có source_ids hợp lệ, đối chiếu tên quán/thương hiệu hoặc website với nguồn tìm kiếm
+        if not ids and n_sources > 0:
+            name_low = name.lower()
+            web_low = str(c.get("website") or "").lower().replace("https://", "").replace("http://", "").replace("www.", "").strip("/")
+            for i, s in enumerate(sources, 1):
+                s_text = (str(s.get("title") or "") + " " + str(s.get("url") or "")).lower()
+                if (name_low in s_text) or (web_low and len(web_low) > 4 and web_low in s_text):
+                    ids.append(i)
+
+        is_known = name.lower() in known
+        has_web = bool(str(c.get("website") or "").strip())
+        has_details = bool(str(c.get("what_they_sell") or "").strip()) or bool(str(c.get("price_info") or "").strip())
+
+        if not n_sources:
+            # Không có nguồn ngoài -> giữ nguyên
+            c["source_ids"] = ids
+            kept.append(c)
+        elif ids or is_known:
+            c["source_ids"] = ids
+            kept.append(c)
+        elif has_web:
+            # Có website chứng minh sự tồn tại -> gán nguồn tìm kiếm [1] nếu có sources
+            ids = [1] if n_sources > 0 else []
+            c["source_ids"] = ids
+            kept.append(c)
+        elif has_details and n_sources > 0:
+            # Có sản phẩm/giá cụ thể từ kết quả tìm kiếm Google Grounding / DDG nhưng AI quên gắn source_ids
+            ids = [1]
+            c["source_ids"] = ids
             kept.append(c)
         else:
             dropped += 1
@@ -783,7 +816,7 @@ _add(Task(
     required_context=["brand.industry", "product.one_liner"],
     schema=O({"competitors": A(O({"name": S, "type": E("Trực tiếp", "Thứ cấp", "Gián tiếp"), "website": S, "what_they_sell": S,
                                    "price_info": S, "source_ids": A(I)}))}),
-    instructions="Tìm kiếm và liệt kê toàn bộ các đối thủ cạnh tranh có thật xuất hiện trong nguồn tìm kiếm tại khu vực (có bao nhiêu liệt kê bấy nhiêu, không tự giới hạn 3 hay 4 bên). Mỗi đối thủ phải có nguồn chứng minh. Không ghi điểm yếu. Không bịa đặt đối thủ.",
+    instructions="Tìm kiếm và liệt kê toàn bộ các đối thủ cạnh tranh có thật trên thị trường tại khu vực được yêu cầu (có bao nhiêu liệt kê bấy nhiêu, không tự giới hạn 3 hay 4 bên). Bao gồm cả các đối thủ đã biết trong hồ sơ/dữ liệu và đối thủ mới từ kết quả tìm kiếm. Với mỗi đối thủ, gán source_ids theo số thứ tự trong DANH SÁCH NGUỒN. Không bịa đặt đối thủ.",
     grounded=True, extras="discovery", post=_post_discovery, temperature=0.2,
 ))
 

@@ -118,7 +118,7 @@ def load_calendar(owner: str, inputs: Dict[str, Any], ctx: Dict[str, Any]) -> Di
 
 def known_competitors(owner: str, ctx: Dict[str, Any]) -> List[str]:
     names = []
-    for path in ("competitors.direct", "competitors.secondary"):
+    for path in ("competitors.direct", "competitors.secondary", "competitors.indirect"):
         names += [str(x) for x in (get_path(ctx, path) or [])]
     names += [r["name"] for r in rows("SELECT name FROM discovered_competitors WHERE user_email = ?", (normalize_email(owner),))]
     seen, out = set(), []
@@ -133,21 +133,58 @@ def known_competitors(owner: str, ctx: Dict[str, Any]) -> List[str]:
 def load_discovery(owner: str, inputs: Dict[str, Any], ctx: Dict[str, Any]) -> Dict[str, Any]:
     known = known_competitors(owner, ctx)
     parts = []
-    if known:
-        parts.append("ĐỐI THỦ CHỦ DOANH NGHIỆP ĐÃ BIẾT HOẶC ĐÃ LƯU: " + ", ".join(known) + ". Hãy đối chiếu các đối thủ này và rà soát thêm mọi đối thủ cạnh tranh khác trên thị trường.")
+
+    # 1. Đối thủ do chủ doanh nghiệp đã nhập tay hoặc đã lưu trước đó
+    comp_rows = rows("SELECT name, website, phone, social, competitor_type, price_segment, core_products, notes FROM discovered_competitors WHERE user_email = ?", (normalize_email(owner),))
+    comp_details = []
+    for r in comp_rows:
+        details = [f"- **{r['name']}** ({r.get('competitor_type') or 'Trực tiếp'})"]
+        if r.get("website"): details.append(f"Web: {r['website']}")
+        if r.get("phone"): details.append(f"SĐT: {r['phone']}")
+        if r.get("social"): details.append(f"MXH: {r['social']}")
+        if r.get("price_segment"): details.append(f"Giá: {r['price_segment']}")
+        if r.get("core_products"): details.append(f"Bán: {r['core_products']}")
+        if r.get("notes"): details.append(f"Ghi chú: {r['notes']}")
+        comp_details.append(" | ".join(details))
+
+    if comp_details:
+        parts.append("ĐỐI THỦ CHỦ DOANH NGHIỆP ĐÃ NHẬP / ĐÃ LƯU TRƯỚC ĐÓ:\n" + "\n".join(comp_details) +
+                     "\n-> YÊU CẦU: Hãy đưa lại các đối thủ này vào danh sách phân tích (kèm thông tin đã có), đồng thời rà soát TÌM THÊM các đối thủ cạnh tranh mới khác trên địa bàn.")
+    elif known:
+        parts.append("ĐỐI THỦ ĐÃ BIẾT TRONG HỒ SƠ: " + ", ".join(known) +
+                     ".\n-> YÊU CẦU: Hãy đối chiếu các đối thủ này và rà soát tìm thêm mọi đối thủ cạnh tranh khác trên thị trường.")
     else:
-        parts.append("ĐỐI THỦ CHỦ DOANH NGHIỆP ĐÃ BIẾT: Chưa có (hãy rà soát toàn diện trên thị trường).")
+        parts.append("ĐỐI THỦ ĐÃ BIẾT: Chủ doanh nghiệp chưa nhập đối thủ nào. Hãy rà soát toàn diện trên thị trường.")
+
+    # 2. Bối cảnh thị trường từ lần nghiên cứu gần nhất (nếu có)
     last_market_run = one("SELECT output_json FROM skill_runs WHERE user_email = ? AND task = 'market_research' AND status = 'ok' ORDER BY id DESC LIMIT 1", (normalize_email(owner),))
     if last_market_run and last_market_run.get("output_json"):
         try:
             m_out = loads(last_market_run["output_json"], {})
-            trends = m_out.get("trends") or []
-            market_loc = (ctx.get("market") or {}).get("location") or inputs.get("location") or ""
-            trend_str = "; ".join([t.get("trend", "") for t in trends[:3] if isinstance(t, dict)])
-            if trend_str:
-                parts.append(f"BỐI CẢNH THỊ TRƯỜNG ĐÃ PHÂN TÍCH ({market_loc}): Xu hướng chính: {trend_str}. Rà soát các đối thủ phù hợp với bối cảnh thị trường này.")
+            m_summary = m_out.get("summary") or ""
+            sections = m_out.get("sections") or []
+            comp_sec = next((s for s in sections if isinstance(s, dict) and s.get("title") == "Cạnh tranh"), None)
+            trend_sec = next((s for s in sections if isinstance(s, dict) and s.get("title") == "Xu hướng"), None)
+            
+            context_bits = []
+            if m_summary:
+                context_bits.append(f"Tóm tắt thị trường: {m_summary[:400]}")
+            if comp_sec and comp_sec.get("points"):
+                pts = [p.get("text", "") for p in comp_sec["points"] if isinstance(p, dict) and p.get("text")]
+                if pts:
+                    context_bits.append("Đối thủ / bối cảnh cạnh tranh phát hiện từ nghiên cứu thị trường: " + "; ".join(pts[:5]))
+            if trend_sec and trend_sec.get("points"):
+                t_pts = [p.get("text", "") for p in trend_sec["points"] if isinstance(p, dict) and p.get("text")]
+                if t_pts:
+                    context_bits.append("Xu hướng thị trường: " + "; ".join(t_pts[:3]))
+            
+            if context_bits:
+                market_loc = (ctx.get("market") or {}).get("location") or inputs.get("location") or ""
+                parts.append(f"BỐI CẢNH THỊ TRƯỜNG ĐÃ PHÂN TÍCH ({market_loc}):\n" + "\n".join(f"- {b}" for b in context_bits) +
+                             "\n-> Rà soát các đối thủ cạnh tranh phù hợp với bối cảnh thị trường này.")
         except Exception:
             pass
+
     return {"prompt_text": "\n".join(parts), "known_competitors": known}
 
 

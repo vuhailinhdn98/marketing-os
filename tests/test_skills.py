@@ -467,3 +467,61 @@ def test_login_unknown_email_helpful_message(client):
     assert res.status_code == 401
     assert "chưa tồn tại" in res.json()["detail"].lower()
 
+
+
+def test_competitor_discovery_does_not_drop_real_competitors_without_source_ids(client, ready, fake):
+    def override(data, prompt):
+        data["competitors"] = [
+            {"name": "The Cups Coffee", "type": "Trực tiếp", "website": "https://thecupscoffee.vn",
+             "what_they_sell": "Cà phê muối, trà", "price_info": "35.000 - 65.000 đ", "source_ids": []},
+            {"name": "43 Factory Coffee Roaster", "type": "Trực tiếp", "website": "https://43factory.run",
+             "what_they_sell": "Specialty coffee", "price_info": "80.000 - 150.000 đ", "source_ids": []},
+            {"name": "Quán Trống Trơn", "type": "Trực tiếp", "website": "", "what_they_sell": "", "price_info": "", "source_ids": []}
+        ]
+        return data
+    fake.overrides["Rà soát đối thủ"] = override
+    res = client.post("/api/skills/competitor_discovery/run", json={"inputs": {
+        "location": "Đà Nẵng",
+        "criteria": "Cùng phân khúc giá bình dân, cùng khu vực"
+    }}, headers=ready).json()
+    assert res["status"] == "ok"
+    comps = res["output"]["competitors"]
+    names = [c["name"] for c in comps]
+    assert "The Cups Coffee" in names
+    assert "43 Factory Coffee Roaster" in names
+    assert "Quán Trống Trơn" not in names
+    client.post(f"/api/skills/runs/{res['run_id']}/to-competitors", headers=ready)
+    db_comps = client.get("/api/competitors", headers=ready).json()["competitors"]
+    db_names = [c["name"] for c in db_comps]
+    assert "The Cups Coffee" in db_names
+    assert "43 Factory Coffee Roaster" in db_names
+
+
+def test_discovery_integrates_market_research_and_manual_competitors(client, ready, fake):
+    from app.skills.registry import get_task
+    from app.services.runner import _clean_search_query
+    from app.context import load_context
+
+    ctx = load_context("owner@example.com")
+    task = get_task("competitor_discovery")
+    q = _clean_search_query(task, {"location": "Đà Nẵng", "criteria": "cùng phân khúc"}, ctx)
+    assert "Đà Nẵng" in q
+    assert "F&B" in q or "cà phê" in q.lower() or "quán" in q.lower()
+
+    client.post("/api/competitors", json={
+        "name": "Tiệm Cà Phê A",
+        "website": "tiemcaphea.com",
+        "phone": "0905123456",
+        "social": "facebook.com/tiemcaphea",
+        "competitor_type": "Trực tiếp",
+        "price_segment": "30-50k",
+        "core_products": "Cà phê muối, trà trái cây",
+        "notes": "Quán đông khách buổi sáng"
+    }, headers=ready)
+
+    from app.services.extras import load_discovery
+    disc_data = load_discovery("owner@example.com", {"location": "Đà Nẵng"}, ctx)
+    prompt_text = disc_data["prompt_text"]
+    assert "Tiệm Cà Phê A" in prompt_text
+    assert "0905123456" in prompt_text
+    assert "tiemcaphea.com" in prompt_text

@@ -169,13 +169,24 @@ def _clean_search_query(task: Task, inputs: Dict[str, Any], ctx: Dict[str, Any])
     product = (ctx.get("product") or {}).get("one_liner", "")
     loc = inputs.get("location", "")
     if task.id == "competitor_discovery":
-        crit = inputs.get("criteria", "")
-        base = crit or product or brand.get("industry", "") or "doanh nghiệp"
-        return f"{base} {loc}".strip()
+        import re
+        ind = brand.get("industry", "")
+        prod_words = [w for w in re.sub(r"[^\w\s]", " ", product).split() if len(w) > 1]
+        prod_kw = " ".join(prod_words[:5]) if prod_words else ""
+        parts = []
+        if ind:
+            parts.append(ind)
+        if prod_kw and prod_kw.lower() not in (ind or "").lower():
+            parts.append(prod_kw)
+        if loc:
+            parts.append(loc)
+        q = " ".join(parts).strip()
+        return q or f"đối thủ {loc}".strip()
     if task.id == "competitor_dossier":
         comp = inputs.get("competitor_name", "")
         ind = brand.get("industry", "")
-        return f"{comp} {ind}".strip()
+        loc_val = (ctx.get("market") or {}).get("location") or ""
+        return f"{comp} {ind} {loc_val}".strip()
     if task.id == "market_research":
         obj = inputs.get("objective", "")
         ind = brand.get("industry", "")
@@ -191,9 +202,9 @@ def _research_prompt(task: Task, inputs: Dict[str, Any], ctx: Dict[str, Any]) ->
                 "Tìm: số liệu thị trường và khách hàng có nguồn (ghi năm), xu hướng gần đây, doanh nghiệp đang hoạt động trong khu vực, "
                 "mức giá tham khảo, quy định pháp lý liên quan. Ghi rõ nguồn cho từng con số. Không có số liệu thì nói không tìm thấy.")
     if task.id == "competitor_discovery":
-        return (f"Tìm tất cả các doanh nghiệp đang bán {product} ({brand.get('industry', '')}) tại {inputs.get('location')}. "
-                f"Tiêu chí: {inputs.get('criteria') or 'cùng nhóm khách'}. Liệt kê đầy đủ mọi đối thủ cạnh tranh có thật tìm thấy được (có bao nhiêu liệt kê bấy nhiêu, không tự giới hạn 3-4 bên): tên, website/fanpage, sản phẩm chính, mức giá nếu thấy. "
-                "Chỉ nêu doanh nghiệp có thật xuất hiện trong kết quả tìm kiếm, không bịa đặt đối thủ.")
+        return (f"Tìm tất cả các doanh nghiệp/quán đang kinh doanh {product or brand.get('industry', '')} tại {inputs.get('location')}. "
+                f"Tiêu chí bổ sung: {inputs.get('criteria') or 'cùng phân khúc khách hàng'}. Liệt kê đầy đủ mọi đối thủ cạnh tranh có thật (có bao nhiêu liệt kê bấy nhiêu, không tự giới hạn 3 hay 4 bên): tên, website/fanpage, sản phẩm chính, mức giá nếu thấy. "
+                "Chỉ nêu doanh nghiệp có thật xuất hiện trong kết quả tìm kiếm và hoạt động tại khu vực được yêu cầu, tuyệt đối không bịa đặt đối thủ.")
     if task.id == "competitor_dossier":
         extra_info = []
         if inputs.get('website'): extra_info.append(f"website: {inputs['website']}")
@@ -248,7 +259,7 @@ def run_task(email: str, is_admin: bool, task_id: str, raw_inputs: Dict[str, Any
             query = _clean_search_query(task, inputs, ctx)
             try:
                 from app.netsafe import web_search
-                web_results, _ = web_search(query, max_results=5)
+                web_results, _ = web_search(query, max_results=8)
                 if web_results:
                     sources = [{"title": r["title"], "url": r["url"]} for r in web_results]
                     queries = [query]
@@ -272,6 +283,11 @@ def run_task(email: str, is_admin: bool, task_id: str, raw_inputs: Dict[str, Any
             ex["sources"] = sources
             base_prompt += (f"\n\nBÁO CÁO TÌM KIẾM GOOGLE (thô):\n{grounded_result.text[:12000]}\n\n{_sources_block(sources)}\n"
                             "Gắn source_ids theo số thứ tự trong DANH SÁCH NGUỒN. Ý nào không có nguồn thì tag [Unverified] hoặc [Inference].")
+
+    if task.id == "competitor_discovery":
+        base_prompt += ("\n\nLƯU Ý VỀ DANH SÁCH ĐỐI THỦ:\n"
+                        "- Liệt kê toàn bộ các đối thủ cạnh tranh có thật (có bao nhiêu liệt kê bấy nhiêu, không tự giới hạn 3 hay 4 bên).\n"
+                        "- Với mỗi đối thủ, bắt buộc gán source_ids là mảng số nguyên trỏ đến các số thứ tự trong DANH SÁCH NGUỒN (ví dụ [1] hoặc [1, 2]). Không để source_ids rỗng nếu thông tin lấy từ báo cáo tìm kiếm hoặc thị trường.")
 
     result = llm.generate_json(key, system=system, prompt=base_prompt, schema=task.schema,
                                preferred_model=model_pref, temperature=task.temperature)

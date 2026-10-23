@@ -120,26 +120,33 @@ def analyze_ai_text(text: str) -> Dict[str, Any]:
 
 
 def _rule_based_humanize(text: str, mode: str, tone: str) -> str:
-    """Thuật toán viết lại theo luật cục bộ (đảm bảo hoạt động ngay cả khi offline / không có AI key)."""
+    """Thuật toán viết lại theo luật cục bộ thích ứng đa ngành (hoạt động xuất sắc offline / khi không có AI key)."""
     out = text
-    # Thay thế các cụm từ sáo rỗng
+    # Thay thế các cụm từ sáo rỗng phổ quát trên mọi ngành nghề (F&B, Cá Koi, Cơ khí, Nha khoa, BĐS,...)
     replacements = [
         (r"Trong thời đại (kỹ thuật )?số ngày nay,?\s*", "Thực tế cho thấy, "),
-        (r"đóng vai trò vô cùng quan trọng đối với", "quyết định trực tiếp đến"),
-        (r"Việc tối ưu hóa công cụ tìm kiếm không chỉ giúp", "SEO không đơn thuần là"),
-        (r"mà còn góp phần nâng cao uy tín thương hiệu một cách đáng kể\.", "— nó chính là chiếc chìa khóa để khách hàng chọn bạn thay vì đối thủ."),
-        (r"Hơn nữa,?\s*", "Chưa kể, "),
-        (r"việc áp dụng các chiến lược SEO hiệu quả sẽ giúp doanh nghiệp tiếp cận được nhiều khách hàng tiềm năng hơn\.", "khi bài viết chạm đúng nỗi đau của người đọc, khách hàng sẽ chủ động tìm đến bạn mà không cần tốn tiền chạy quảng cáo liên tục."),
-        (r"Điều này đặc biệt quan trọng trong bối cảnh cạnh tranh ngày càng gay gắt trên thị trường trực tuyến\.", "Giữa một thị trường cạnh tranh từng vị trí, ai đứng đầu trang tìm kiếm, người đó chiếm trọn niềm tin."),
-        (r"Tóm lại,?\s*", "Nói ngắn gọn: "),
-        (r"SEO là một yếu tố không thể thiếu trong chiến lược marketing tổng thể của doanh nghiệp\.", "muốn doanh số tăng trưởng bền vững, SEO là thứ doanh nghiệp phải làm ngay hôm nay."),
+        (r"Trong thời đại (công nghệ|4\.0) ngày nay,?\s*", "Nhìn vào thực tế, "),
+        (r"đóng vai trò (vô cùng|hết sức|rất|cực kỳ) quan trọng (trong việc|đối với)?\s*", "quyết định trực tiếp đến "),
+        (r"không chỉ\s+(.*?)\s+mà còn\s+(.*?)([\.,]|$)", r"không dừng lại ở việc \1, điều này còn giúp \2. "),
+        (r"với sự phát triển (vượt bậc|không ngừng|mạnh mẽ) của\s*", "cùng với xu thế "),
+        (r"tóm lại(,| là)\s*", "Điểm mấu chốt là: "),
+        (r"có thể nói(,| rằng)\s*", "Rõ ràng, "),
+        (r"mang lại nhiều lợi ích (to lớn|thiết thực)?(\s+cho)?\s*", "đem lại giá trị thực tế cho "),
+        (r"cần lưu ý rằng,?\s*", "Đặc biệt chú ý: "),
+        (r"như chúng ta đã biết,?\s*", "Thực tế ai cũng thấy, "),
+        (r"đáp ứng nhu cầu ngày càng cao của\s*", "giải quyết trúng mong muốn của "),
+        (r"góp phần nâng cao\s*", "trực tiếp thúc đẩy "),
+        (r"là một yếu tố không thể thiếu\s*", "luôn là ưu tiên hàng đầu "),
+        (r"trong bối cảnh cạnh tranh (ngày càng)? gay gắt\s*", "giữa thị trường cạnh tranh khốc liệt hiện nay "),
+        (r"một cách (hiệu quả|nhanh chóng|toàn diện) và bền vững", "vừa nhanh chóng lại vừa bền vững lâu dài"),
+        (r"hãy cùng tìm hiểu\s*", "hãy cùng điểm qua "),
+        (r"không thể phủ nhận rằng\s*", "ai cũng phải công nhận "),
+        (r"mở ra một kỷ nguyên mới\s*", "tạo ra bước chuyển biến rõ rệt "),
     ]
     for pattern, rep in replacements:
         out = re.sub(pattern, rep, out, flags=re.IGNORECASE)
 
-    # Chèn câu hỏi tu từ mở đầu nếu chưa có
-    if not out.startswith("Bạn có biết?") and not out.startswith("Liệu"):
-        out = "Bạn có biết? Hơn 68% quyết định mua hàng trực tuyến bắt đầu từ một lượt tìm kiếm trên Google.\n\n" + out
+    out = re.sub(r"[ \t]+", " ", out).strip()
     return out
 
 

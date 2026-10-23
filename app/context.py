@@ -192,16 +192,27 @@ def _coerce(kind: str, value: Any) -> Any:
     if kind == "number":
         if isinstance(value, (int, float)):
             return float(value)
-        txt = str(value).strip().replace(" ", "")
+        txt = str(value).strip().lower().replace(" ", "")
         if not txt:
             return None
-        txt = txt.replace("%", "")
+        txt = txt.replace("%", "").replace("vnd", "").replace("vnđ", "").replace("đ", "")
+        multiplier = 1.0
+        if "tỷ" in txt or "ti" in txt:
+            multiplier = 1_000_000_000.0
+            txt = re.sub(r"(tỷ|ti)", "", txt)
+        elif "tr" in txt or "triệu" in txt or "trieu" in txt:
+            multiplier = 1_000_000.0
+            txt = re.sub(r"(tr|triệu|trieu)", "", txt)
+        elif "k" in txt or "nghìn" in txt or "ngàn" in txt or "nghin" in txt or "ngan" in txt:
+            multiplier = 1_000.0
+            txt = re.sub(r"(k|nghìn|ngàn|nghin|ngan)", "", txt)
+
         # 1.200.000 hoặc 1,200,000 → 1200000 ; 35,5 → 35.5
         if re.fullmatch(r"\d{1,3}([.,]\d{3})+", txt):
             txt = re.sub(r"[.,]", "", txt)
         txt = txt.replace(",", ".")
         try:
-            return float(txt)
+            return float(txt) * multiplier
         except ValueError:
             raise ValueError("phải là số")
     if kind == "list":

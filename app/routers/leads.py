@@ -79,7 +79,10 @@ def update_lead(lead_id: int, user: CurrentUser = Depends(require_user), body: D
 
 @router.patch("/{lead_id}/status")
 def update_status(lead_id: int, user: CurrentUser = Depends(require_user), body: Dict[str, Any] = Body(...)) -> Dict[str, Any]:
-    return {"lead": leads.set_status(user.email, lead_id, str(body.get("status", "")), str(body.get("lost_reason", "")))}
+    patch = {"status": str(body.get("status", "")), "lost_reason": str(body.get("lost_reason", ""))}
+    if "deal_value" in body and body["deal_value"] is not None:
+        patch["deal_value"] = body["deal_value"]
+    return {"lead": leads.update_lead(user.email, lead_id, patch)}
 
 
 @router.delete("/{lead_id}")

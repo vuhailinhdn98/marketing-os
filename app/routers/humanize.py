@@ -41,8 +41,11 @@ def rewrite_text(
     strength = str(body.get("strength") or "Cao")
     keywords = body.get("keywords")
     if isinstance(keywords, str):
-        keywords = [k.strip() for k in keywords.split(",") if k.strip()]
-    elif not isinstance(keywords, list):
+        import re as _re
+        keywords = [k.strip() for k in _re.split(r"[\n,;\t]+", keywords) if k.strip()]
+    elif isinstance(keywords, list):
+        keywords = [str(k).strip() for k in keywords if str(k).strip()]
+    else:
         keywords = None
 
     try:
@@ -100,9 +103,13 @@ def market_radar(
     industry = str(body.get("industry") or brand.get("industry") or "Marketing & Kinh doanh").strip()
     location = str(body.get("location") or (ctx.get("market") or {}).get("location") or "Việt Nam").strip()
 
-    from app.netsafe import web_search
     query = f"xu hướng từ khóa nhu cầu {industry} {location}".strip()
-    sources, _ = web_search(query, max_results=6)
+    sources = []
+    try:
+        from app.netsafe import web_search
+        sources, _ = web_search(query, max_results=6)
+    except Exception:
+        sources = []
 
     # Tổng hợp các cơ hội từ khóa xu hướng
     trends = [

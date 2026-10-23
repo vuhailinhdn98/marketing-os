@@ -214,22 +214,51 @@ def run_task(email: str, is_admin: bool, task_id: str, raw_inputs: Dict[str, Any
     if task.grounded:
         grounded_result = llm.generate_grounded(key, system=system, prompt=_research_prompt(task, inputs, ctx), preferred_model=model_pref)
         if not grounded_result.ok:
-            prov = grounded_result.provenance(task=task_id, key_source=key_source, context_version=ctx.get("version"))
-            return {"status": "not_generated", "provenance": prov}
-        sources = list(grounded_result.sources)
-        site = ex.get("site")
-        if site and site.get("url"):
-            sources.append({"title": f"Website đối thủ (tải trực tiếp): {site.get('title') or site['url']}", "url": site["url"]})
-        ex["sources"] = sources
-        base_prompt += (f"\n\nBÁO CÁO TÌM KIẾM GOOGLE (thô):\n{grounded_result.text[:12000]}\n\n{_sources_block(sources)}\n"
-                        "Gắn source_ids theo số thứ tự trong DANH SÁCH NGUỒN. Ý nào không có nguồn thì tag [Unverified] hoặc [Inference].")
+            if grounded_result.error_code in ("invalid_key", "forbidden"):
+                prov = grounded_result.provenance(task=task_id, key_source=key_source, context_version=ctx.get("version"))
+                return {"status": "not_generated", "provenance": prov}
+            # Dự phòng tìm kiếm web khi Google Search grounding hết hạn mức/không hỗ trợ trên key này
+            sources: List[Dict[str, str]] = []
+            queries: List[str] = []
+            grounded_text = ""
+            query = _research_prompt(task, inputs, ctx).split("\n", 1)[0]
+            try:
+                from app.netsafe import web_search
+                web_results, _ = web_search(query, max_results=5)
+                if web_results:
+                    sources = [{"title": r["title"], "url": r["url"]} for r in web_results]
+                    queries = [query]
+                    grounded_text = "\n".join(f"- {r['title']}: {r['snippet']}" for r in web_results)
+            except Exception:
+                pass
+            site = ex.get("site")
+            if site and site.get("url"):
+                sources.append({"title": f"Website đối thủ (tải trực tiếp): {site.get('title') or site['url']}", "url": site["url"]})
+            ex["sources"] = sources
+            if grounded_text:
+                base_prompt += (f"\n\nBÁO CÁO TÌM KIẾM WEB (thô):\n{grounded_text[:12000]}\n\n{_sources_block(sources)}\n"
+                                "Gắn source_ids theo số thứ tự trong DANH SÁCH NGUỒN. Ý nào không có nguồn thì tag [Unverified] hoặc [Inference].")
+            else:
+                base_prompt += f"\n\n{_sources_block(sources)}\n"
+        else:
+            sources = list(grounded_result.sources)
+            site = ex.get("site")
+            if site and site.get("url"):
+                sources.append({"title": f"Website đối thủ (tải trực tiếp): {site.get('title') or site['url']}", "url": site["url"]})
+            ex["sources"] = sources
+            base_prompt += (f"\n\nBÁO CÁO TÌM KIẾM GOOGLE (thô):\n{grounded_result.text[:12000]}\n\n{_sources_block(sources)}\n"
+                            "Gắn source_ids theo số thứ tự trong DANH SÁCH NGUỒN. Ý nào không có nguồn thì tag [Unverified] hoặc [Inference].")
 
     result = llm.generate_json(key, system=system, prompt=base_prompt, schema=task.schema,
                                preferred_model=model_pref, temperature=task.temperature)
-    if grounded_result is not None:
+    if grounded_result is not None and grounded_result.ok:
         result.grounded = grounded_result.grounded
         result.sources = ex.get("sources", [])
         result.search_queries = grounded_result.search_queries
+    elif task.grounded and ex.get("sources"):
+        result.grounded = True
+        result.sources = ex.get("sources", [])
+        result.search_queries = [task.title]
     prov = result.provenance(task=task_id, key_source=key_source, context_version=ctx.get("version"), sections=task.sections)
     if not result.ok:
         return {"status": "not_generated", "provenance": prov}

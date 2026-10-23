@@ -13,3 +13,4 @@ data/runtime-test/
 .env
 .pytest_cache/
 backups/
+.pytest_temp/

@@ -88,3 +88,17 @@ def test_fallback_succeeds_on_next_model(seq):
     calls, _ = seq([LIMIT_ZERO, OK])
     model, payload = llm._call_with_fallback("k", ["gemini-x", "gemini-y"], lambda m: {})
     assert model == "gemini-y" and calls == ["gemini-x:generateContent", "gemini-y:generateContent"]
+
+
+def test_400_bad_request_retries_next_model(seq):
+    BAD_400 = err(400, "Unknown field google_search in tool", "INVALID_ARGUMENT")
+    calls, _ = seq([BAD_400, OK])
+    model, payload = llm._call_with_fallback("k", ["gemini-x", "gemini-y"], lambda m: {})
+    assert model == "gemini-y" and calls == ["gemini-x:generateContent", "gemini-y:generateContent"]
+
+
+def test_thinking_exhausted_retries_next_model(seq):
+    THINKING_MAX = Resp(200, {"candidates": [{"content": {"parts": [{"thought": True, "text": "thinking..."}]}, "finishReason": "MAX_TOKENS"}]})
+    calls, _ = seq([THINKING_MAX, OK])
+    model, payload = llm._call_with_fallback("k", ["gemini-x", "gemini-y"], lambda m: {})
+    assert model == "gemini-y" and calls == ["gemini-x:generateContent", "gemini-y:generateContent"]

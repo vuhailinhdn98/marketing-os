@@ -390,3 +390,25 @@ def test_truncated_output_reports_clearly(client, ready, fake):
     llm._post = cut
     res = client.post("/api/skills/content_pillars/run", json={"inputs": {}}, headers=ready).json()
     assert res["status"] == "not_generated" and res["provenance"]["error_code"] == "truncated"
+
+
+def test_grounded_quota_falls_back_to_web_search(client, ready, fake, monkeypatch):
+    def fake_fail_grounded(*args, **kwargs):
+        return llm.LLMResult(ok=False, error="Quota exceeded for grounding", error_code="quota")
+    monkeypatch.setattr(llm, "generate_grounded", fake_fail_grounded)
+
+    from app import netsafe
+    monkeypatch.setattr(netsafe, "web_search", lambda query, max_results=5: ([
+        {"title": "Đối thủ A", "snippet": "Cung cấp giải pháp marketing", "url": "https://doithu-a.vn"}
+    ], None))
+
+    def override(data, prompt):
+        data["competitors"] = [{"name": "Đối thủ A", "type": "Trực tiếp", "website": "https://doithu-a.vn",
+                                "what_they_sell": "marketing", "price_info": "", "source_ids": [1]}]
+        return data
+    fake.overrides["Rà soát đối thủ"] = override
+
+    res = client.post("/api/skills/competitor_discovery/run", json={"inputs": {"location": "Hà Nội"}}, headers=ready).json()
+    assert res["status"] == "ok"
+    assert res["output"]["competitors"][0]["name"] == "Đối thủ A"
+    assert res["provenance"]["grounded"] is True

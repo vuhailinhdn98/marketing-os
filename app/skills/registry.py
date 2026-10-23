@@ -379,7 +379,7 @@ def _post_discovery(data, inputs, ctx, extras):
     for c in data.get("competitors") or []:
         ids = [i for i in (c.get("source_ids") or []) if isinstance(i, int) and 1 <= i <= n_sources]
         c["source_ids"] = ids
-        if ids or str(c.get("name", "")).lower() in known:
+        if not n_sources or ids or str(c.get("name", "")).lower() in known:
             kept.append(c)
         else:
             dropped += 1

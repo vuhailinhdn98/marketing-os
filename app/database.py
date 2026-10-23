@@ -411,6 +411,10 @@ def _migrate(conn: sqlite3.Connection) -> None:
         "UPDATE lead_records SET status='new' WHERE status NOT IN "
         "('new','consulting','won','repeat','referral','loyal','lost')"
     )
+    # Reset model mặc định không hợp lệ hoặc bị hạn chế access (gemini-2.5-flash)
+    conn.execute(
+        "UPDATE user_profiles SET gemini_model = '' WHERE gemini_model = 'gemini-2.5-flash'"
+    )
 
 
 def ensure_db() -> None:

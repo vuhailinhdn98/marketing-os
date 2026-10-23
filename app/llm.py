@@ -31,7 +31,7 @@ MODEL_CACHE_TTL = 3600
 _model_cache: Dict[str, Tuple[float, List[Dict[str, Any]]]] = {}
 _cache_lock = threading.Lock()
 
-DEFAULT_TEXT_MODELS = ["gemini-2.5-flash", "gemini-flash-latest"]
+DEFAULT_TEXT_MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
 _EXCLUDE_TEXT = ("image", "tts", "audio", "live", "embedding", "robotics", "computer-use", "learnlm",
                  "gemma", "aqa", "veo", "imagen", "lyria", "omni", "thinking-exp")
 
@@ -116,7 +116,7 @@ def _raise_for(resp: requests.Response) -> None:
                        short=short)
     if resp.status_code == 400 and status == "FAILED_PRECONDITION":
         raise LLMError("Gemini từ chối yêu cầu (thường do vùng/billing của dự án)." + detail, "forbidden")
-    raise LLMError(f"Yêu cầu bị từ chối (HTTP {resp.status_code}).{detail}", "bad_request")
+    raise LLMError(f"Yêu cầu bị từ chối (HTTP {resp.status_code}).{detail}", "bad_request", retry_next_model=True, short=f"lỗi tham số (400)")
 
 
 def _quota_details(err: Dict[str, Any]) -> Tuple[str, Optional[float]]:
@@ -254,6 +254,7 @@ def rank_text_models(models: List[Dict[str, Any]], preferred: str = "") -> List[
     def score(name: str) -> Tuple:
         stable = 0 if ("preview" in name or "exp" in name) else 1
         alias = 0 if "latest" in name else 1
+        ga_priority = 2 if "2.0-flash" in name and "lite" not in name else (1 if "1.5-flash" in name else 0)
         if "flash-lite" in name:
             family = 2
         elif "flash" in name:
@@ -262,7 +263,7 @@ def rank_text_models(models: List[Dict[str, Any]], preferred: str = "") -> List[
             family = 1
         else:
             family = 0
-        return (alias, stable, family, _version(name))
+        return (alias, stable, ga_priority, family, _version(name))
 
     ordered = sorted(set(names), key=score, reverse=True)
     if preferred and preferred in ordered:
@@ -314,8 +315,12 @@ def _extract(payload: Dict[str, Any]) -> Tuple[str, Dict[str, Any], List[Dict[st
         raise LLMError(f"Kết quả bị Gemini chặn ({finish}).", "blocked")
     parts = (cand.get("content") or {}).get("parts") or []
     text = "".join(p.get("text", "") for p in parts if not p.get("thought"))
+    if not text.strip():
+        all_text = "".join(p.get("text", "") for p in parts)
+        if all_text.strip() and ("{" in all_text or "[" in all_text):
+            text = all_text
     if not text.strip() and finish == "MAX_TOKENS":
-        raise LLMError("Model dùng hết giới hạn token trước khi trả kết quả.", "truncated", retry_next_model=True)
+        raise LLMError("Model dùng hết giới hạn token trước khi trả kết quả.", "truncated", retry_next_model=True, short="hết giới hạn token")
     return text, cand.get("groundingMetadata") or {}, parts
 
 
@@ -346,7 +351,9 @@ def _call_with_fallback(api_key: str, models: List[str], body_for: Any) -> Tuple
         if failures and time.time() - started > FALLBACK_BUDGET:
             break
         try:
-            return model, _post(api_key, f"models/{model}:generateContent", body_for(model))
+            payload = _post(api_key, f"models/{model}:generateContent", body_for(model))
+            _extract(payload)
+            return model, payload
         except LLMError as exc:
             if not exc.retry_next_model:
                 raise
@@ -445,6 +452,7 @@ def _schema_errors(data: Any, schema: Optional[Dict[str, Any]]) -> List[str]:
     return [f"{'/'.join(str(p) for p in e.path) or '(gốc)'}: {e.message}" for e in validator.iter_errors(data)][:12]
 
 
+
 def generate_json(api_key: str, *, system: str, prompt: str, schema: Dict[str, Any],
                   preferred_model: str = "", temperature: float = 0.5, max_output_tokens: int = 32768) -> LLMResult:
     """Sinh JSON đúng schema. Trả LLMResult(ok=False) kèm lý do nếu không được."""
@@ -457,6 +465,7 @@ def generate_json(api_key: str, *, system: str, prompt: str, schema: Dict[str, A
     full_prompt = (f"{prompt}\n\nĐỊNH DẠNG BẮT BUỘC: trả về DUY NHẤT một đối tượng JSON hợp lệ theo JSON Schema sau, "
                    f"không kèm giải thích:\n{schema_text}")
     use_schema_field = {"on": True}
+    use_thinking = {"on": True}
 
     def body_for(_model: str) -> Dict[str, Any]:
         gen: Dict[str, Any] = {"temperature": temperature,
@@ -464,6 +473,8 @@ def generate_json(api_key: str, *, system: str, prompt: str, schema: Dict[str, A
                                "responseMimeType": "application/json"}
         if use_schema_field["on"]:
             gen["responseJsonSchema"] = schema
+        if use_thinking["on"] and ("2.5" in _model or "thinking" in _model):
+            gen["thinkingConfig"] = {"thinkingBudget": 0}
         return {"systemInstruction": {"parts": [{"text": system}]},
                 "contents": [{"role": "user", "parts": [{"text": full_prompt}]}],
                 "generationConfig": gen}
@@ -472,8 +483,9 @@ def generate_json(api_key: str, *, system: str, prompt: str, schema: Dict[str, A
         try:
             model, payload = _call_with_fallback(api_key, models, body_for)
         except LLMError as exc:
-            if exc.code == "bad_request" and use_schema_field["on"]:
-                use_schema_field["on"] = False  # model/phiên bản API không nhận responseJsonSchema
+            if exc.code == "bad_request" and (use_schema_field["on"] or use_thinking["on"]):
+                use_schema_field["on"] = False
+                use_thinking["on"] = False
                 model, payload = _call_with_fallback(api_key, models, body_for)
             else:
                 raise
@@ -493,11 +505,14 @@ def generate_json(api_key: str, *, system: str, prompt: str, schema: Dict[str, A
             log.info("generate_json repair model=%s errors=%s", model, errors[:3])
             repair = (f"Kết quả JSON trước đó chưa đúng schema. Lỗi: {errors}\n\nKết quả trước:\n{text[:12000]}\n\n"
                       f"Hãy trả lại JSON đã sửa, giữ nguyên nội dung đúng, theo schema:\n{schema_text}")
+            repair_gen: Dict[str, Any] = {"temperature": 0.1, "maxOutputTokens": min(max_output_tokens, output_limit(api_key, model)),
+                                         "responseMimeType": "application/json"}
+            if "2.5" in model or "thinking" in model:
+                repair_gen["thinkingConfig"] = {"thinkingBudget": 0}
             payload = _post(api_key, f"models/{model}:generateContent", {
                 "systemInstruction": {"parts": [{"text": system}]},
                 "contents": [{"role": "user", "parts": [{"text": repair}]}],
-                "generationConfig": {"temperature": 0.1, "maxOutputTokens": min(max_output_tokens, output_limit(api_key, model)),
-                                     "responseMimeType": "application/json"},
+                "generationConfig": repair_gen,
             })
             text, _, _ = _extract(payload)
             data = coerce_to_schema(parse_json_text(text), schema)
@@ -523,10 +538,14 @@ def generate_grounded(api_key: str, *, system: str, prompt: str, preferred_model
         return LLMResult(ok=False, error=exc.message, error_code=exc.code)
 
     def body_for(_model: str) -> Dict[str, Any]:
+        tool = {"google_search": {}} if _version(_model) >= 2.0 or not _version(_model) else {"google_search_retrieval": {"dynamic_retrieval_config": {"mode": "MODE_DYNAMIC"}}}
+        gen: Dict[str, Any] = {"temperature": temperature, "maxOutputTokens": min(12288, output_limit(api_key, _model))}
+        if "2.5" in _model or "thinking" in _model:
+            gen["thinkingConfig"] = {"thinkingBudget": 0}
         return {"systemInstruction": {"parts": [{"text": system}]},
                 "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-                "tools": [{"google_search": {}}],
-                "generationConfig": {"temperature": temperature, "maxOutputTokens": min(12288, output_limit(api_key, _model))}}
+                "tools": [tool],
+                "generationConfig": gen}
 
     try:
         model, payload = _call_with_fallback(api_key, models, body_for)

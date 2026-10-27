@@ -1,32 +1,175 @@
 # -*- coding: utf-8 -*-
 """
-Tầng dữ liệu SQLite cho Marketing OS.
+Tầng dữ liệu của Marketing OS — chạy được trên hai loại cơ sở dữ liệu:
 
-- Một file DB duy nhất tại DATA_DIR/marketing_os.db (mặc định data/runtime/, đã nằm trong .gitignore).
-- Lần chạy đầu: nếu còn DB cũ data/marketing_os_app.db thì sao chép sang chỗ mới (không xóa bản cũ).
-- Lược đồ được nâng cấp bằng migration có đánh số, chạy lại nhiều lần vẫn an toàn.
-- Mọi bảng nghiệp vụ đều có user_email để tách workspace.
+- Postgres (khi có biến môi trường DATABASE_URL, ví dụ Neon/Supabase): dữ liệu nằm ngoài máy chủ web nên
+  KHÔNG mất khi Render gói free ngủ, khởi động lại hay triển khai lại. Đây là cấu hình nên dùng trên cloud.
+- SQLite (mặc định khi không có DATABASE_URL): một file tại DATA_DIR/marketing_os.db, hợp cho máy cá nhân
+  hoặc máy chủ có ổ đĩa bền.
+
+Mã nghiệp vụ chỉ dùng connect / rows / one / execute với dấu hỏi (?) làm tham số và SQL dùng được ở cả hai nơi;
+lớp này tự đổi sang cú pháp Postgres. Mọi bảng nghiệp vụ đều có user_email để tách workspace của từng tài khoản.
 """
 from __future__ import annotations
 
+import datetime as _dt
+import decimal
 import json
+import logging
+import re
 import shutil
 import sqlite3
 import threading
 from contextlib import contextmanager
-from typing import Any, Dict, Iterable, Iterator, List, Optional
+from typing import Any, Dict, Iterable, Iterator, List, Optional, Sequence
 
 from app import config
 
+log = logging.getLogger("marketing_os.db")
+
 _init_lock = threading.Lock()
 _initialized_for: Optional[str] = None
+_pool = None            # psycopg_pool.ConnectionPool khi dùng Postgres
+_pool_url: str = ""
 
 
 def normalize_email(email: Optional[str]) -> str:
     return str(email or "").strip().lower()
 
 
-def _connect() -> sqlite3.Connection:
+def using_postgres() -> bool:
+    return bool(config.settings.database_url)
+
+
+def backend_name() -> str:
+    return "postgres" if using_postgres() else "sqlite"
+
+
+# ---------------------------------------------------------------------------
+# Postgres: đổi cú pháp và chuẩn hóa giá trị trả về cho giống SQLite
+# ---------------------------------------------------------------------------
+
+# Bảng có khóa tự tăng "id" — INSERT vào các bảng này trả về id mới (giống lastrowid của SQLite)
+_SERIAL_TABLES = {
+    "research_records", "content_items", "performance_metrics", "calendar_schedules", "automation_logs",
+    "discovered_competitors", "lead_records", "context_versions", "skill_runs", "budget_lines", "utm_links",
+    "experiments", "data_imports", "data_rows", "media_jobs", "humanize_history",
+}
+_INSERT_TABLE_RE = re.compile(r"^\s*INSERT\s+INTO\s+([A-Za-z_][A-Za-z0-9_]*)", re.I)
+
+
+def _pg_sql(sql: str) -> str:
+    """Đổi tham số ? sang %s (bỏ qua chuỗi trong nháy đơn) và nhân đôi % để psycopg không hiểu nhầm."""
+    out: List[str] = []
+    in_quote = False
+    for ch in sql:
+        if ch == "'":
+            in_quote = not in_quote
+            out.append(ch)
+        elif ch == "%":
+            out.append("%%")
+        elif ch == "?" and not in_quote:
+            out.append("%s")
+        else:
+            out.append(ch)
+    return "".join(out)
+
+
+def _pg_params(params: Iterable[Any]) -> tuple:
+    # SQLite lưu True/False thành 1/0; cột cờ trong lược đồ là INTEGER nên đổi bool sang int cho Postgres
+    return tuple(int(p) if isinstance(p, bool) else p for p in params)
+
+
+def _pg_value(v: Any) -> Any:
+    """Trả giá trị giống SQLite: thời điểm là chuỗi 'YYYY-MM-DD HH:MM:SS' (giờ UTC), số thập phân là int/float."""
+    if isinstance(v, _dt.datetime):
+        if v.tzinfo is not None:
+            v = v.astimezone(_dt.timezone.utc).replace(tzinfo=None)
+        return v.strftime("%Y-%m-%d %H:%M:%S")
+    if isinstance(v, _dt.date):
+        return v.isoformat()
+    if isinstance(v, decimal.Decimal):
+        return int(v) if v == v.to_integral_value() else float(v)
+    if isinstance(v, memoryview):
+        return v.tobytes()
+    return v
+
+
+class _PgCursor:
+    """Bọc con trỏ psycopg để có rowcount, lastrowid, fetchone/fetchall trả dict như sqlite3.Row."""
+
+    def __init__(self, cur: Any, lastrowid: Optional[int] = None):
+        self._cur = cur
+        self.rowcount = cur.rowcount
+        self.lastrowid = lastrowid
+
+    def _norm(self, row: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+        return None if row is None else {k: _pg_value(v) for k, v in row.items()}
+
+    def fetchone(self) -> Optional[Dict[str, Any]]:
+        return self._norm(self._cur.fetchone())
+
+    def fetchall(self) -> List[Dict[str, Any]]:
+        return [self._norm(r) for r in self._cur.fetchall()]  # type: ignore[misc]
+
+
+class _PgConnection:
+    """Giao diện execute/executemany giống sqlite3.Connection trên một kết nối psycopg."""
+
+    def __init__(self, conn: Any):
+        self._conn = conn
+
+    def execute(self, sql: str, params: Iterable[Any] = ()) -> _PgCursor:
+        params = _pg_params(params)
+        m = _INSERT_TABLE_RE.match(sql)
+        wants_id = bool(m and m.group(1).lower() in _SERIAL_TABLES and "RETURNING" not in sql.upper())
+        text = _pg_sql(sql) + (" RETURNING id" if wants_id else "")
+        cur = self._conn.cursor()
+        cur.execute(text, params)
+        lastrowid = None
+        if wants_id:
+            row = cur.fetchone()
+            lastrowid = row["id"] if row else None
+        return _PgCursor(cur, lastrowid)
+
+    def executemany(self, sql: str, seq: Sequence[Iterable[Any]]) -> None:
+        cur = self._conn.cursor()
+        cur.executemany(_pg_sql(sql), [_pg_params(p) for p in seq])
+
+    def commit(self) -> None:
+        self._conn.commit()
+
+    def rollback(self) -> None:
+        self._conn.rollback()
+
+
+def _pg_pool():
+    global _pool, _pool_url
+    url = config.settings.database_url
+    if _pool is not None and _pool_url == url:
+        return _pool
+    try:
+        from psycopg.rows import dict_row
+        from psycopg_pool import ConnectionPool
+    except ImportError as exc:  # pragma: no cover - phụ thuộc môi trường
+        raise RuntimeError("Đã đặt DATABASE_URL nhưng máy chủ thiếu thư viện psycopg / psycopg-pool "
+                           "(chạy: pip install -r requirements.txt).") from exc
+    if _pool is not None:
+        _pool.close()
+    # prepare_threshold=None: tắt prepared statement để chạy được qua bộ gom kết nối (PgBouncer/Neon pooler).
+    # timezone=UTC: CURRENT_TIMESTAMP lưu giờ UTC giống SQLite; giao diện tự đổi sang giờ người xem.
+    # max_idle < 5 phút: Neon gói free tự tắt máy sau 5 phút không dùng, kết nối cũ sẽ chết.
+    _pool = ConnectionPool(
+        url, min_size=1, max_size=config.settings.db_pool_size, open=True, timeout=30, max_idle=240,
+        check=ConnectionPool.check_connection,
+        kwargs={"row_factory": dict_row, "prepare_threshold": None, "options": "-c timezone=UTC",
+                "connect_timeout": 15},
+    )
+    _pool_url = url
+    return _pool
+
+
+def _connect_sqlite() -> sqlite3.Connection:
     path = config.settings.db_path
     path.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(path), timeout=15)
@@ -36,9 +179,20 @@ def _connect() -> sqlite3.Connection:
 
 
 @contextmanager
-def connect() -> Iterator[sqlite3.Connection]:
+def connect() -> Iterator[Any]:
+    """Một giao dịch: tự commit khi xong, rollback khi lỗi. Dùng conn.execute(sql, params) với tham số '?'."""
     ensure_db()
-    conn = _connect()
+    if using_postgres():
+        with _pg_pool().connection() as raw:
+            conn = _PgConnection(raw)
+            try:
+                yield conn
+                raw.commit()
+            except Exception:
+                raw.rollback()
+                raise
+        return
+    conn = _connect_sqlite()
     try:
         yield conn
         conn.commit()
@@ -61,7 +215,7 @@ def one(sql: str, params: Iterable[Any] = ()) -> Optional[Dict[str, Any]]:
 
 
 def execute(sql: str, params: Iterable[Any] = ()) -> int:
-    """Chạy một câu lệnh ghi. Trả về lastrowid (INSERT) hoặc số dòng bị ảnh hưởng."""
+    """Chạy một câu lệnh ghi. Trả về id mới (INSERT vào bảng có id tự tăng) hoặc số dòng bị ảnh hưởng."""
     with connect() as conn:
         cur = conn.execute(sql, tuple(params))
         return cur.lastrowid if sql.lstrip().upper().startswith("INSERT") else cur.rowcount
